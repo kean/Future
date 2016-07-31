@@ -64,8 +64,8 @@ public extension Promise {
         }
     }
     
-    public func `catch`(_ closure: (error: ErrorProtocol) -> Void) -> Promise {
-        return then(fulfilment: nil, rejection: closure)
+    public func `catch`(_ closure: (error: ErrorProtocol) -> Void) {
+        _ = then(fulfilment: nil, rejection: closure)
     }
     
     public func recover(_ closure: (error: ErrorProtocol) -> Promise) -> Promise {
