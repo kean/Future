@@ -34,7 +34,7 @@ public class Promise<T> {
         let completion: (resolution: Resolution<T>) -> Void = { resolution in
             queue.async { closure(resolution: resolution) }
         }
-        queue.async {
+        self.queue.async {
             switch self.state {
             case let .pending(handlers): handlers.objects.append(completion)
             case let .resolved(resolution): completion(resolution: resolution)
