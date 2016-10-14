@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0CAA5D271DB14901001F6D96"
+               BuildableName = "Pill tvOS Tests.xctest"
+               BlueprintName = "Pill tvOS Tests"
+               ReferencedContainer = "container:Pill.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "0C5108441D4E82B900F1F405"
+            BuildableName = "Pill.framework"
+            BlueprintName = "Pill tvOS"
+            ReferencedContainer = "container:Pill.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
