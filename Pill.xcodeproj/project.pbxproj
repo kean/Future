@@ -65,6 +65,7 @@
 		0CAA5D221DB14859001F6D96 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0CAA5D281DB14901001F6D96 /* Pill tvOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Pill tvOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAA5D391DB1495E001F6D96 /* Pill macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Pill macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CAA5D461DB149FF001F6D96 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		0CE052001D4E830700A12B45 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -171,6 +172,7 @@
 			children = (
 				0CAA5D071DB14531001F6D96 /* Package.swift */,
 				0CAA5D081DB14531001F6D96 /* README.md */,
+				0CAA5D461DB149FF001F6D96 /* .travis.yml */,
 			);
 			name = Metadata;
 			sourceTree = "<group>";
@@ -989,6 +991,7 @@
 				0CAA5D1C1DB14767001F6D96 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0CAA5D301DB14901001F6D96 /* Build configuration list for PBXNativeTarget "Pill tvOS Tests" */ = {
 			isa = XCConfigurationList;
@@ -997,6 +1000,7 @@
 				0CAA5D321DB14901001F6D96 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0CAA5D411DB1495E001F6D96 /* Build configuration list for PBXNativeTarget "Pill macOS Tests" */ = {
 			isa = XCConfigurationList;
@@ -1005,6 +1009,7 @@
 				0CAA5D431DB1495E001F6D96 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0CE052071D4E830700A12B45 /* Build configuration list for PBXNativeTarget "Pill watchOS" */ = {
 			isa = XCConfigurationList;

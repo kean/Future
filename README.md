@@ -2,6 +2,7 @@
 
 <p align="left">
 <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
+<a href="https://travis-ci.org/kean/Pill"><img src="https://img.shields.io/travis/kean/Pill/master.svg"></a>
 </p>
 
 Micro Promise under 100 sloc. Supports chaining, recovery, bubbles-up errors.
