@@ -11,19 +11,21 @@
 		0C20715C1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
 		0C20715D1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
 		0C20715E1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
-		0C51082E1D4E820000F1F405 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C51082D1D4E820000F1F405 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0C51083F1D4E82AA00F1F405 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C51082D1D4E820000F1F405 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0C51084D1D4E82E500F1F405 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C51082D1D4E820000F1F405 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0CE052081D4E831300A12B45 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C51082D1D4E820000F1F405 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CAA5D0A1DB1458F001F6D96 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CAA5D0B1DB14595001F6D96 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CAA5D0C1DB1459A001F6D96 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CAA5D0D1DB1459F001F6D96 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0C20715A1D4E83A700EA5BEF /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		0C5108211D4E81CE00F1F405 /* Promise.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promise.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0C51082D1D4E820000F1F405 /* Promise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Promise.h; sourceTree = "<group>"; };
 		0C5108301D4E820D00F1F405 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C5108371D4E824A00F1F405 /* Promise.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promise.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C5108451D4E82B900F1F405 /* Promise.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promise.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0CAA5D091DB14588001F6D96 /* Promise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Promise.h; sourceTree = "<group>"; };
 		0CE052001D4E830700A12B45 /* Promise.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promise.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -65,6 +67,7 @@
 				0C51082C1D4E820000F1F405 /* Sources */,
 				0C51082F1D4E820D00F1F405 /* Supporting Files */,
 				0C5108221D4E81CE00F1F405 /* Products */,
+				0CAA5D061DB14524001F6D96 /* Metadata */,
 			);
 			sourceTree = "<group>";
 		};
@@ -82,7 +85,6 @@
 		0C51082C1D4E820000F1F405 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				0C51082D1D4E820000F1F405 /* Promise.h */,
 				0C20715A1D4E83A700EA5BEF /* Promise.swift */,
 			);
 			path = Sources;
@@ -91,10 +93,20 @@
 		0C51082F1D4E820D00F1F405 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0CAA5D091DB14588001F6D96 /* Promise.h */,
 				0C5108301D4E820D00F1F405 /* Info.plist */,
 			);
 			path = "Supporting Files";
 			sourceTree = SOURCE_ROOT;
+		};
+		0CAA5D061DB14524001F6D96 /* Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				0CAA5D071DB14531001F6D96 /* Package.swift */,
+				0CAA5D081DB14531001F6D96 /* README.md */,
+			);
+			name = Metadata;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -103,7 +115,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C51082E1D4E820000F1F405 /* Promise.h in Headers */,
+				0CAA5D0B1DB14595001F6D96 /* Promise.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,7 +123,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C51083F1D4E82AA00F1F405 /* Promise.h in Headers */,
+				0CAA5D0A1DB1458F001F6D96 /* Promise.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,7 +131,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C51084D1D4E82E500F1F405 /* Promise.h in Headers */,
+				0CAA5D0C1DB1459A001F6D96 /* Promise.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +139,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CE052081D4E831300A12B45 /* Promise.h in Headers */,
+				0CAA5D0D1DB1459F001F6D96 /* Promise.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,7 +449,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
 				PRODUCT_NAME = Promise;
 				SKIP_INSTALL = YES;
@@ -461,7 +473,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
 				PRODUCT_NAME = Promise;
 				SKIP_INSTALL = YES;
@@ -482,7 +494,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
 				PRODUCT_NAME = Promise;
@@ -507,7 +519,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
 				PRODUCT_NAME = Promise;
