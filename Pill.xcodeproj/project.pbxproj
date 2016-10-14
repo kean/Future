@@ -11,22 +11,22 @@
 		0C20715C1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
 		0C20715D1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
 		0C20715E1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
-		0CAA5D0A1DB1458F001F6D96 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0CAA5D0B1DB14595001F6D96 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0CAA5D0C1DB1459A001F6D96 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0CAA5D0D1DB1459F001F6D96 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CAA5D0A1DB1458F001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CAA5D0B1DB14595001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CAA5D0C1DB1459A001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CAA5D0D1DB1459F001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0C20715A1D4E83A700EA5BEF /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
-		0C5108211D4E81CE00F1F405 /* Promise.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promise.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C5108211D4E81CE00F1F405 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C5108301D4E820D00F1F405 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0C5108371D4E824A00F1F405 /* Promise.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promise.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0C5108451D4E82B900F1F405 /* Promise.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promise.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C5108371D4E824A00F1F405 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C5108451D4E82B900F1F405 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		0CAA5D091DB14588001F6D96 /* Promise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Promise.h; sourceTree = "<group>"; };
-		0CE052001D4E830700A12B45 /* Promise.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promise.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CAA5D091DB14588001F6D96 /* Pill.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pill.h; sourceTree = "<group>"; };
+		0CE052001D4E830700A12B45 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,10 +74,10 @@
 		0C5108221D4E81CE00F1F405 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0C5108211D4E81CE00F1F405 /* Promise.framework */,
-				0C5108371D4E824A00F1F405 /* Promise.framework */,
-				0C5108451D4E82B900F1F405 /* Promise.framework */,
-				0CE052001D4E830700A12B45 /* Promise.framework */,
+				0C5108211D4E81CE00F1F405 /* Pill.framework */,
+				0C5108371D4E824A00F1F405 /* Pill.framework */,
+				0C5108451D4E82B900F1F405 /* Pill.framework */,
+				0CE052001D4E830700A12B45 /* Pill.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -93,7 +93,7 @@
 		0C51082F1D4E820D00F1F405 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0CAA5D091DB14588001F6D96 /* Promise.h */,
+				0CAA5D091DB14588001F6D96 /* Pill.h */,
 				0C5108301D4E820D00F1F405 /* Info.plist */,
 			);
 			path = "Supporting Files";
@@ -115,7 +115,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CAA5D0B1DB14595001F6D96 /* Promise.h in Headers */,
+				0CAA5D0B1DB14595001F6D96 /* Pill.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,7 +123,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CAA5D0A1DB1458F001F6D96 /* Promise.h in Headers */,
+				0CAA5D0A1DB1458F001F6D96 /* Pill.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,7 +131,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CAA5D0C1DB1459A001F6D96 /* Promise.h in Headers */,
+				0CAA5D0C1DB1459A001F6D96 /* Pill.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,16 +139,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CAA5D0D1DB1459F001F6D96 /* Promise.h in Headers */,
+				0CAA5D0D1DB1459F001F6D96 /* Pill.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		0C5108201D4E81CE00F1F405 /* Promise macOS */ = {
+		0C5108201D4E81CE00F1F405 /* Pill macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0C5108291D4E81CE00F1F405 /* Build configuration list for PBXNativeTarget "Promise macOS" */;
+			buildConfigurationList = 0C5108291D4E81CE00F1F405 /* Build configuration list for PBXNativeTarget "Pill macOS" */;
 			buildPhases = (
 				0C51081C1D4E81CE00F1F405 /* Sources */,
 				0C51081D1D4E81CE00F1F405 /* Frameworks */,
@@ -159,14 +159,14 @@
 			);
 			dependencies = (
 			);
-			name = "Promise macOS";
+			name = "Pill macOS";
 			productName = Promise;
-			productReference = 0C5108211D4E81CE00F1F405 /* Promise.framework */;
+			productReference = 0C5108211D4E81CE00F1F405 /* Pill.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		0C5108361D4E824A00F1F405 /* Promise iOS */ = {
+		0C5108361D4E824A00F1F405 /* Pill iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0C51083C1D4E824A00F1F405 /* Build configuration list for PBXNativeTarget "Promise iOS" */;
+			buildConfigurationList = 0C51083C1D4E824A00F1F405 /* Build configuration list for PBXNativeTarget "Pill iOS" */;
 			buildPhases = (
 				0C5108321D4E824A00F1F405 /* Sources */,
 				0C5108331D4E824A00F1F405 /* Frameworks */,
@@ -177,14 +177,14 @@
 			);
 			dependencies = (
 			);
-			name = "Promise iOS";
+			name = "Pill iOS";
 			productName = "Promise iOS";
-			productReference = 0C5108371D4E824A00F1F405 /* Promise.framework */;
+			productReference = 0C5108371D4E824A00F1F405 /* Pill.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		0C5108441D4E82B900F1F405 /* Promise tvOS */ = {
+		0C5108441D4E82B900F1F405 /* Pill tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0C51084A1D4E82B900F1F405 /* Build configuration list for PBXNativeTarget "Promise tvOS" */;
+			buildConfigurationList = 0C51084A1D4E82B900F1F405 /* Build configuration list for PBXNativeTarget "Pill tvOS" */;
 			buildPhases = (
 				0C5108401D4E82B900F1F405 /* Sources */,
 				0C5108411D4E82B900F1F405 /* Frameworks */,
@@ -195,14 +195,14 @@
 			);
 			dependencies = (
 			);
-			name = "Promise tvOS";
+			name = "Pill tvOS";
 			productName = "Promise tvOS";
-			productReference = 0C5108451D4E82B900F1F405 /* Promise.framework */;
+			productReference = 0C5108451D4E82B900F1F405 /* Pill.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		0CE051FF1D4E830700A12B45 /* Promise watchOS */ = {
+		0CE051FF1D4E830700A12B45 /* Pill watchOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0CE052071D4E830700A12B45 /* Build configuration list for PBXNativeTarget "Promise watchOS" */;
+			buildConfigurationList = 0CE052071D4E830700A12B45 /* Build configuration list for PBXNativeTarget "Pill watchOS" */;
 			buildPhases = (
 				0CE051FB1D4E830700A12B45 /* Sources */,
 				0CE051FC1D4E830700A12B45 /* Frameworks */,
@@ -213,9 +213,9 @@
 			);
 			dependencies = (
 			);
-			name = "Promise watchOS";
+			name = "Pill watchOS";
 			productName = "Promise watchOS";
-			productReference = 0CE052001D4E830700A12B45 /* Promise.framework */;
+			productReference = 0CE052001D4E830700A12B45 /* Pill.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -255,7 +255,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0C51081B1D4E81CE00F1F405 /* Build configuration list for PBXProject "Promise" */;
+			buildConfigurationList = 0C51081B1D4E81CE00F1F405 /* Build configuration list for PBXProject "Pill" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -267,10 +267,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0C5108361D4E824A00F1F405 /* Promise iOS */,
-				0C5108201D4E81CE00F1F405 /* Promise macOS */,
-				0C5108441D4E82B900F1F405 /* Promise tvOS */,
-				0CE051FF1D4E830700A12B45 /* Promise watchOS */,
+				0C5108361D4E824A00F1F405 /* Pill iOS */,
+				0C5108201D4E81CE00F1F405 /* Pill macOS */,
+				0C5108441D4E82B900F1F405 /* Pill tvOS */,
+				0CE051FF1D4E830700A12B45 /* Pill watchOS */,
 			);
 		};
 /* End PBXProject section */
@@ -450,8 +450,8 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
-				PRODUCT_NAME = Promise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
+				PRODUCT_NAME = Pill;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -474,8 +474,8 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
-				PRODUCT_NAME = Promise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
+				PRODUCT_NAME = Pill;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -496,8 +496,8 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
-				PRODUCT_NAME = Promise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
+				PRODUCT_NAME = Pill;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -521,8 +521,8 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
-				PRODUCT_NAME = Promise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
+				PRODUCT_NAME = Pill;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -544,8 +544,8 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
-				PRODUCT_NAME = Promise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
+				PRODUCT_NAME = Pill;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -568,8 +568,8 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
-				PRODUCT_NAME = Promise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
+				PRODUCT_NAME = Pill;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -592,8 +592,8 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
-				PRODUCT_NAME = Promise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
+				PRODUCT_NAME = Pill;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -616,8 +616,8 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Promise;
-				PRODUCT_NAME = Promise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
+				PRODUCT_NAME = Pill;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -630,7 +630,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0C51081B1D4E81CE00F1F405 /* Build configuration list for PBXProject "Promise" */ = {
+		0C51081B1D4E81CE00F1F405 /* Build configuration list for PBXProject "Pill" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0C5108271D4E81CE00F1F405 /* Debug */,
@@ -639,7 +639,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0C5108291D4E81CE00F1F405 /* Build configuration list for PBXNativeTarget "Promise macOS" */ = {
+		0C5108291D4E81CE00F1F405 /* Build configuration list for PBXNativeTarget "Pill macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0C51082A1D4E81CE00F1F405 /* Debug */,
@@ -648,7 +648,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0C51083C1D4E824A00F1F405 /* Build configuration list for PBXNativeTarget "Promise iOS" */ = {
+		0C51083C1D4E824A00F1F405 /* Build configuration list for PBXNativeTarget "Pill iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0C51083D1D4E824A00F1F405 /* Debug */,
@@ -657,7 +657,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0C51084A1D4E82B900F1F405 /* Build configuration list for PBXNativeTarget "Promise tvOS" */ = {
+		0C51084A1D4E82B900F1F405 /* Build configuration list for PBXNativeTarget "Pill tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0C51084B1D4E82B900F1F405 /* Debug */,
@@ -666,7 +666,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0CE052071D4E830700A12B45 /* Build configuration list for PBXNativeTarget "Promise watchOS" */ = {
+		0CE052071D4E830700A12B45 /* Build configuration list for PBXNativeTarget "Pill watchOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0CE052051D4E830700A12B45 /* Debug */,

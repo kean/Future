@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0C5108361D4E824A00F1F405"
                BuildableName = "Promise.framework"
-               BlueprintName = "Promise iOS"
-               ReferencedContainer = "container:Promise.xcodeproj">
+               BlueprintName = "Pill iOS"
+               ReferencedContainer = "container:Pill.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,8 +47,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0C5108361D4E824A00F1F405"
             BuildableName = "Promise.framework"
-            BlueprintName = "Promise iOS"
-            ReferencedContainer = "container:Promise.xcodeproj">
+            BlueprintName = "Pill iOS"
+            ReferencedContainer = "container:Pill.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -65,8 +65,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0C5108361D4E824A00F1F405"
             BuildableName = "Promise.framework"
-            BlueprintName = "Promise iOS"
-            ReferencedContainer = "container:Promise.xcodeproj">
+            BlueprintName = "Pill iOS"
+            ReferencedContainer = "container:Pill.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

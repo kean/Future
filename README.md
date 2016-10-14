@@ -1,4 +1,4 @@
-# Promise
+# Pill
 
 <p align="left">
 <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
@@ -23,4 +23,4 @@ cache.data(for: request)
 
 ## License
 
-Promise is available under the MIT license. See the LICENSE file for more info.
+Pill is available under the MIT license. See the LICENSE file for more info.

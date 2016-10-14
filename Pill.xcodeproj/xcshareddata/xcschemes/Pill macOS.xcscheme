@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0C5108441D4E82B900F1F405"
+               BlueprintIdentifier = "0C5108201D4E81CE00F1F405"
                BuildableName = "Promise.framework"
-               BlueprintName = "Promise tvOS"
-               ReferencedContainer = "container:Promise.xcodeproj">
+               BlueprintName = "Pill macOS"
+               ReferencedContainer = "container:Pill.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,10 +45,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0C5108441D4E82B900F1F405"
+            BlueprintIdentifier = "0C5108201D4E81CE00F1F405"
             BuildableName = "Promise.framework"
-            BlueprintName = "Promise tvOS"
-            ReferencedContainer = "container:Promise.xcodeproj">
+            BlueprintName = "Pill macOS"
+            ReferencedContainer = "container:Pill.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -63,10 +63,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0C5108441D4E82B900F1F405"
+            BlueprintIdentifier = "0C5108201D4E81CE00F1F405"
             BuildableName = "Promise.framework"
-            BlueprintName = "Promise tvOS"
-            ReferencedContainer = "container:Promise.xcodeproj">
+            BlueprintName = "Pill macOS"
+            ReferencedContainer = "container:Pill.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

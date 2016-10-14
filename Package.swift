@@ -5,5 +5,5 @@
 import PackageDescription
 
 let package = Package(
-    name: "Promise"
+    name: "Pill"
 )

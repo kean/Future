@@ -4,5 +4,5 @@
 
 @import Foundation;
 
-FOUNDATION_EXPORT double PromiseVersionNumber;
-FOUNDATION_EXPORT const unsigned char PromiseVersionString[];
+FOUNDATION_EXPORT double PillVersionNumber;
+FOUNDATION_EXPORT const unsigned char PillVersionString[];
