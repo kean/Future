@@ -9,7 +9,7 @@ Micro Promise under 100 sloc. Supports chaining, recovery, bubbles-up errors.
 
 ## Requirements
 
-- iOS 8.0 / watchOS 2.0 / OS X 10.10 / tvOS 9.0
+- iOS 9.0 / watchOS 2.0 / OS X 10.11 / tvOS 9.0
 - Xcode 8, Swift 3
 
 ## Usage
