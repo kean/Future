@@ -81,6 +81,15 @@ public extension Promise {
         return completion(on: queue, fulfill: closure, reject: nil)
     }
 
+    /// Transforms `Promise<T>` to `Promise<U>`.
+    ///
+    /// - parameter on: A queue on which the closure is executed. `.main` by default.
+    /// queue by default.
+    /// - returns: A promise fulfilled with a value returns by the closure.
+    public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> U) -> Promise<U> {
+        return then(on: queue) { Promise<U>(value: closure($0)) }
+    }
+
     /// The provided closure executes asynchronously when the promise fulfills
     /// with a value. Allows you to chain promises.
     ///
@@ -132,15 +141,6 @@ public extension Promise {
             case let .rejected(err): reject?(err)
             }
         }
-    }
-
-    /// Transforms `Promise<T>` to `Promise<U>`.
-    ///
-    /// - parameter on: A queue on which the closure is executed. `.main` by default.
-    /// queue by default.
-    /// - returns: A promise fulfilled with a value returns by the closure.
-    public func map<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> U) -> Promise<U> {
-        return then(on: queue) { Promise<U>(value: closure($0)) }
     }
 }
 
