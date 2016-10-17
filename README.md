@@ -1,4 +1,6 @@
-# Pill
+<p align="left"><img src="https://cloud.githubusercontent.com/assets/1567433/19457156/adeb407c-94cd-11e6-93fd-763d88aa873c.png" height="50"/>
+
+<hr>
 
 <p align="left">
 <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
@@ -20,6 +22,17 @@ cache.data(for: request)
     .then { cache.setData($0, for: request) }
     .then { process(data: $0) }
     .catch { error in print("catched \(error)") }
+```
+
+#### Synchronous Inspection
+
+```swift
+// Check if promise is pending
+promise.isPending
+
+// Retrieve the fulfillment value or the rejection reason
+promise.resolution?.value
+promise.resolution?.error
 ```
 
 ## License

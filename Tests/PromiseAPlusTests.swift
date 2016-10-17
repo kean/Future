@@ -873,30 +873,41 @@ class APlusTests: XCTestCase {
             }
         }
 
-        func testChaining() {
+        func test_2_2_7() {
             test("2.2.7: `then` must return a promise: `promise2 = promise1.then(onFulfilled, onRejected)") {
 
-                expect("`then` returns promise") { finish in
-                    let promise = Promise<Int>.fulfilledAsync()
-                    var callCount = 0
-
-                    let promise2 = promise.then {
-                        XCTAssertEqual($0, dummy)
-                        callCount += 1
-                        XCTAssertEqual(callCount, 1)
-                    }
-
-                    promise2.catch { _ in XCTFail() }
-
-                    promise2.then {
-                        XCTAssertEqual($0, dummy)
-                        callCount += 1
-                        XCTAssertEqual(callCount, 2)
-                        finish()
-                    }
+                test("is a promise") {
+                    // Doesn't make sense in Swift
+                }
+                
+                test("2.2.7.1: If either `onFulfilled` or `onRejected` returns a value `x`, run the Promise Resolution procedure `[[Resolve]](promise2, x)`") {
+                    // See separate 3.3 tests
+                }
+                
+                test("2.2.7.2: If either `onFulfilled` or `onRejected` throws an exception `e`, `promise2` must be rejected with `e` as the reason.") {
+                    // We don't test that since we don't allow then/catch to throw
+                }
+                
+                test("2.2.7.3: If `onFulfilled` is not a function and `promise1` is fulfilled, `promise2` must be fulfilled with the same value.") {
+                    // Doesn't make sense in Swift
+                }
+                
+                test("2.2.7.4: If `onRejected` is not a function and `promise1` is rejected, `promise2` must be rejected with the same reason.") {
+                    // Doesn't make sense in Swift
                 }
             }
-
+        }
+        
+        func test_2_3_1() {
+            test("2.3.1: If `promise` and `x` refer to the same object, reject `promise` with a `TypeError' as the reason.") {
+                // First of, this is really a fatal error which is a result of
+                // a programmatic error - it's not 'just an error'.
+                // Second of, Pill doesn't (yet) support this since it seems
+                // like an overkill at this point.
+            }
+        }
+        
+        func test_2_3_2() {
             test("2.3.2: If `x` is a promise, adopt its state") {
                 expect("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") { finish in
                     let promise = Promise<Int>() { _ in }
@@ -910,7 +921,10 @@ class APlusTests: XCTestCase {
                     }
                 }
             }
-
+        }
+        
+        func other() {
+            
             test("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
                 expect("`x` is already-fulfilled") { finish in
                     let promise = Promise<Int>(value: dummy)
@@ -920,7 +934,7 @@ class APlusTests: XCTestCase {
                         finish()
                     }
                 }
-
+                
                 expect("`x` is eventually-fulfilled") { finish in
                     let promise = Promise<Int>.fulfilledAsync()
                     let promise2 = promise.then { _ in }
@@ -930,7 +944,7 @@ class APlusTests: XCTestCase {
                     }
                 }
             }
-
+            
             test("2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.") {
                 expect("`x` is already-rejected") { finish in
                     let promise = Promise<Int>(error: Error.e1)
@@ -940,7 +954,7 @@ class APlusTests: XCTestCase {
                         finish()
                     }
                 }
-
+                
                 expect("`x` is eventually-rejected") { finish in
                     let promise = Promise<Int>.rejectedAsync()
                     let promise2 = promise.then { _ in }

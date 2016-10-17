@@ -58,7 +58,7 @@ public final class Promise<T> {
         return self
     }
 
-    // MARK: Properties
+    // MARK: Synchronous Inspection
 
     /// Returns `true` if the promise is still pending.
     public var isPending: Bool { return resolution == nil }
