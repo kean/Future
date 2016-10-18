@@ -131,14 +131,14 @@ class APlusTests: XCTestCase {
             test("2.2.2.1: it must be called after `promise` is fulfilled, with `promise`’s fulfillment value as its first argument.") {
                 expect("fulfill delayed") { finish in
                     Promise<Int>.fulfilledAsync().then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         finish()
                     }
                 }
 
                 expect("fulfill immediately") { finish in
-                    Promise<Int>(value: dummy).then {
-                        XCTAssertEqual($0, dummy)
+                    Promise<Int>(value: sentinel).then {
+                        XCTAssertEqual($0, sentinel)
                         finish()
                     }
                 }
@@ -176,7 +176,7 @@ class APlusTests: XCTestCase {
 
             test("2.2.2.3: it must not be called more than once.") {
                 expect("already-fulfilled") { finish in
-                    let promise = Promise<Int>(value: dummy)
+                    let promise = Promise<Int>(value: sentinel)
 
                     var timesCalled = 0
                     promise.then { _ -> Void in
@@ -235,15 +235,15 @@ class APlusTests: XCTestCase {
 
                     var timesCalled = 0
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
 
-                    fulfill(dummy)
+                    fulfill(sentinel)
 
                     after(ticks: 5) {
-                        fulfill(dummy)
+                        fulfill(sentinel)
                     }
 
                     after(ticks: 25) {
@@ -259,7 +259,7 @@ class APlusTests: XCTestCase {
 
                     after(ticks: 5) {
                         promise.then {
-                            XCTAssertEqual($0, dummy)
+                            XCTAssertEqual($0, sentinel)
                             timesCalled += 1
                             XCTAssertEqual(timesCalled, 1)
                         }
@@ -267,7 +267,7 @@ class APlusTests: XCTestCase {
 
                     after(ticks: 10) {
                         promise.then {
-                            XCTAssertEqual($0, dummy)
+                            XCTAssertEqual($0, sentinel)
                             timesCalled += 1
                             XCTAssertEqual(timesCalled, 2)
                         }
@@ -275,7 +275,7 @@ class APlusTests: XCTestCase {
 
                     after(ticks: 15) {
                         promise.then {
-                            XCTAssertEqual($0, dummy)
+                            XCTAssertEqual($0, sentinel)
                             timesCalled += 1
                             XCTAssertEqual(timesCalled, 3)
                             finish()
@@ -283,7 +283,7 @@ class APlusTests: XCTestCase {
                     }
 
                     after(ticks: 20) {
-                        fulfill(dummy)
+                        fulfill(sentinel)
                     }
                 }
 
@@ -293,15 +293,15 @@ class APlusTests: XCTestCase {
                     var timesCalled = 0
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
 
-                    fulfill(dummy)
+                    fulfill(sentinel)
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 2)
                         finish()
@@ -498,7 +498,7 @@ class APlusTests: XCTestCase {
         "platform code.") {
             test("`then` returns before the promise becomes fulfilled or rejected") {
                 expect("`then`") { finish in
-                    let promise = Promise<Int>(value: dummy)
+                    let promise = Promise<Int>(value: sentinel)
 
                     var thenHasReturned = false
 
@@ -534,7 +534,7 @@ class APlusTests: XCTestCase {
                         thenCalled = true;
                     }
 
-                    fulfill(dummy)
+                    fulfill(sentinel)
 
                     XCTAssertEqual(thenCalled, false)
                 }
@@ -544,7 +544,7 @@ class APlusTests: XCTestCase {
 
                     var thenCalled = false;
 
-                    fulfill(dummy)
+                    fulfill(sentinel)
 
                     promise.then { _ in
                         thenCalled = true;
@@ -554,7 +554,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when one `onFulfilled` is added inside another `onFulfilled`") { finish in
-                    let promise = Promise<Int>(value: dummy)
+                    let promise = Promise<Int>(value: sentinel)
 
                     var firstOnFulfilledFinished = false
 
@@ -569,7 +569,7 @@ class APlusTests: XCTestCase {
 
                 expect("when `onFulfilled` is added inside an `onRejected`") { finish in
                     let promise = Promise<Int>(error: Error.e1)
-                    let promise2 = Promise<Int>(value: dummy)
+                    let promise2 = Promise<Int>(value: sentinel)
 
                     var firstOnRejectedFinished = false
 
@@ -588,7 +588,7 @@ class APlusTests: XCTestCase {
                     var firstStackFinished = false
 
                     after(ticks: 1) {
-                        fulfill(dummy)
+                        fulfill(sentinel)
                         firstStackFinished = true
                     }
 
@@ -643,7 +643,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when `onRejected` is added inside an `onFulfilled`") { finish in
-                    let promise = Promise<Int>(value: dummy)
+                    let promise = Promise<Int>(value: sentinel)
                     let promise2 = Promise<Int>(error: Error.e1)
 
                     var firstOnFulfilledFinished = false
@@ -693,17 +693,17 @@ class APlusTests: XCTestCase {
                     let finisher = Finisher(finish, 3)
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         finisher.finish()
                     }
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         finisher.finish()
                     }
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         finisher.finish()
                     }
                 }
@@ -718,7 +718,7 @@ class APlusTests: XCTestCase {
                     let promise = Promise<Int>.fulfilledAsync()
 
                     promise.then { val -> Int in
-                        XCTAssertEqual(val, dummy)
+                        XCTAssertEqual(val, sentinel)
                         return 2
                     }.then {
                         XCTAssertEqual($0, 2)
@@ -726,7 +726,7 @@ class APlusTests: XCTestCase {
                     }
 
                     promise.then { val -> Int in
-                        XCTAssertEqual(val, dummy)
+                        XCTAssertEqual(val, sentinel)
                         return 3
                     }.then {
                         XCTAssertEqual($0, 3)
@@ -734,7 +734,7 @@ class APlusTests: XCTestCase {
                     }
 
                     promise.then { val -> Int in
-                        XCTAssertEqual(val, dummy)
+                        XCTAssertEqual(val, sentinel)
                         return 4
                     }.then {
                         XCTAssertEqual($0, 4)
@@ -747,20 +747,20 @@ class APlusTests: XCTestCase {
                     var callCount = 0
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 1)
                     }
 
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 2)
                     }
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 3)
                         finish()
@@ -774,17 +774,17 @@ class APlusTests: XCTestCase {
                     var callCount = 0
 
                     promise.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 1)
                         
                         promise.then {
-                            XCTAssertEqual($0, dummy)
+                            XCTAssertEqual($0, sentinel)
                             callCount += 1
                             XCTAssertEqual(callCount, 2)
                             
                             promise.then {
-                                XCTAssertEqual($0, dummy)
+                                XCTAssertEqual($0, sentinel)
                                 callCount += 1
                                 XCTAssertEqual(callCount, 3)
                                 finish()
@@ -909,15 +909,29 @@ class APlusTests: XCTestCase {
         
         func test_2_3_2() {
             test("2.3.2: If `x` is a promise, adopt its state") {
-                expect("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") { finish in
-                    let promise = Promise<Int>() { _ in }
-                    let promise2 = promise.then { _ in
-                        XCTFail()
+                test("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") {
+                    expect("via return from a fulfilled promise") { finish in
+                        let promise = Promise(value: 1).then { _ in
+                            return Promise<Int> { _ in } // pending
+                        }
+                        promise.completion { _ in
+                            XCTFail()
+                        }
+                        after(ticks: 20) {
+                            finish()
+                        }
                     }
-                    XCTAssertTrue(promise.isPending)
-                    XCTAssertTrue(promise2.isPending)
-                    after(ticks: 4) {
-                        finish()
+                 
+                    expect("via return from a rejected promise") { finish in
+                        let promise = Promise<Int>(error: Error.e1).recover { _ in
+                            return Promise<Int> { _ in } // pending
+                        }
+                        promise.completion { _ in
+                            XCTFail()
+                        }
+                        after(ticks: 20) {
+                            finish()
+                        }
                     }
                 }
             }
@@ -927,10 +941,10 @@ class APlusTests: XCTestCase {
             
             test("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
                 expect("`x` is already-fulfilled") { finish in
-                    let promise = Promise<Int>(value: dummy)
+                    let promise = Promise<Int>(value: sentinel)
                     let promise2 = promise.then { _ in }
                     promise2.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         finish()
                     }
                 }
@@ -939,7 +953,7 @@ class APlusTests: XCTestCase {
                     let promise = Promise<Int>.fulfilledAsync()
                     let promise2 = promise.then { _ in }
                     promise2.then {
-                        XCTAssertEqual($0, dummy)
+                        XCTAssertEqual($0, sentinel)
                         finish()
                     }
                 }

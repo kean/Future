@@ -72,7 +72,7 @@ enum Error: Swift.Error {
     case e2
 }
 
-let dummy = 1
+let sentinel = 1
 
 extension Promise {
     class func deferred() -> (promise: Promise, fulfill: (T) -> Void, reject: (Error) -> Void) {
@@ -85,7 +85,7 @@ extension Promise {
     class func fulfilledAsync() -> Promise<Int> {
         return Promise<Int>() { fulfill, _ in
             DispatchQueue.global().async {
-                fulfill(dummy)
+                fulfill(sentinel)
             }
         }
     }
