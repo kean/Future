@@ -1,6 +1,4 @@
-<p align="left"><img src="https://cloud.githubusercontent.com/assets/1567433/19468404/cbd6f2f6-951e-11e6-8f74-443ebb0d0a12.png" height="50"/>
-
-<hr>
+<p align="left"><img src="https://cloud.githubusercontent.com/assets/1567433/19490843/61cd2460-9579-11e6-9269-6cdebdf2a1cb.png" height="100"/>
 
 <p align="left">
 <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
