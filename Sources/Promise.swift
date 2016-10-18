@@ -13,6 +13,8 @@ public final class Promise<T> {
     private var state: State<T> = .pending(Handlers<T>())
     private let lock = NSLock()
 
+    // MARK: Creation
+
     /// Creates a new, pending promise.
     ///
     /// - parameter value: The provided closure is called immediately on the
@@ -38,18 +40,20 @@ public final class Promise<T> {
     /// Create a promise rejected with a given error.
     public init(error: Error) { state = .resolved(.rejected(error)) }
 
+    // MARK: Finally
+
     /// The provided closure executes asynchronously when the promise resolves.
     ///
-    /// - parameter on: A queue on which the closure is executed. `.main` by default.
+    /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: self
-    @discardableResult public func completion(on queue: DispatchQueue = .main, _ closure: @escaping (Resolution<T>) -> Void) -> Promise {
-        let completion: (Resolution<T>) -> Void = { resolution in
+    @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping (Resolution<T>) -> Void) -> Promise {
+        let _closure: (Resolution<T>) -> Void = { resolution in
             queue.async { closure(resolution) }
         }
         lock.lock(); defer { lock.unlock() }
         switch state {
-        case let .pending(handlers): handlers.objects.append(completion)
-        case let .resolved(resolution): completion(resolution)
+        case let .pending(handlers): handlers.objects.append(_closure)
+        case let .resolved(resolution): _closure(resolution)
         }
         return self
     }
@@ -63,20 +67,23 @@ public final class Promise<T> {
     }
 }
 
+/// Extensions on top of `finally`.
 public extension Promise {
+
+    // MARK: Then
 
     /// The provided closure executes asynchronously when the promise fulfills
     /// with a value.
     ///
-    /// - parameter on: A queue on which the closure is executed. `.main` by default.
+    /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: self
     @discardableResult public func then(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> Void) -> Promise {
-        return completion(on: queue, then: closure, catch: nil)
+        return finally(on: queue, then: closure, catch: nil)
     }
 
     /// Transforms `Promise<T>` to `Promise<U>`.
     ///
-    /// - parameter on: A queue on which the closure is executed. `.main` by default.
+    /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// queue by default.
     /// - returns: A promise fulfilled with a value returns by the closure.
     public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> U) -> Promise<U> {
@@ -86,19 +93,21 @@ public extension Promise {
     /// The provided closure executes asynchronously when the promise fulfills
     /// with a value. Allows you to chain promises.
     ///
-    /// - parameter on: A queue on which the closure is executed. `.main` by default.
+    /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise that resolves with the resolution of the promise
     /// returned by the given closure.
     public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> Promise<U>) -> Promise<U> {
         return Promise<U>() { fulfill, reject in
-            completion(
+            finally(
                 on: queue,
                 then: { // resolve new promise with the promise returned by the closure
-                    closure($0).completion(on: queue, then: fulfill, catch: reject)
+                    closure($0).finally(on: queue, then: fulfill, catch: reject)
                 },
                 catch: reject) // bubble up error
         }
     }
+
+    // MARK: Catch
 
     /// The provided closure executes asynchronously when the promise is
     /// rejected with an error.
@@ -106,30 +115,30 @@ public extension Promise {
     /// A promise bubbles up errors. It allows you to catch all errors returned
     /// by a chain of promises with a single `catch()`.
     ///
-    /// - parameter on: A queue on which the closure is executed. `.main` by default.
+    /// - parameter on: A queue on which the closure is run. `.main` by default.
     @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Void) -> Promise {
-        return completion(on: queue, then: nil, catch: closure)
+        return finally(on: queue, then: nil, catch: closure)
     }
 
     /// Unlike `catch` `recover` allows you to continue the chain of promises
     /// by recovering from the error by creating a new promise.
     ///
-    /// - parameter on: A queue on which the closure is executed. `.main` by default.
+    /// - parameter on: A queue on which the closure is run. `.main` by default.
     public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Promise) -> Promise {
         return Promise() { fulfill, reject in
-            completion(
+            finally(
                 on: queue,
                 then: fulfill, // bubble up value
                 catch: { // resolve new promise with the promise returned by the closure
-                    closure($0).completion(on: queue, then: fulfill, catch: reject)
+                    closure($0).finally(on: queue, then: fulfill, catch: reject)
             })
         }
     }
 
     /// Private convenience method on top of `completion(on:closure:)`.
     /// Allows you to add `then` and `catch` closures with a single call.
-    @discardableResult private func completion(on queue: DispatchQueue = .main, then: ((T) -> Void)?, `catch`: ((Error) -> Void)?) -> Promise {
-        return completion(on: queue) {
+    @discardableResult private func finally(on queue: DispatchQueue = .main, then: ((T) -> Void)?, `catch`: ((Error) -> Void)?) -> Promise {
+        return finally(on: queue) {
             switch $0 {
             case let .fulfilled(val): then?(val)
             case let .rejected(err): `catch`?(err)
@@ -138,7 +147,6 @@ public extension Promise {
     }
 }
 
-// FIXME: make nested when compiler adds support for it
 private final class Handlers<T> {
     var objects = [(Resolution<T>) -> Void]() // boxed handlers
 }
