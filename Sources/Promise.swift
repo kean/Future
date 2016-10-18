@@ -37,7 +37,7 @@ public final class Promise<T> {
     /// Creates a promise fulfilled with a given value.
     public init(value: T) { state = .resolved(.fulfilled(value)) }
 
-    /// Create a promise rejected with a given error.
+    /// Creates a promise rejected with a given error.
     public init(error: Error) { state = .resolved(.rejected(error)) }
 
     // MARK: Finally
@@ -46,7 +46,7 @@ public final class Promise<T> {
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: self
-    @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping (Resolution<T>) -> Void) -> Promise {
+    @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping (Resolution<T>) -> Void) -> Promise<T> {
         let _closure: (Resolution<T>) -> Void = { resolution in
             queue.async { closure(resolution) }
         }
@@ -77,7 +77,7 @@ public extension Promise {
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: self
-    @discardableResult public func then(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> Void) -> Promise {
+    @discardableResult public func then(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> Void) -> Promise<T> {
         return finally(on: queue, then: closure, catch: nil)
     }
 
@@ -116,7 +116,7 @@ public extension Promise {
     /// by a chain of promises with a single `catch()`.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
-    @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Void) -> Promise {
+    @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Void) -> Promise<T> {
         return finally(on: queue, then: nil, catch: closure)
     }
 
@@ -124,8 +124,8 @@ public extension Promise {
     /// by recovering from the error by creating a new promise.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
-    public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Promise) -> Promise {
-        return Promise() { fulfill, reject in
+    public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Promise<T>) -> Promise<T> {
+        return Promise<T>() { fulfill, reject in
             finally(
                 on: queue,
                 then: fulfill, // bubble up value
@@ -137,7 +137,7 @@ public extension Promise {
 
     /// Private convenience method on top of `completion(on:closure:)`.
     /// Allows you to add `then` and `catch` closures with a single call.
-    @discardableResult private func finally(on queue: DispatchQueue = .main, then: ((T) -> Void)?, `catch`: ((Error) -> Void)?) -> Promise {
+    @discardableResult private func finally(on queue: DispatchQueue = .main, then: ((T) -> Void)?, `catch`: ((Error) -> Void)?) -> Promise<T> {
         return finally(on: queue) {
             switch $0 {
             case let .fulfilled(val): then?(val)
