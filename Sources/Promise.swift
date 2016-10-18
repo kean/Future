@@ -10,8 +10,6 @@ import Foundation
 /// Promises start in a *pending* state and *resolve* with a value to become
 /// *fulfilled* or an `Error` to become *rejected*.
 public final class Promise<T> {
-    // Promise is built into Nuke to avoid fetching external dependencies.
-
     private var state: State<T> = .pending(Handlers<T>())
     private let lock = NSLock()
 
@@ -24,23 +22,21 @@ public final class Promise<T> {
         closure({ self.resolve(.fulfilled($0)) }, { self.resolve(.rejected($0)) })
     }
 
-    /// Creates a promise fulfilled with a given value.
-    public init(value: T) {
-        state = .resolved(.fulfilled(value))
-    }
-
-    /// Create a promise rejected with a given error.
-    public init(error: Error) {
-        state = .resolved(.rejected(error))
-    }
-
     private func resolve(_ resolution: Resolution<T>) {
         lock.lock(); defer { lock.unlock() }
         if case let .pending(handlers) = state {
             state = .resolved(resolution)
+            // Handlers only contain `queue.async` calls which are fast
+            // enough for a critical section (no real need to optimize this).
             handlers.objects.forEach { $0(resolution) }
         }
     }
+
+    /// Creates a promise fulfilled with a given value.
+    public init(value: T) { state = .resolved(.fulfilled(value)) }
+
+    /// Create a promise rejected with a given error.
+    public init(error: Error) { state = .resolved(.rejected(error)) }
 
     /// The provided closure executes asynchronously when the promise resolves.
     ///
@@ -59,9 +55,6 @@ public final class Promise<T> {
     }
 
     // MARK: Synchronous Inspection
-
-    /// Returns `true` if the promise is still pending.
-    public var isPending: Bool { return resolution == nil }
 
     /// Returns resolution if the promise has already resolved.
     public var resolution: Resolution<T>? {
@@ -114,8 +107,8 @@ public extension Promise {
     /// by a chain of promises with a single `catch()`.
     ///
     /// - parameter on: A queue on which the closure is executed. `.main` by default.
-    @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Void) {
-        completion(on: queue, then: nil, catch: closure)
+    @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Void) -> Promise {
+        return completion(on: queue, then: nil, catch: closure)
     }
 
     /// Unlike `catch` `recover` allows you to continue the chain of promises

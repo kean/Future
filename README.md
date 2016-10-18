@@ -27,9 +27,6 @@ cache.data(for: request)
 #### Synchronous Inspection
 
 ```swift
-// Check if promise is pending
-promise.isPending
-
 // Retrieve the fulfillment value or the rejection reason
 promise.resolution?.value
 promise.resolution?.error
