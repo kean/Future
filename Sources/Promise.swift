@@ -78,7 +78,7 @@ public extension Promise {
     /// - parameter on: A queue on which the closure is executed. `.main` by default.
     /// - returns: self
     @discardableResult public func then(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> Void) -> Promise {
-        return completion(on: queue, fulfill: closure, reject: nil)
+        return completion(on: queue, then: closure, catch: nil)
     }
 
     /// Transforms `Promise<T>` to `Promise<U>`.
@@ -100,10 +100,10 @@ public extension Promise {
         return Promise<U>() { fulfill, reject in
             completion(
                 on: queue,
-                fulfill: { // resolve new promise with the promise returned by the closure
-                    closure($0).completion(on: queue, fulfill: fulfill, reject: reject)
+                then: { // resolve new promise with the promise returned by the closure
+                    closure($0).completion(on: queue, then: fulfill, catch: reject)
                 },
-                reject: reject) // bubble up error
+                catch: reject) // bubble up error
         }
     }
 
@@ -115,7 +115,7 @@ public extension Promise {
     ///
     /// - parameter on: A queue on which the closure is executed. `.main` by default.
     @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Void) {
-        completion(on: queue, fulfill: nil, reject: closure)
+        completion(on: queue, then: nil, catch: closure)
     }
 
     /// Unlike `catch` `recover` allows you to continue the chain of promises
@@ -126,19 +126,20 @@ public extension Promise {
         return Promise() { fulfill, reject in
             completion(
                 on: queue,
-                fulfill: fulfill, // bubble up value
-                reject: { // resolve new promise with the promise returned by the closure
-                    closure($0).completion(on: queue, fulfill: fulfill, reject: reject)
+                then: fulfill, // bubble up value
+                catch: { // resolve new promise with the promise returned by the closure
+                    closure($0).completion(on: queue, then: fulfill, catch: reject)
             })
         }
     }
 
     /// Private convenience method on top of `completion(on:closure:)`.
-    @discardableResult private func completion(on queue: DispatchQueue = .main, fulfill: ((T) -> Void)?, reject: ((Error) -> Void)?) -> Promise {
+    /// Allows you to add `then` and `catch` closures with a single call.
+    @discardableResult private func completion(on queue: DispatchQueue = .main, then: ((T) -> Void)?, `catch`: ((Error) -> Void)?) -> Promise {
         return completion(on: queue) {
             switch $0 {
-            case let .fulfilled(val): fulfill?(val)
-            case let .rejected(err): reject?(err)
+            case let .fulfilled(val): then?(val)
+            case let .rejected(err): `catch`?(err)
             }
         }
     }

@@ -5,14 +5,10 @@
 import XCTest
 import Pill
 
-// Tests were migrated from JS https://github.com/promises-aplus/promises-tests
+// Tests migrated from JS https://github.com/promises-aplus/promises-tests
 
 class APlusTests: XCTestCase {
-    
-    func testThatPromiseIsCreatedInPendingState() {
-        XCTAssertEqual(Promise<Void>() { _ in }.isPending, true)
-    }
-    
+        
     func test_2_1_2() {
         test("2.1.2.1: When fulfilled, a promise: must not transition to any other state.") {
 

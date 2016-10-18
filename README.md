@@ -7,7 +7,7 @@
 <a href="https://travis-ci.org/kean/Pill"><img src="https://img.shields.io/travis/kean/Pill/master.svg"></a>
 </p>
 
-Micro Promise under 100 sloc. Supports chaining, recovery, bubbles-up errors.
+Micro Promise under 100 sloc. Supports chaining, recovery, bubbles-up errors. Covered by Promise/A+ [test suite](https://github.com/promises-aplus/promises-tests).
 
 ## Requirements
 
