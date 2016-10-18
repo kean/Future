@@ -934,49 +934,56 @@ class APlusTests: XCTestCase {
                         }
                     }
                 }
+
+                test("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
+                    expect("`x` is already-fulfilled") { finish in
+                        let promise = Promise<Int>(value: sentinel).then { _ in }
+                        promise.then {
+                            XCTAssertEqual($0, sentinel)
+                            finish()
+                        }
+                    }
+
+                    expect("`x` is eventually-fulfilled") { finish in
+                        let promise = Promise<Int>.fulfilledAsync().then { _ in }
+                        promise.then {
+                            XCTAssertEqual($0, sentinel)
+                            finish()
+                        }
+                    }
+                }
+
+
+                test("2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.") {
+                    expect("`x` is already-rejected") { finish in
+                        let promise = Promise<Int>(error: Error.e1).then { _ in }
+                        promise.catch {
+                            XCTAssertEqual($0 as? Error, Error.e1)
+                            finish()
+                        }
+                    }
+
+                    expect("`x` is eventually-rejected") { finish in
+                        let promise = Promise<Int>.rejectedAsync().then { _ in }
+                        promise.catch {
+                            XCTAssertEqual($0 as? Error, Error.e1)
+                            finish()
+                        }
+                    }
+                }
             }
         }
-        
-        func other() {
-            
-            test("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
-                expect("`x` is already-fulfilled") { finish in
-                    let promise = Promise<Int>(value: sentinel)
-                    let promise2 = promise.then { _ in }
-                    promise2.then {
-                        XCTAssertEqual($0, sentinel)
-                        finish()
-                    }
-                }
-                
-                expect("`x` is eventually-fulfilled") { finish in
-                    let promise = Promise<Int>.fulfilledAsync()
-                    let promise2 = promise.then { _ in }
-                    promise2.then {
-                        XCTAssertEqual($0, sentinel)
-                        finish()
-                    }
-                }
+
+        func test_2_3_3() {
+            test("2.3.3: Otherwise, if `x` is an object or function,") {
+                // Most of those tests doesn't make sense in Swift
+                // FIXME: Get back to it later, there might be some usefull tests
             }
-            
-            test("2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.") {
-                expect("`x` is already-rejected") { finish in
-                    let promise = Promise<Int>(error: Error.e1)
-                    let promise2 = promise.then { _ in }
-                    promise2.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
-                        finish()
-                    }
-                }
-                
-                expect("`x` is eventually-rejected") { finish in
-                    let promise = Promise<Int>.rejectedAsync()
-                    let promise2 = promise.then { _ in }
-                    promise2.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
-                        finish()
-                    }
-                }
+        }
+
+        func test_2_3_4() {
+            test("2.3.4: If `x` is not an object or function, fulfill `promise` with `x`") {
+                // Doesn't make sense in Swift
             }
         }
     }
