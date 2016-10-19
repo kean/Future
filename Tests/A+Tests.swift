@@ -17,8 +17,8 @@ class APlusTests: XCTestCase {
                     fulfill(0)
                     fulfill(1)
                 }
-                promise.finally {
-                    XCTAssertEqual($0.value, 0)
+                promise.then {
+                    XCTAssertEqual($0, 0)
                     finish()
                 }
             }
@@ -28,8 +28,8 @@ class APlusTests: XCTestCase {
                     fulfill(0)
                     reject(Error.e1)
                 }
-                promise.finally {
-                    XCTAssertEqual($0.value, 0)
+                promise.then {
+                    XCTAssertEqual($0, 0)
                     finish()
                 }
             }
@@ -41,8 +41,8 @@ class APlusTests: XCTestCase {
                         reject(Error.e1)
                     }
                 }
-                promise.finally {
-                    XCTAssertEqual($0.value, 0)
+                promise.then {
+                    XCTAssertEqual($0, 0)
                     finish()
                 }
             }
@@ -54,8 +54,8 @@ class APlusTests: XCTestCase {
                         reject(Error.e1)
                     }
                 }
-                promise.finally {
-                    XCTAssertEqual($0.value, 0)
+                promise.then {
+                    XCTAssertEqual($0, 0)
                     finish()
                 }
             }
@@ -70,8 +70,8 @@ class APlusTests: XCTestCase {
                     reject(Error.e1)
                     reject(Error.e2)
                 }
-                promise.finally {
-                    XCTAssertEqual($0.error as? Error, Error.e1)
+                promise.catch {
+                    XCTAssertEqual($0 as? Error, Error.e1)
                     finish()
                 }
             }
@@ -81,8 +81,8 @@ class APlusTests: XCTestCase {
                     reject(Error.e1)
                     fulfill(1)
                 }
-                promise.finally {
-                    XCTAssertEqual($0.error as? Error, Error.e1)
+                promise.catch {
+                    XCTAssertEqual($0 as? Error, Error.e1)
                     finish()
                 }
             }
@@ -94,8 +94,8 @@ class APlusTests: XCTestCase {
                         fulfill(1)
                     }
                 }
-                promise.finally {
-                    XCTAssertEqual($0.error as? Error, Error.e1)
+                promise.catch {
+                    XCTAssertEqual($0 as? Error, Error.e1)
                     finish()
                 }
             }
@@ -107,8 +107,8 @@ class APlusTests: XCTestCase {
                         fulfill(1)
                     }
                 }
-                promise.finally {
-                    XCTAssertEqual($0.error as? Error, Error.e1)
+                promise.catch {
+                    XCTAssertEqual($0 as? Error, Error.e1)
                     finish()
                 }
             }
@@ -933,7 +933,7 @@ class APlusTests: XCTestCase {
 
                 test("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
                     expect("`x` is already-fulfilled") { finish in
-                        let promise = Promise<Int>(value: sentinel).then { _ in }
+                        let promise = Promise<Int>(value: sentinel).then { return $0 }
                         promise.then {
                             XCTAssertEqual($0, sentinel)
                             finish()
@@ -941,7 +941,7 @@ class APlusTests: XCTestCase {
                     }
 
                     expect("`x` is eventually-fulfilled") { finish in
-                        let promise = Promise<Int>.fulfilledAsync().then { _ in }
+                        let promise = Promise<Int>.fulfilledAsync().then { return $0 }
                         promise.then {
                             XCTAssertEqual($0, sentinel)
                             finish()
