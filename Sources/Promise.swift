@@ -21,21 +21,28 @@ public final class Promise<T> {
     /// current thread. In the closure you should start an asynchronous task and
     /// call either `fulfill` or `reject` when it completes.
     public init(_ closure: (_ fulfill: @escaping (T) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
-        closure({ self.resolve(.fulfilled($0)) }, { self.resolve(.rejected($0)) })
+        closure({ self._fulfill($0) }, { self._reject($0) })
     }
-
-    private func resolve(_ state: State<T>) {
-        lock.lock(); defer { lock.unlock() }
-        if case let .pending(handlers) = self.state {
-            self.state = state
+    
+    private func _fulfill(_ value: T) {
+        _resolve { handlers in
+            state = .fulfilled(value)
             // Handlers only contain `queue.async` calls which are fast
             // enough for a critical section (no real need to optimize this).
-            switch state {
-            case let .fulfilled(value): handlers.fulfill.forEach { $0(value) }
-            case let .rejected(error): handlers.reject.forEach { $0(error) }
-            default: return
-            }
+            handlers.fulfill.forEach { $0(value) }
         }
+    }
+    
+    private func _reject(_ error: Error) {
+        _resolve { handlers in
+            state = .rejected(error)
+            handlers.reject.forEach { $0(error) }
+        }
+    }
+    
+    private func _resolve(_ closure: (Handlers<T>) -> Void) {
+        lock.lock(); defer { lock.unlock() }
+        if case let .pending(handlers) = state { closure(handlers) }
     }
     
     /// Creates a promise fulfilled with a given value.
@@ -47,16 +54,18 @@ public final class Promise<T> {
     // MARK: Synchronous Inspection
 
     public var value: T? { // a bit of ninja coding
+        lock.lock(); defer { lock.unlock() }
         if case let .fulfilled(val) = state { return val } else { return nil }
     }
     
     public var error: Error? {
+        lock.lock(); defer { lock.unlock() }
         if case let .rejected(err) = state { return err } else { return nil }
     }
 
     // MARK: Callbacks
     
-    private func observe(on queue: DispatchQueue, fulfill: @escaping (T) -> Void, reject: @escaping (Error) -> Void) {
+    private func _observe(on queue: DispatchQueue, fulfill: @escaping (T) -> Void, reject: @escaping (Error) -> Void) {
         // `fulfill` and `reject` are called asynchronously on `queue`
         let _fulfill: (T) -> Void = { value in queue.async { fulfill(value) } }
         let _reject: (Error) -> Void = { error in queue.async { reject(error) } }
@@ -78,9 +87,9 @@ public final class Promise<T> {
     /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// queue by default.
     /// - returns: A promise fulfilled with a value returns by the closure.
-    @discardableResult public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> U) -> Promise<U> {
+    @discardableResult public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) throws -> U) -> Promise<U> {
         return _then(on: queue) { value, fulfill, _ in
-            fulfill(closure(value))
+            fulfill(try closure(value))
         }
     }
 
@@ -90,18 +99,20 @@ public final class Promise<T> {
     /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise that resolves with the resolution of the promise
     /// returned by the given closure.
-    @discardableResult public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) -> Promise<U>) -> Promise<U> {
+    @discardableResult public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) throws -> Promise<U>) -> Promise<U> {
         return _then(on: queue) { value, fulfill, reject in
-            closure(value).observe(on: queue, fulfill: fulfill, reject: reject)
+            try closure(value)._observe(on: queue, fulfill: fulfill, reject: reject)
         }
     }
     
     /// Returns a new promise.
     /// - when `self` is fufilled the closure is called (you control it)
     /// - when `self` is rejected the promise is rejected
-    private func _then<U>(on queue: DispatchQueue, _ closure: @escaping (T, @escaping (U) -> Void, @escaping (Error) -> Void) -> Void) -> Promise<U> {
+    private func _then<U>(on queue: DispatchQueue, _ closure: @escaping (T, @escaping (U) -> Void, @escaping (Error) -> Void) throws -> Void) -> Promise<U> {
         return Promise<U>() { fulfill, reject in
-            observe(on: queue, fulfill: { closure($0, fulfill, reject) }, reject: reject)
+            _observe(on: queue, fulfill: {
+                do { try closure($0, fulfill, reject) } catch { reject(error) }
+            }, reject: reject)
         }
     }
 
@@ -114,10 +125,10 @@ public final class Promise<T> {
     /// by a chain of promises with a single `catch()`.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
-    @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Void) -> Promise<T> {
+    @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) throws -> Void) -> Promise<T> {
         return _catch(on: queue) { error, _, reject in
-            closure(error)
-            reject(error)
+            try closure(error)
+            reject(error) // If closure doesn't throw, bubble previous error up
         }
     }
 
@@ -125,25 +136,27 @@ public final class Promise<T> {
     /// by recovering from the error by creating a new promise.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
-    @discardableResult public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Promise<T>) -> Promise<T> {
+    @discardableResult public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) throws -> Promise<T>) -> Promise<T> {
         return _catch(on: queue) { error, fulfill, reject in
-            closure(error).observe(on: queue, fulfill: fulfill, reject: reject)
+            try closure(error)._observe(on: queue, fulfill: fulfill, reject: reject)
         }
     }
     
     /// Returns a new promise.
     /// - when `self` is fufilled the promise is fulfilled
     /// - when `self` is rejected the closure is called (you control it)
-    private func _catch(on queue: DispatchQueue, _ closure: @escaping (Error, @escaping (T) -> Void, @escaping (Error) -> Void) -> Void) -> Promise<T> {
+    private func _catch(on queue: DispatchQueue, _ closure: @escaping (Error, @escaping (T) -> Void, @escaping (Error) -> Void) throws -> Void) -> Promise<T> {
         return Promise<T>() { fulfill, reject in
-            observe(on: queue, fulfill: fulfill, reject: { closure($0, fulfill, reject) })
+            _observe(on: queue, fulfill: fulfill, reject: {
+                do { try closure($0, fulfill, reject) } catch { reject(error) }
+            })
         }
     }
     
     // MARK: Finally
     
     @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping (Void) -> Void) -> Promise<T> {
-        observe(on: queue, fulfill: { _ in closure() }, reject: { _ in closure() })
+        _observe(on: queue, fulfill: { _ in closure() }, reject: { _ in closure() })
         return self
     }
 }
