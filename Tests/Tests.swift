@@ -21,8 +21,8 @@ class PromiseTests: XCTestCase {
             Promise(value: 1).then { value -> Promise<Int> in
                 throw Error.e1
             }.catch {
-                    XCTAssertEqual($0 as? Error, Error.e1)
-                    finish()
+                XCTAssertEqual($0 as? Error, Error.e1)
+                finish()
             }
         }
         

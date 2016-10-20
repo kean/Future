@@ -4,8 +4,9 @@
 
 import Foundation
 
-/// A promise is an object that represents an asynchronous task. Use `then()`
-/// to get the result of the promise. Use `catch()` to catch errors.
+/// A promise represents a value which may be available now, or in the future,
+/// or never. Use `then()` to get the result of the promise. Use `catch()`
+/// to catch errors.
 ///
 /// Promises start in a *pending* state and either get *fulfilled* with a
 /// value or get *rejected* with an error.
@@ -17,9 +18,9 @@ public final class Promise<T> {
 
     /// Creates a new, pending promise.
     ///
-    /// - parameter value: The provided closure is called immediately on the
-    /// current thread. In the closure you should start an asynchronous task and
-    /// call either `fulfill` or `reject` when it completes.
+    /// - parameter closure: The closure is called immediately on the current
+    /// thread. You should start an asynchronous task and call either `fulfill`
+    /// or `reject` when it completes.
     public init(_ closure: (_ fulfill: @escaping (T) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
         closure({ self._fulfill($0) }, { self._reject($0) })
     }
@@ -53,8 +54,8 @@ public final class Promise<T> {
     
     // MARK: Synchronous Inspection
 
-    public var value: T? { // a bit of ninja coding
-        lock.lock(); defer { lock.unlock() }
+    public var value: T? {
+        lock.lock(); defer { lock.unlock() } // a bit of ninja coding
         if case let .fulfilled(val) = state { return val } else { return nil }
     }
     
@@ -66,7 +67,7 @@ public final class Promise<T> {
     // MARK: Callbacks
     
     private func _observe(on queue: DispatchQueue, fulfill: @escaping (T) -> Void, reject: @escaping (Error) -> Void) {
-        // `fulfill` and `reject` are called asynchronously on `queue`
+        // `fulfill` and `reject` are called asynchronously on the `queue`
         let _fulfill: (T) -> Void = { value in queue.async { fulfill(value) } }
         let _reject: (Error) -> Void = { error in queue.async { reject(error) } }
         
@@ -82,11 +83,11 @@ public final class Promise<T> {
     
     // MARK: Then
     
-    /// Transforms `Promise<T>` to `Promise<U>`.
+    /// The provided closure executes asynchronously when the promise fulfills
+    /// with a value.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
-    /// queue by default.
-    /// - returns: A promise fulfilled with a value returns by the closure.
+    /// - returns: A promise fulfilled with a value returned by the closure.
     @discardableResult public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) throws -> U) -> Promise<U> {
         return _then(on: queue) { value, fulfill, _ in
             fulfill(try closure(value))
@@ -94,11 +95,10 @@ public final class Promise<T> {
     }
 
     /// The provided closure executes asynchronously when the promise fulfills
-    /// with a value. Allows you to chain promises.
+    /// with a value.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
-    /// - returns: A promise that resolves with the resolution of the promise
-    /// returned by the given closure.
+    /// - returns: A promise that resolves by the promise returned by the closure.
     @discardableResult public func then<U>(on queue: DispatchQueue = .main, _ closure: @escaping (T) throws -> Promise<U>) -> Promise<U> {
         return _then(on: queue) { value, fulfill, reject in
             try closure(value)._observe(on: queue, fulfill: fulfill, reject: reject)
@@ -133,9 +133,21 @@ public final class Promise<T> {
     }
 
     /// Unlike `catch` `recover` allows you to continue the chain of promises
+    /// by recovering from the error by returning a new value.
+    ///
+    /// - parameter on: A queue on which the closure is run. `.main` by default.
+    /// - returns: A promise fulfilled with a value returned by the closure.
+    @discardableResult public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) throws -> T) -> Promise<T> {
+        return _catch(on: queue) { error, fulfill, _ in
+            fulfill(try closure(error))
+        }
+    }
+    
+    /// Unlike `catch` `recover` allows you to continue the chain of promises
     /// by recovering from the error by creating a new promise.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
+    /// - returns: A promise that resolves by the promise returned by the closure.
     @discardableResult public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) throws -> Promise<T>) -> Promise<T> {
         return _catch(on: queue) { error, fulfill, reject in
             try closure(error)._observe(on: queue, fulfill: fulfill, reject: reject)
@@ -155,6 +167,10 @@ public final class Promise<T> {
     
     // MARK: Finally
     
+    /// The provided closure executes asynchronously when the promise is
+    /// either fulfilled or rejected. Returns `self`.
+    ///
+    /// - parameter on: A queue on which the closure is run. `.main` by default.
     @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping (Void) -> Void) -> Promise<T> {
         _observe(on: queue, fulfill: { _ in closure() }, reject: { _ in closure() })
         return self
