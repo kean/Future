@@ -60,6 +60,7 @@
 		0C5108371D4E824A00F1F405 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C5108451D4E82B900F1F405 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C7E0EB81DBA0E3E00BA75EC /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		0C7E0EB91DBA0F1900BA75EC /* Pill.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pill.podspec; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D091DB14588001F6D96 /* Pill.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pill.h; sourceTree = "<group>"; };
@@ -175,6 +176,7 @@
 		0CAA5D061DB14524001F6D96 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				0C7E0EB91DBA0F1900BA75EC /* Pill.podspec */,
 				0CAA5D071DB14531001F6D96 /* Package.swift */,
 				0CAA5D081DB14531001F6D96 /* README.md */,
 				0C7E0EB81DBA0E3E00BA75EC /* CHANGELOG.md */,
