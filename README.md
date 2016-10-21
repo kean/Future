@@ -1,33 +1,81 @@
 <p align="left"><img src="https://cloud.githubusercontent.com/assets/1567433/19490843/61cd2460-9579-11e6-9269-6cdebdf2a1cb.png" height="100"/>
 
 <p align="left">
-<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
+<img src="https://img.shields.io/cocoapods/v/Pill.svg?label=version">
+<img src="https://img.shields.io/badge/supports-CocoaPods%20%7C%20Carthage%20%7C%20SwiftPM-green.svg">
+<img src="https://img.shields.io/cocoapods/p/Pill.svg?style=flat)">
 <a href="https://travis-ci.org/kean/Pill"><img src="https://img.shields.io/travis/kean/Pill/master.svg"></a>
 </p>
 
-Micro Promise under 100 sloc. Supports chaining, recovery, bubbles-up errors. Covered by Promise/A+ [test suite](https://github.com/promises-aplus/promises-tests).
+Micro Promise/A+ under 100 lines of code. Has all the essential features, adapted for Swift. Covered by Promise/A+ [test suite](https://github.com/promises-aplus/promises-tests).
 
 ## Requirements
 
 - iOS 9.0 / watchOS 2.0 / OS X 10.11 / tvOS 9.0
-- Xcode 8, Swift 3
+- Xcode 8
+- Swift 3
 
-## Usage
+## API
+
+### Promise/A+
+
+Instead of a single `promise.then(onFulfilled, onRejected)` method Pill has a bunch of type-safe methods with the same functionality:
+
+Equivalent to `onFulfilled`:
 
 ```swift
-cache.data(for: request)
-    .recover { error in loadData(with: request) }
-    .then { cache.setData($0, for: request) }
-    .then { process(data: $0) }
-    .catch { error in print("catched \(error)") }
+func then<U>(_ closure: @escaping (T) throws -> U) -> Promise<U>
+func then<U>(_ closure: @escaping (T) throws -> Promise<U>) -> Promise<U>
 ```
 
-#### Synchronous Inspection
+Equivalent to `onRejected`:
 
 ```swift
-// Retrieve the fulfillment value or the rejection reason
-promise.resolution?.value
-promise.resolution?.error
+func catch(_ closure: @escaping (Error) throws -> Void) -> Promise<T>
+func recover(_ closure: @escaping (Error) throws -> T) -> Promise<T>
+func recover(_ closure: @escaping (Error) throws -> Promise<T>) -> Promise<T>
+```
+
+Each of the `then` / `catch` methods also have an `on queue: DispatchQueue` parameter which is `.main` by default.
+
+Additions:
+
+```swift
+func finally(_ closure: @escaping (Void) -> Void) -> Promise<T>
+```
+
+### Creating Promise
+
+```swift
+let promise = Promise { fulfill, reject in
+    URLSession.shared.dataTask(with: url) { data, _, error in
+        if let data = data {
+            fulfill(data)
+        } else {
+            reject(error ?? Error.unknown)
+        }
+    }.resume()
+}
+```
+
+Already fulfilled:
+
+```swift
+let promise = Promise(value: 1)
+```
+
+Already rejected:
+
+```swift
+let promise = Promise<Int>(error: Error.unknown)
+```
+
+### Synchronous Inspection
+
+```swift
+var isPending: Bool
+var value: T?
+var error: Error?
 ```
 
 ## License
