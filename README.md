@@ -48,11 +48,11 @@ func finally(_ closure: @escaping (Void) -> Void) -> Promise<T>
 
 ```swift
 let promise = Promise { fulfill, reject in
-    URLSession.shared.dataTask(with: url) { data, _, error in
-        if let data = data {
-            fulfill(data)
+    doSomething { value, error in
+        if let value = value {
+            fulfill(value)
         } else {
-            reject(error ?? Error.unknown)
+            reject(error)
         }
     }.resume()
 }
