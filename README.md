@@ -44,7 +44,7 @@ Additions:
 func finally(_ closure: @escaping (Void) -> Void) -> Promise<T>
 ```
 
-### Creating Promise
+### Creating Promises
 
 ```swift
 let promise = Promise { fulfill, reject in
