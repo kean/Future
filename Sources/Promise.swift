@@ -51,18 +51,6 @@ public final class Promise<T> {
 
     /// Creates a promise rejected with a given error.
     public init(error: Error) { state = .rejected(error) }
-    
-    // MARK: Synchronous Inspection
-
-    public var value: T? {
-        lock.lock(); defer { lock.unlock() } // a bit of ninja coding
-        if case let .fulfilled(val) = state { return val } else { return nil }
-    }
-    
-    public var error: Error? {
-        lock.lock(); defer { lock.unlock() }
-        if case let .rejected(err) = state { return err } else { return nil }
-    }
 
     // MARK: Callbacks
     
@@ -174,6 +162,22 @@ public final class Promise<T> {
     @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping (Void) -> Void) -> Promise<T> {
         _observe(on: queue, fulfill: { _ in closure() }, reject: { _ in closure() })
         return self
+    }
+    
+    // MARK: Synchronous Inspection
+    
+    /// Returns `true` the promise hasn't resolved yet.
+    public var isPending: Bool { if case .pending(_) = _state { return true } else { return false } }
+    
+    /// Returns the `value` which promise was `fulfilled` with.
+    public var value: T? { if case let .fulfilled(val) = _state { return val } else { return nil } }
+    
+    /// Returns the `error` which promise was `rejected` with.
+    public var error: Error? { if case let .rejected(err) = _state { return err } else { return nil } }
+    
+    private var _state: State<T> {
+        lock.lock(); defer { lock.unlock() }
+        return state
     }
 }
 
