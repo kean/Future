@@ -71,8 +71,7 @@ public final class Promise<T> {
     
     // MARK: Then
     
-    /// The provided closure executes asynchronously when the promise fulfills
-    /// with a value.
+    /// The given closure executes asynchronously when the promise is fulfilled.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise fulfilled with a value returned by the closure.
@@ -82,8 +81,7 @@ public final class Promise<T> {
         }
     }
 
-    /// The provided closure executes asynchronously when the promise fulfills
-    /// with a value.
+    /// The given closure executes asynchronously when the promise is fulfilled.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise that resolves by the promise returned by the closure.
@@ -106,8 +104,7 @@ public final class Promise<T> {
 
     // MARK: Catch
 
-    /// The provided closure executes asynchronously when the promise is
-    /// rejected with an error.
+    /// The given closure executes asynchronously when the promise is rejected.
     ///
     /// A promise bubbles up errors. It allows you to catch all errors returned
     /// by a chain of promises with a single `catch()`.
