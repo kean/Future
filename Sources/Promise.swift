@@ -156,7 +156,7 @@ public final class Promise<T> {
     /// either fulfilled or rejected. Returns `self`.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
-    @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping (Void) -> Void) -> Promise<T> {
+    @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping () -> Void) -> Promise<T> {
         _observe(on: queue, fulfill: { _ in closure() }, reject: { _ in closure() })
         return self
     }
