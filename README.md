@@ -12,8 +12,8 @@ Micro Promise/A+ under 100 lines of code. Has all the essential features, adapte
 ## Requirements
 
 - iOS 9.0 / watchOS 2.0 / OS X 10.11 / tvOS 9.0
-- Xcode 8
-- Swift 3
+- Xcode 9
+- Swift 4
 
 ## API
 
