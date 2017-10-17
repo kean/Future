@@ -12,7 +12,7 @@ import Pill
 var descriptions = [String]() // stack of test descriptions
 
 extension XCTestCase {
-    func test(_ description: String, _ block: (Void) -> Void = {}) -> Void {
+    func test(_ description: String, _ block: () -> Void = {}) -> Void {
         precondition(Thread.isMainThread)
 
         descriptions.append(description)
@@ -20,7 +20,7 @@ extension XCTestCase {
         descriptions.removeLast()
     }
     
-    func expect(_ description: String = "GenericExpectation", _ block: (_ fulfill: @escaping (Void) -> Void) -> Void) {
+    func expect(_ description: String = "GenericExpectation", _ block: (_ fulfill: @escaping () -> Void) -> Void) {
         precondition(Thread.isMainThread)
 
         descriptions.append(description)
@@ -36,8 +36,8 @@ extension XCTestCase {
         return self.expectation(description: "GenericExpectation")
     }
 
-    func expectNotification(_ name: Notification.Name, object: AnyObject? = nil, handler: XCNotificationExpectationHandler? = nil) -> XCTestExpectation {
-        return self.expectation(forNotification: name.rawValue, object: object, handler: handler)
+    func expectNotification(_ name: Notification.Name, object: AnyObject? = nil, handler: XCTNSNotificationExpectation.Handler? = nil) -> XCTestExpectation {
+        return self.expectation(forNotification: NSNotification.Name(rawValue: name.rawValue), object: object, handler: handler)
     }
 
     func wait(_ timeout: TimeInterval = 2.0, handler: XCWaitCompletionHandler? = nil) {
@@ -103,9 +103,9 @@ extension Promise {
 
 class Finisher {
     private var _count: Int
-    private let _finish: (Void) -> Void
+    private let _finish: () -> Void
 
-    init(_ finish: @escaping (Void) -> Void, _ count: Int) {
+    init(_ finish: @escaping () -> Void, _ count: Int) {
         self._finish = finish
         self._count = count
     }
