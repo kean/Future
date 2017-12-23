@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'Pill'
-    s.version          = '0.3'
+    s.version          = '0.4'
     s.summary          = 'Micro Promise/A+ under 100 lines of code'
     s.homepage         = 'https://github.com/kean/Pill'
     s.license          = 'MIT'
