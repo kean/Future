@@ -11,8 +11,10 @@ import Foundation
 /// Promises start in a *pending* state and either get *fulfilled* with a
 /// value or get *rejected* with an error.
 public final class Promise<T> {
-    private var state: State<T> = .pending(Handlers())
-    private let lock = NSLock()
+    // previous `State` based approach was easier to reason about but was
+    // harder to implement in a performant way.
+    private var handlers: Handlers<T>? // nil when finished
+    private var result: Result<T>? // nil when pending
 
     // MARK: Creation
 
@@ -22,35 +24,37 @@ public final class Promise<T> {
     /// thread. You should start an asynchronous task and call either `fulfill`
     /// or `reject` when it completes.
     public init(_ closure: (_ fulfill: @escaping (T) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
+        handlers = Handlers<T>()
         closure({ self._fulfill($0) }, { self._reject($0) })
     }
     
     private func _fulfill(_ value: T) {
-        _resolve { handlers in
-            state = .fulfilled(value)
-            // Handlers only contain `queue.async` calls which are fast
-            // enough for a critical section (no real need to optimize this).
-            handlers.fulfill.forEach { $0(value) }
+        if let handlers = _resolve(.fulfilled(value)) {
+            handlers.fulfill.forEach { $0(value) } // called outside of lock
         }
     }
-    
+
     private func _reject(_ error: Error) {
-        _resolve { handlers in
-            state = .rejected(error)
-            handlers.reject.forEach { $0(error) }
+        if let handlers = _resolve(.rejected(error)) {
+            handlers.reject.forEach { $0(error) } // called outside of lock
         }
     }
-    
-    private func _resolve(_ closure: (Handlers<T>) -> Void) {
-        lock.lock(); defer { lock.unlock() }
-        if case let .pending(handlers) = state { closure(handlers) }
+
+    // Return handlers to call if promise was resolved.
+    private func _resolve(_ result: Result<T>) -> Handlers<T>? {
+        _lock.lock(); defer { _lock.unlock() }
+        guard self.result == nil else { return nil } // already resolved
+        self.result = result
+        let handlers = self.handlers
+        self.handlers = nil
+        return handlers
     }
-    
+
     /// Creates a promise fulfilled with a given value.
-    public init(value: T) { state = .fulfilled(value) }
+    public init(value: T) { result = .fulfilled(value) }
 
     /// Creates a promise rejected with a given error.
-    public init(error: Error) { state = .rejected(error) }
+    public init(error: Error) { result = .rejected(error) }
 
     // MARK: Callbacks
     
@@ -58,17 +62,24 @@ public final class Promise<T> {
         // `fulfill` and `reject` are called asynchronously on the `queue`
         let _fulfill: (T) -> Void = { value in queue.async { fulfill(value) } }
         let _reject: (Error) -> Void = { error in queue.async { reject(error) } }
-        
-        lock.lock(); defer { lock.unlock() }
-        switch state {
-        case let .pending(handlers):
-            handlers.fulfill.append(_fulfill)
-            handlers.reject.append(_reject)
-        case let .fulfilled(value): _fulfill(value)
-        case let .rejected(error): _reject(error)
+
+        if let result = _register(fulfill: _fulfill, reject: _reject) {
+            // already resolved
+            switch result {
+            case let .fulfilled(value): _fulfill(value)
+            case let .rejected(error): _reject(error)
+            }
         }
     }
-    
+
+    /// Either registered observers of returns result if resolved.
+    private func _register(fulfill: @escaping (T) -> Void, reject: @escaping (Error) -> Void) -> Result<T>? {
+        _lock.lock(); defer { _lock.unlock() }
+        handlers?.fulfill.append(fulfill)
+        handlers?.reject.append(reject)
+        return result
+    }
+
     // MARK: Then
     
     /// The given closure executes asynchronously when the promise is fulfilled.
@@ -164,17 +175,19 @@ public final class Promise<T> {
     // MARK: Synchronous Inspection
     
     /// Returns `true` the promise hasn't resolved yet.
-    public var isPending: Bool { if case .pending(_) = _state { return true } else { return false } }
+    public var isPending: Bool { return _lock.sync { result == nil } }
     
     /// Returns the `value` which promise was `fulfilled` with.
-    public var value: T? { if case let .fulfilled(val) = _state { return val } else { return nil } }
+    public var value: T? { return _lock.sync { result?.value } }
     
     /// Returns the `error` which promise was `rejected` with.
-    public var error: Error? { if case let .rejected(err) = _state { return err } else { return nil } }
-    
-    private var _state: State<T> {
-        lock.lock(); defer { lock.unlock() }
-        return state
+    public var error: Error? { return _lock.sync { result?.error } }
+}
+
+extension NSLock {
+    func sync<T>(_ closure: () -> T) -> T {
+        lock(); defer { unlock() }
+        return closure()
     }
 }
 
@@ -183,6 +196,21 @@ private final class Handlers<T> { // boxed handlers
     var reject = [(Error) -> Void]()
 }
 
-private enum State<T> {
-    case pending(Handlers<T>), fulfilled(T), rejected(Error)
+private enum Result<T> {
+    case fulfilled(T), rejected(Error)
+    /// Returns a `value` if the result is success.
+
+    var value: T? {
+        if case let .fulfilled(val) = self { return val } else { return nil }
+    }
+
+    /// Returns an `error` if the result is failure.
+    var error: Error? {
+        if case let .rejected(err) = self { return err } else { return nil }
+    }
 }
+
+// We use the same lock across different tokens because the design of Promise
+// prevents potential issues. For example, closures registered with a Promise
+// are never executed inside a lock.
+private let _lock = NSLock()
