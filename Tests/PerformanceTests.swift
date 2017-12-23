@@ -9,7 +9,7 @@ import Pill
 class PromisePerformanceTests: XCTestCase {
     func testCreation() {
         measure {
-            for _ in 0..<100_00 {
+            for _ in 0..<100_000 {
                 let _ = Promise<Int> { (_,_) in
                     return // do nothing
                 }
