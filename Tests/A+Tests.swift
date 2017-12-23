@@ -908,9 +908,9 @@ class APlusTests: XCTestCase {
                 test("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") {
                     expect("via return from a fulfilled promise") { finish in
                         let promise = Promise(value: 1).then { _ in
-                            return Promise<Int> { _ in } // pending
+                            return Promise<Int> { (_,_) in } // pending
                         }
-                        promise.finally { _ in
+                        promise.finally {
                             XCTFail()
                         }
                         after(ticks: 20) {
@@ -920,9 +920,9 @@ class APlusTests: XCTestCase {
                  
                     expect("via return from a rejected promise") { finish in
                         let promise = Promise<Int>(error: Error.e1).recover { _ in
-                            return Promise<Int> { _ in } // pending
+                            return Promise<Int> { (_,_) in } // pending
                         }
-                        promise.finally { _ in
+                        promise.finally {
                             XCTFail()
                         }
                         after(ticks: 20) {

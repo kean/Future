@@ -1,13 +1,13 @@
 language: objective-c
 os: osx
-osx_image: xcode8
+osx_image: xcode9
 
 env:
   global:
-  - IOS_FRAMEWORK_SCHEME="Pill iOS"
-  - MACOS_FRAMEWORK_SCHEME="Pill macOS"
-  - TVOS_FRAMEWORK_SCHEME="Pill tvOS"
-  - WATCHOS_FRAMEWORK_SCHEME="Pill watchOS"
+  - IOS_SCHEME="Pill iOS"
+  - MACOS_SCHEME="Pill macOS"
+  - TVOS_SCHEME="Pill tvOS"
+  - WATCHOS_SCHEME="Pill watchOS"
 
   matrix:
   matrix:

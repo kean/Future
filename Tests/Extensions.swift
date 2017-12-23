@@ -20,7 +20,7 @@ extension XCTestCase {
         descriptions.removeLast()
     }
     
-    func expect(_ description: String = "GenericExpectation", _ block: (_ fulfill: @escaping () -> Void) -> Void) {
+    func expect(_ description: String = "GenericExpectation", file: StaticString = #file, line: UInt = #line, _ block: (_ fulfill: @escaping () -> Void) -> Void) {
         precondition(Thread.isMainThread)
 
         descriptions.append(description)

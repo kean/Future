@@ -11,7 +11,7 @@ import Foundation
 /// Promises start in a *pending* state and either get *fulfilled* with a
 /// value or get *rejected* with an error.
 public final class Promise<T> {
-    private var state: State = .pending(Handlers())
+    private var state: State<T> = .pending(Handlers())
     private let lock = NSLock()
 
     // MARK: Creation
@@ -41,7 +41,7 @@ public final class Promise<T> {
         }
     }
     
-    private func _resolve(_ closure: (Handlers) -> Void) {
+    private func _resolve(_ closure: (Handlers<T>) -> Void) {
         lock.lock(); defer { lock.unlock() }
         if case let .pending(handlers) = state { closure(handlers) }
     }
@@ -172,19 +172,17 @@ public final class Promise<T> {
     /// Returns the `error` which promise was `rejected` with.
     public var error: Error? { if case let .rejected(err) = _state { return err } else { return nil } }
     
-    private var _state: State {
+    private var _state: State<T> {
         lock.lock(); defer { lock.unlock() }
         return state
     }
+}
 
-    /// MARK: Helpers
+private final class Handlers<T> { // boxed handlers
+    var fulfill = [(T) -> Void]()
+    var reject = [(Error) -> Void]()
+}
 
-    private final class Handlers { // boxed handlers
-        var fulfill = [(T) -> Void]()
-        var reject = [(Error) -> Void]()
-    }
-
-    private enum State {
-        case pending(Handlers), fulfilled(T), rejected(Error)
-    }
+private enum State<T> {
+    case pending(Handlers<T>), fulfilled(T), rejected(Error)
 }

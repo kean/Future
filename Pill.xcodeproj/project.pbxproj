@@ -11,6 +11,9 @@
 		0C20715C1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
 		0C20715D1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
 		0C20715E1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
+		0C74EED01FEE9FA900732850 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */; };
+		0C74EED11FEE9FA900732850 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */; };
+		0C74EED21FEE9FA900732850 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */; };
 		0CAA5D0A1DB1458F001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CAA5D0B1DB14595001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CAA5D0C1DB1459A001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -59,6 +62,7 @@
 		0C5108301D4E820D00F1F405 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C5108371D4E824A00F1F405 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C5108451D4E82B900F1F405 /* Pill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		0C7E0EB81DBA0E3E00BA75EC /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		0C7E0EB91DBA0F1900BA75EC /* Pill.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pill.podspec; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -192,6 +196,7 @@
 				0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */,
 				0CC528C61DB823FF004E09CB /* Tests.swift */,
 				0CAA5D221DB14859001F6D96 /* Extensions.swift */,
+				0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -374,7 +379,7 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = NR8DLKJ7E6;
 						DevelopmentTeamName = "ALEXANDER GREBENUK";
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 					0C5108361D4E824A00F1F405 = {
@@ -520,6 +525,7 @@
 			files = (
 				0CAA5D211DB14780001F6D96 /* A+Tests.swift in Sources */,
 				0CC528C71DB823FF004E09CB /* Tests.swift in Sources */,
+				0C74EED01FEE9FA900732850 /* PerformanceTests.swift in Sources */,
 				0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -530,6 +536,7 @@
 			files = (
 				0CAA5D331DB14912001F6D96 /* A+Tests.swift in Sources */,
 				0CC528C81DB823FF004E09CB /* Tests.swift in Sources */,
+				0C74EED11FEE9FA900732850 /* PerformanceTests.swift in Sources */,
 				0CAA5D341DB14912001F6D96 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -540,6 +547,7 @@
 			files = (
 				0CAA5D441DB1496B001F6D96 /* A+Tests.swift in Sources */,
 				0CC528C91DB82400004E09CB /* Tests.swift in Sources */,
+				0C74EED21FEE9FA900732850 /* PerformanceTests.swift in Sources */,
 				0CAA5D451DB1496B001F6D96 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -701,7 +709,8 @@
 				PRODUCT_NAME = Pill;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -724,7 +733,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Pill;
 				PRODUCT_NAME = Pill;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -796,7 +806,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
@@ -819,7 +829,7 @@
 				PRODUCT_NAME = Pill;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
@@ -839,7 +849,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Pill-iOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -857,7 +866,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Pill-iOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -874,7 +882,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Pill-tvOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
@@ -890,7 +898,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Pill-tvOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -908,7 +916,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Pill-macOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -924,7 +932,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Pill-macOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -946,7 +954,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -969,7 +977,7 @@
 				PRODUCT_NAME = Pill;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
