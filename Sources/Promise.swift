@@ -11,8 +11,6 @@ import Foundation
 /// Promises start in a *pending* state and either get *fulfilled* with a
 /// value or get *rejected* with an error.
 public final class Promise<T> {
-    // previous `State` based approach was easier to reason about but was
-    // harder to implement in a performant way.
     private var handlers: Handlers<T>? // nil when finished
     private var result: Result<T>? // nil when pending
 
@@ -25,29 +23,25 @@ public final class Promise<T> {
     /// or `reject` when it completes.
     public init(_ closure: (_ fulfill: @escaping (T) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
         handlers = Handlers<T>()
-        closure({ self._fulfill($0) }, { self._reject($0) })
+        closure({ self._fulfill($0) }, { self._reject($0) }) // retain self
     }
     
     private func _fulfill(_ value: T) {
-        if let handlers = _resolve(.fulfilled(value)) {
-            handlers.fulfill.forEach { $0(value) } // called outside of lock
-        }
+        _resolve(.fulfilled(value))?.fulfill.forEach { $0(value) }
     }
 
     private func _reject(_ error: Error) {
-        if let handlers = _resolve(.rejected(error)) {
-            handlers.reject.forEach { $0(error) } // called outside of lock
-        }
+        _resolve(.rejected(error))?.reject.forEach { $0(error) }
     }
 
-    // Return handlers to call if promise was resolved.
+    // Return handlers to call if promise was resolved. Returns nil otherwise.
     private func _resolve(_ result: Result<T>) -> Handlers<T>? {
         _lock.lock(); defer { _lock.unlock() }
         guard self.result == nil else { return nil } // already resolved
         self.result = result
         let handlers = self.handlers
         self.handlers = nil
-        return handlers
+        return handlers // returns handlers to be used outside of critical section
     }
 
     /// Creates a promise fulfilled with a given value.
@@ -63,16 +57,16 @@ public final class Promise<T> {
         let _fulfill: (T) -> Void = { value in queue.async { fulfill(value) } }
         let _reject: (Error) -> Void = { error in queue.async { reject(error) } }
 
-        if let result = _register(fulfill: _fulfill, reject: _reject) {
-            // already resolved
-            switch result {
-            case let .fulfilled(value): _fulfill(value)
-            case let .rejected(error): _reject(error)
-            }
+        guard let result = _register(fulfill: _fulfill, reject: _reject) else { return }
+
+        // already resolved
+        switch result {
+        case let .fulfilled(value): _fulfill(value)
+        case let .rejected(error): _reject(error)
         }
     }
 
-    /// Either registered observers of returns result if resolved.
+    /// Registers observer if pending, returns result otherwise.
     private func _register(fulfill: @escaping (T) -> Void, reject: @escaping (Error) -> Void) -> Result<T>? {
         _lock.lock(); defer { _lock.unlock() }
         handlers?.fulfill.append(fulfill)
@@ -186,25 +180,23 @@ public final class Promise<T> {
 
 extension NSLock {
     func sync<T>(_ closure: () -> T) -> T {
-        lock(); defer { unlock() }
+        lock(); defer { unlock() };
         return closure()
     }
 }
 
-private final class Handlers<T> { // boxed handlers
-    var fulfill = [(T) -> Void]()
-    var reject = [(Error) -> Void]()
+private struct Handlers<T> { // boxed handlers
+    var fulfill = ContiguousArray<(T) -> Void>()
+    var reject = ContiguousArray<(Error) -> Void>()
 }
 
 private enum Result<T> {
     case fulfilled(T), rejected(Error)
-    /// Returns a `value` if the result is success.
 
     var value: T? {
         if case let .fulfilled(val) = self { return val } else { return nil }
     }
 
-    /// Returns an `error` if the result is failure.
     var error: Error? {
         if case let .rejected(err) = self { return err } else { return nil }
     }
