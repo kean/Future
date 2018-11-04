@@ -1,3 +1,7 @@
+## Pill 0.5
+
+Updated to Swift 4.2
+
 ## Pill 0.4
 
 Improve performance:
