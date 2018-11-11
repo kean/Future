@@ -7,7 +7,7 @@
 <a href="https://travis-ci.org/kean/Pill"><img src="https://img.shields.io/travis/kean/Pill/master.svg"></a>
 </p>
 
-Micro Promise/A+ under 100 lines of code. Has all the essential features, adapted for Swift. Covered by Promise/A+ [test suite](https://github.com/promises-aplus/promises-tests).
+A streamlined `Future<Value, Error>` implementation with typed errors and a Swifty API.
 
 ## Requirements
 
@@ -15,67 +15,112 @@ Micro Promise/A+ under 100 lines of code. Has all the essential features, adapte
 - Xcode 10
 - Swift 4.2
 
-## API
+## Quick Start
 
-### Promise/A+
-
-Instead of a single `promise.then(onFulfilled, onRejected)` method Pill has a bunch of type-safe methods with the same functionality:
-
-Equivalent to `onFulfilled`:
+To access the result of the `Future`, use `func on(success:failure:completion:)`:
 
 ```swift
-func then<U>(_ closure: @escaping (T) throws -> U) -> Promise<U>
-func then<U>(_ closure: @escaping (T) throws -> Promise<U>) -> Promise<U>
+let future = Future<Int, Error>(value: 1)
+
+future.on(
+    success: { print("value: \($0)" },
+    failure: { print("error: \($0)" },
+    completion: { print("either succeeded or failed" }
+)
 ```
 
-Equivalent to `onRejected`:
+By default, all the callbacks are called on the main queue. To observe changes on a different queue use `func observeOn(_queue:)`:
 
 ```swift
-func catch(_ closure: @escaping (Error) throws -> Void) -> Promise<T>
-func recover(_ closure: @escaping (Error) throws -> T) -> Promise<T>
-func recover(_ closure: @escaping (Error) throws -> Promise<T>) -> Promise<T>
+future.observeOn(DispatchQueue.global())
+    .on(success: { print("value: \($0)" })
 ```
 
-Each of the `then` / `catch` methods also have an `on queue: DispatchQueue` parameter which is `.main` by default.
+### Mapping Values
 
-Additions:
+Use familiar `map` and `flatMap` function to transform the future's values and chain futures:
 
 ```swift
-func finally(_ closure: @escaping (Void) -> Void) -> Promise<T>
+let user: Future<User, Error>
+func loadAvatar(url: URL) -> Future<UIImage, Error> {}
+
+let avatar = user
+    .map { $0.avatarURL }
+    .flatMap(loadAvatar)
 ```
 
-### Creating Promises
+### Mapping Errors
+
+`Future` has typed errors. To convert from one error type to another use `mapError`:
 
 ```swift
-let promise = Promise { fulfill, reject in
-    doSomething { value, error in
-        if let value = value {
-            fulfill(value)
-        } else {
-            reject(error)
-        }
-    }.resume()
+let request: Future<Data, URLError>
+request.mapError(MyError.init(urlError:))
+```
+
+Use `flatMapError` to "recover" from an error.
+
+### Creating Futures
+
+Using `Promise`:
+
+```swift
+func someAsyncOperation(args) -> Future<Value, Error> {
+    let promise = Promise<Value, Error>()
+    someAsyncOperationWithCallback(args) { result -> Void in
+        // when finished...
+        promise.succeed(result: result)
+        // if error...
+        promise.fail(error: error)
+    }
+    return promise.future
 }
 ```
 
-Already fulfilled:
+Using a convenience init method:
 
 ```swift
-let promise = Promise(value: 1)
+let future = Future<Int, Error> { succeed, fail in
+    someAsyncOperationWithCallback { value, error in
+        // succeed or fail
+    }
+}
 ```
 
-Already rejected:
+With a value:
 
 ```swift
-let promise = Promise<Int>(error: Error.unknown)
+let future = Future<Int, Error>(value: 1)
+```
+
+With an error:
+
+```swift
+let future = Future<Int, Error>(error: Error.unknown)
+```
+
+### Operators
+
+Use `func and(_ future:)` to wait for two futures to a result:
+
+```swift
+let user: Future<User, Error>
+let avatar: Future<UIImage, Error>
+
+user.and(avatar).on(success: { value in
+    let (user, avatar) = (value.0, value.1)
+    // use both values
+})
 ```
 
 ### Synchronous Inspection
 
 ```swift
-var isPending: Bool
-var value: T?
-var error: Error?
+class Future {
+    var isPending: Bool
+    var value: T?
+    var error: Error?
+}
 ```
 
 ## License
