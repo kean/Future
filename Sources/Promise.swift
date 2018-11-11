@@ -79,38 +79,30 @@ public final class Promise<Value, Error> {
         }
     }
 
-    // MARK: Then
+    // MARK: Map
     
     /// The given closure executes asynchronously when the promise is fulfilled.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise fulfilled with a value returned by the closure.
-    @discardableResult public func then<NewValue>(on queue: DispatchQueue = .main, _ closure: @escaping (Value) -> NewValue) -> Promise<NewValue, Error> {
-        return _then(on: queue) { value, fulfill, _ in
-            fulfill(closure(value))
-        }
+    @discardableResult public func map<NewValue>(on queue: DispatchQueue = .main, _ closure: @escaping (Value) -> NewValue) -> Promise<NewValue, Error> {
+        return flatMap(on: queue, { value in
+            Promise<NewValue, Error>(value: closure(value))
+        })
     }
 
     /// The given closure executes asynchronously when the promise is fulfilled.
     ///
     /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise that resolves by the promise returned by the closure.
-    @discardableResult public func then<NewValue>(on queue: DispatchQueue = .main, _ closure: @escaping (Value) -> Promise<NewValue, Error>) -> Promise<NewValue, Error> {
-        return _then(on: queue) { value, fulfill, reject in
-            closure(value)._observe(on: queue, fulfill: fulfill, reject: reject)
-        }
-    }
-    
-    /// Returns a new promise.
-    /// - when `self` is fufilled the closure is called (you control it)
-    /// - when `self` is rejected the promise is rejected
-    private func _then<NewValue>(on queue: DispatchQueue, _ closure: @escaping (Value, @escaping (NewValue) -> Void, @escaping (Error) -> Void) -> Void) -> Promise<NewValue, Error> {
-        return Promise<NewValue, Error>() { fulfill, reject in
-            _observe(on: queue, fulfill: {
-                closure($0, fulfill, reject)
+    @discardableResult public func flatMap<NewValue>(on queue: DispatchQueue = .main, _ closure: @escaping (Value) -> Promise<NewValue, Error>) -> Promise<NewValue, Error> {
+        return Promise<NewValue, Error> { fulfill, reject in
+            _observe(on: queue, fulfill: { value in
+                closure(value)._observe(on: queue, fulfill: fulfill, reject: reject)
             }, reject: reject)
         }
     }
+
 
     // MARK: Catch
 

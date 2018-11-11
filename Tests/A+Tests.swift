@@ -17,7 +17,7 @@ class APlusTests: XCTestCase {
                     fulfill(0)
                     fulfill(1)
                 }
-                promise.then {
+                promise.map {
                     XCTAssertEqual($0, 0)
                     finish()
                 }
@@ -28,7 +28,7 @@ class APlusTests: XCTestCase {
                     fulfill(0)
                     reject(MyError.e1)
                 }
-                promise.then {
+                promise.map {
                     XCTAssertEqual($0, 0)
                     finish()
                 }
@@ -41,7 +41,7 @@ class APlusTests: XCTestCase {
                         reject(MyError.e1)
                     }
                 }
-                promise.then {
+                promise.map {
                     XCTAssertEqual($0, 0)
                     finish()
                 }
@@ -54,7 +54,7 @@ class APlusTests: XCTestCase {
                         reject(MyError.e1)
                     }
                 }
-                promise.then {
+                promise.map {
                     XCTAssertEqual($0, 0)
                     finish()
                 }
@@ -126,14 +126,14 @@ class APlusTests: XCTestCase {
 
             test("2.2.2.1: it must be called after `promise` is fulfilled, with `promise`’s fulfillment value as its first argument.") {
                 expect("fulfill delayed") { finish in
-                    Promise<Int, MyError>.fulfilledAsync().then {
+                    Promise<Int, MyError>.fulfilledAsync().map {
                         XCTAssertEqual($0, sentinel)
                         finish()
                     }
                 }
 
                 expect("fulfill immediately") { finish in
-                    Promise<Int, MyError>(value: sentinel).then {
+                    Promise<Int, MyError>(value: sentinel).map {
                         XCTAssertEqual($0, sentinel)
                         finish()
                     }
@@ -145,7 +145,7 @@ class APlusTests: XCTestCase {
                     let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var called = false
-                    promise.then { _ -> Void in
+                    promise.map { _ -> Void in
                         called = true
                         finish()
                     }
@@ -161,7 +161,7 @@ class APlusTests: XCTestCase {
                 expect("never fulfilled") { finish in
                     let (promise, _, _) = Promise<Int, MyError>.deferred()
 
-                    promise.then { _ -> Void in
+                    promise.map { _ -> Void in
                         XCTFail()
                     }
                     after(ticks: 5) {
@@ -175,7 +175,7 @@ class APlusTests: XCTestCase {
                     let promise = Promise<Int, MyError>(value: sentinel)
 
                     var timesCalled = 0
-                    promise.then { _ -> Void in
+                    promise.map { _ -> Void in
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
@@ -190,7 +190,7 @@ class APlusTests: XCTestCase {
                     let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
-                    promise.then { _ -> Void in
+                    promise.map { _ -> Void in
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
@@ -209,7 +209,7 @@ class APlusTests: XCTestCase {
                     let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
-                    promise.then { _ -> Void in
+                    promise.map { _ -> Void in
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
@@ -230,7 +230,7 @@ class APlusTests: XCTestCase {
                     let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
@@ -254,7 +254,7 @@ class APlusTests: XCTestCase {
                     var timesCalled = 0
 
                     after(ticks: 5) {
-                        promise.then {
+                        promise.map {
                             XCTAssertEqual($0, sentinel)
                             timesCalled += 1
                             XCTAssertEqual(timesCalled, 1)
@@ -262,7 +262,7 @@ class APlusTests: XCTestCase {
                     }
 
                     after(ticks: 10) {
-                        promise.then {
+                        promise.map {
                             XCTAssertEqual($0, sentinel)
                             timesCalled += 1
                             XCTAssertEqual(timesCalled, 2)
@@ -270,7 +270,7 @@ class APlusTests: XCTestCase {
                     }
 
                     after(ticks: 15) {
-                        promise.then {
+                        promise.map {
                             XCTAssertEqual($0, sentinel)
                             timesCalled += 1
                             XCTAssertEqual(timesCalled, 3)
@@ -288,7 +288,7 @@ class APlusTests: XCTestCase {
 
                     var timesCalled = 0
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
@@ -296,7 +296,7 @@ class APlusTests: XCTestCase {
 
                     fulfill(sentinel)
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 2)
@@ -335,7 +335,7 @@ class APlusTests: XCTestCase {
                         called = true
                         finish()
                     }
-                    promise.then { _ in
+                    promise.map { _ in
                         XCTFail()
                     }
                     after(ticks: 5) {
@@ -498,7 +498,7 @@ class APlusTests: XCTestCase {
 
                     var thenHasReturned = false
 
-                    promise.then { _ in
+                    promise.map { _ in
                         XCTAssertEqual(thenHasReturned, true)
                         finish()
                     }
@@ -526,7 +526,7 @@ class APlusTests: XCTestCase {
 
                     var thenCalled = false;
 
-                    promise.then { _ in
+                    promise.map { _ in
                         thenCalled = true;
                     }
 
@@ -542,7 +542,7 @@ class APlusTests: XCTestCase {
 
                     fulfill(sentinel)
 
-                    promise.then { _ in
+                    promise.map { _ in
                         thenCalled = true;
                     }
                     
@@ -554,8 +554,8 @@ class APlusTests: XCTestCase {
 
                     var firstOnFulfilledFinished = false
 
-                    promise.then { _ in
-                        promise.then { _ in
+                    promise.map { _ in
+                        promise.map { _ in
                             XCTAssertEqual(firstOnFulfilledFinished, true)
                             finish()
                         }
@@ -570,7 +570,7 @@ class APlusTests: XCTestCase {
                     var firstOnRejectedFinished = false
 
                     promise.catch { _ in
-                        promise2.then { _ in
+                        promise2.map { _ in
                             XCTAssertEqual(firstOnRejectedFinished, true)
                             finish()
                         }
@@ -588,7 +588,7 @@ class APlusTests: XCTestCase {
                         firstStackFinished = true
                     }
 
-                    promise.then { _ in
+                    promise.map { _ in
                         XCTAssertEqual(firstStackFinished, true)
                         finish()
                     }
@@ -644,7 +644,7 @@ class APlusTests: XCTestCase {
 
                     var firstOnFulfilledFinished = false
 
-                    promise.then { _ in
+                    promise.map { _ in
                         promise2.catch { _ in
                             XCTAssertEqual(firstOnFulfilledFinished, true)
                             finish()
@@ -688,17 +688,17 @@ class APlusTests: XCTestCase {
 
                     let finisher = Finisher(finish, 3)
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         finisher.finish()
                     }
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         finisher.finish()
                     }
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         finisher.finish()
                     }
@@ -713,26 +713,26 @@ class APlusTests: XCTestCase {
 
                     let promise = Promise<Int, MyError>.fulfilledAsync()
 
-                    promise.then { val -> Int in
+                    promise.map { val -> Int in
                         XCTAssertEqual(val, sentinel)
                         return 2
-                    }.then {
+                    }.map {
                         XCTAssertEqual($0, 2)
                         finisher.finish()
                     }
 
-                    promise.then { val -> Int in
+                    promise.map { val -> Int in
                         XCTAssertEqual(val, sentinel)
                         return 3
-                    }.then {
+                    }.map {
                         XCTAssertEqual($0, 3)
                         finisher.finish()
                     }
 
-                    promise.then { val -> Int in
+                    promise.map { val -> Int in
                         XCTAssertEqual(val, sentinel)
                         return 4
-                    }.then {
+                    }.map {
                         XCTAssertEqual($0, 4)
                         finisher.finish()
                     }
@@ -742,20 +742,20 @@ class APlusTests: XCTestCase {
                     let promise = Promise<Int, MyError>.fulfilledAsync()
                     var callCount = 0
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 1)
                     }
 
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 2)
                     }
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 3)
@@ -769,17 +769,17 @@ class APlusTests: XCTestCase {
                     let promise = Promise<Int, MyError>.fulfilledAsync()
                     var callCount = 0
 
-                    promise.then {
+                    promise.map {
                         XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 1)
                         
-                        promise.then {
+                        promise.map {
                             XCTAssertEqual($0, sentinel)
                             callCount += 1
                             XCTAssertEqual(callCount, 2)
                             
-                            promise.then {
+                            promise.map {
                                 XCTAssertEqual($0, sentinel)
                                 callCount += 1
                                 XCTAssertEqual(callCount, 3)
@@ -840,7 +840,7 @@ class APlusTests: XCTestCase {
                         finish()
                     }
 
-                    promise.then { _ in XCTFail() }
+                    promise.map { _ in XCTFail() }
                 }
 
                 expect("even when one handler is added inside another handle") { finish in
@@ -907,7 +907,7 @@ class APlusTests: XCTestCase {
             test("2.3.2: If `x` is a promise, adopt its state") {
                 test("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") {
                     expect("via return from a fulfilled promise") { finish in
-                        let promise = Promise(value: 1).then { _ in
+                        let promise = Promise(value: 1).flatMap { _ in
                             return Promise<Int, MyError> { (_,_) in } // pending
                         }
                         promise.finally {
@@ -933,16 +933,16 @@ class APlusTests: XCTestCase {
 
                 test("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
                     expect("`x` is already-fulfilled") { finish in
-                        let promise = Promise<Int, MyError>(value: sentinel).then { return $0 }
-                        promise.then {
+                        let promise = Promise<Int, MyError>(value: sentinel).map { return $0 }
+                        promise.map {
                             XCTAssertEqual($0, sentinel)
                             finish()
                         }
                     }
 
                     expect("`x` is eventually-fulfilled") { finish in
-                        let promise = Promise<Int, MyError>.fulfilledAsync().then { return $0 }
-                        promise.then {
+                        let promise = Promise<Int, MyError>.fulfilledAsync().map { return $0 }
+                        promise.map {
                             XCTAssertEqual($0, sentinel)
                             finish()
                         }
@@ -952,7 +952,7 @@ class APlusTests: XCTestCase {
 
                 test("2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.") {
                     expect("`x` is already-rejected") { finish in
-                        let promise = Promise<Int, MyError>(error: MyError.e1).then { _ in }
+                        let promise = Promise<Int, MyError>(error: MyError.e1).map { _ in }
                         promise.catch {
                             XCTAssertEqual($0, MyError.e1)
                             finish()
@@ -960,7 +960,7 @@ class APlusTests: XCTestCase {
                     }
 
                     expect("`x` is eventually-rejected") { finish in
-                        let promise = Promise<Int, MyError>.rejectedAsync().then { _ in }
+                        let promise = Promise<Int, MyError>.rejectedAsync().map { _ in }
                         promise.catch {
                             XCTAssertEqual($0, MyError.e1)
                             finish()
