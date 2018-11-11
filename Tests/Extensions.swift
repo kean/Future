@@ -74,24 +74,17 @@ enum MyError: Swift.Error {
 
 let sentinel = 1
 
-extension Promise {
-    class func deferred() -> (promise: Promise, fulfill: (Value) -> Void, reject: (Error) -> Void) {
-        var fulfill: ((Value) -> Void)!
-        var reject: ((Error) -> Void)!
-        let promise = self.init { fulfill = $0; reject = $1 }
-        return (promise, fulfill, reject)
-    }
-    
-    class func fulfilledAsync() -> Promise<Int, Error> {
-        return Promise<Int, Error>() { fulfill, _ in
+extension Future {    
+    class func fulfilledAsync() -> Future<Int, Error> {
+        return Future<Int, Error>() { fulfill, _ in
             DispatchQueue.global().async {
                 fulfill(sentinel)
             }
         }
     }
 
-    class func rejectedAsync() -> Promise<Int, MyError> {
-        return Promise<Int, MyError>() { _, reject in
+    class func rejectedAsync() -> Future<Int, MyError> {
+        return Future<Int, MyError>() { _, reject in
             DispatchQueue.global().async {
                 reject(MyError.e1)
             }

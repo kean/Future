@@ -6,22 +6,22 @@ import XCTest
 import Foundation
 import Pill
 
-class PromiseTests: XCTestCase {
+class FutureTests: XCTestCase {
 
     // MARK: - Observe On
 
     func testObserveOnMainThreadByDefault() {
         // GIVEN the default promise
-        let promise = Promise<Int, MyError>(value: 1)
+        let future = Future<Int, MyError>(value: 1)
 
         // EXPECT maps to be called on main queue
-        _ = promise.map { _ -> Int in
+        _ = future.map { _ -> Int in
             XCTAssertTrue(Thread.isMainThread)
             return 2
         }
 
         // EXPECT on(...) to be called on the main queue
-        promise.on(
+        future.on(
             value: { _ in
                 XCTAssertTrue(Thread.isMainThread)
             },
@@ -36,17 +36,17 @@ class PromiseTests: XCTestCase {
 
     func testObserveOn() {
         // GIVEN the promise with a a custom observe queue
-        let promise = Promise<Int, MyError>(value: 1)
+        let future = Future<Int, MyError>(value: 1)
             .observeOn(DispatchQueue.global())
 
         // EXPECT maps to be called on global queue
-        _ = promise.map { _ -> Int in
+        _ = future.map { _ -> Int in
             XCTAssertFalse(Thread.isMainThread)
             return 2
         }
 
         // EXPECT on(...) to be called on the global queue
-        promise.on(
+        future.on(
             value: { _ in
                 XCTAssertFalse(Thread.isMainThread)
             },
@@ -61,20 +61,20 @@ class PromiseTests: XCTestCase {
 
     func testObserveOnFlatMap() {
         // GIVEN the promise with a a custom observe queue
-        let promise = Promise<Int, MyError>(value: 1)
+        let future = Future<Int, MyError>(value: 1)
             .observeOn(DispatchQueue.global())
             .flatMap { value in
-                return Promise(value: value + 1)
+                return Future(value: value + 1)
             }
 
         // EXPECT maps to be called on global queue
-        _ = promise.map { _ -> Int in
+        _ = future.map { _ -> Int in
             XCTAssertFalse(Thread.isMainThread)
             return 2
         }
 
         // EXPECT on(...) to be called on the global queue
-        promise.on(
+        future.on(
             value: { _ in
                 XCTAssertFalse(Thread.isMainThread)
             },

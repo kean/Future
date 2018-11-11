@@ -10,29 +10,29 @@ class PromisePerformanceTests: XCTestCase {
     func testCreation() {
         measure {
             for _ in 0..<100_000 {
-                let _ = Promise<Int> { (_,_) in
+                let _ = Future<Int, Void> { (_,_) in
                     return // do nothing
                 }
             }
         }
     }
 
-    func testThen() {
-        let promises = (0..<50_000).map { _ in Promise(value: 1) }
+    func testOnValue() {
+        let promises = (0..<50_000).map { _ in Future<Int, Void>(value: 1) }
 
         let expectation = self.makeExpectation()
         var finished = 0
 
         measure {
             for promise in promises {
-                promise.then { _ in
+                promise.on(value: { _ in
                     finished += 1
                     if finished == promises.count {
                         expectation.fulfill()
                     }
 
                     return // do nothing
-                }
+                })
             }
         }
 
@@ -40,25 +40,25 @@ class PromisePerformanceTests: XCTestCase {
     }
 
     func testFulfill() {
-        let items = (0..<100_000).map { _ in Promise<Int>.deferred() }
+        let items = (0..<100_000).map { _ in Promise<Int, Void>() }
 
         let expectation = self.makeExpectation()
         var finished = 0
 
         for item in items {
-            item.promise.then { _ in
+            item.future.on(value: { _ in
                 finished += 1
                 if finished == items.count {
                     expectation.fulfill()
                 }
 
                 return // do nothing
-            }
+            })
         }
 
         measure {
             for item in items {
-                item.fulfill(1)
+                item.fulfill(value: 1)
             }
         }
 
