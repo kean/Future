@@ -25,7 +25,7 @@ class PromisePerformanceTests: XCTestCase {
 
         measure {
             for promise in promises {
-                promise.on(value: { _ in
+                promise.on(success: { _ in
                     finished += 1
                     if finished == promises.count {
                         expectation.fulfill()
@@ -46,7 +46,7 @@ class PromisePerformanceTests: XCTestCase {
         var finished = 0
 
         for item in items {
-            item.future.on(value: { _ in
+            item.future.on(success: { _ in
                 finished += 1
                 if finished == items.count {
                     expectation.fulfill()
@@ -58,7 +58,7 @@ class PromisePerformanceTests: XCTestCase {
 
         measure {
             for item in items {
-                item.fulfill(value: 1)
+                item.succeed(value: 1)
             }
         }
 
