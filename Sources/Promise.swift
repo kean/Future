@@ -27,25 +27,27 @@ public final class Promise<T> {
     }
     
     private func _fulfill(_ value: T) {
-        let handlers = _transitionToState(.fulfilled(value))
-        handlers?.fulfill.forEach { $0(value) }
+        _transitionToState(.fulfilled(value))
     }
 
     private func _reject(_ error: Error) {
-        let handlers = _transitionToState(.rejected(error))
-        handlers?.reject.forEach { $0(error) }
+        _transitionToState(.rejected(error))
     }
 
     // Return handlers to call if promise was resolved. Returns nil otherwise.
-    private func _transitionToState(_ state: State) -> Handlers? {
+    private func _transitionToState(_ newState: State) {
         lock.lock(); defer { lock.unlock() }
         guard case .pending = self.state else {
-            return nil // already resolved
+            return // already resolved
         }
-        self.state = state
-        let handlers = self.handlers
+        self.state = newState
+        let handlers = self.handlers! // handlers can't be nil at this point
+        switch newState {
+        case .pending: break // wait till promise is resovled
+        case let .fulfilled(value): handlers.fulfill.forEach { $0(value) }
+        case let .rejected(error): handlers.reject.forEach { $0(error) }
+        }
         self.handlers = nil
-        return handlers // returns handlers to be used outside of critical section
     }
 
     /// Creates a promise fulfilled with a given value.
@@ -61,26 +63,20 @@ public final class Promise<T> {
     // MARK: Callbacks
     
     private func _observe(on queue: DispatchQueue, fulfill: @escaping (T) -> Void, reject: @escaping (Error) -> Void) {
-        // `fulfill` and `reject` are called asynchronously on the `queue`
-        let _fulfill: (T) -> Void = { value in queue.async { fulfill(value) } }
-        let _reject: (Error) -> Void = { error in queue.async { reject(error) } }
-
-        let state = _register(fulfill: _fulfill, reject: _reject)
-
-        // already resolved
-        switch state {
-        case .pending: break // obsevers registered
-        case let .fulfilled(value): _fulfill(value)
-        case let .rejected(error): _reject(error)
-        }
+        _register(fulfill: { value in queue.async { fulfill(value) } },
+                  reject: { error in queue.async { reject(error) } })
     }
 
     /// Registers observers if pending. Returns state at the time or registration.
-    private func _register(fulfill: @escaping (T) -> Void, reject: @escaping (Error) -> Void) -> State {
+    private func _register(fulfill: @escaping (T) -> Void, reject: @escaping (Error) -> Void) {
         lock.lock(); defer { lock.unlock() }
-        handlers?.fulfill.append(fulfill)
-        handlers?.reject.append(reject)
-        return state
+        switch state {
+        case .pending:
+            handlers?.fulfill.append(fulfill)
+            handlers?.reject.append(reject)
+        case let .fulfilled(value): fulfill(value)
+        case let .rejected(error): reject(error)
+        }
     }
 
     // MARK: Then
@@ -180,26 +176,20 @@ public final class Promise<T> {
     /// Returns `true` the promise hasn't resolved yet.
     public var isPending: Bool {
         lock.lock(); defer { lock.unlock() }
-        guard case .pending = state else {
-            return false
-        }
+        guard case .pending = state else { return false }
         return true
     }
 
     /// Returns the `value` which promise was `fulfilled` with.
     public var value: T? {
         lock.lock(); defer { lock.unlock() }
-        guard case let .fulfilled(value) = state else {
-            return nil
-        }
+        guard case let .fulfilled(value) = state else { return nil }
         return value
     }
     /// Returns the `error` which promise was `rejected` with.
     public var error: Error? {
         lock.lock(); defer { lock.unlock() }
-        guard case let .rejected(error) = state else {
-            return nil
-        }
+        guard case let .rejected(error) = state else { return nil }
         return error
     }
 
@@ -217,7 +207,7 @@ public final class Promise<T> {
     }
 }
 
-// We use the same lock across different tokens because the design of Promise
-// prevents potential issues. For example, closures registered with a Promise
-// are never executed inside a lock.
+// Using the same lock across instances is safe because Promise doesn't invoke
+// any client code directly, it always does so after asynchronously dispatching
+// the work to the provided dispatch queue.
 private let lock = NSLock()
