@@ -11,8 +11,8 @@ import Foundation
 /// Promises start in a *pending* state and either get *fulfilled* with a
 /// value or get *rejected* with an error.
 public final class Promise<T> {
-    private var handlers: Handlers? // nil when finished
     private var state: State = .pending
+    private var handlers: Handlers? // nil when finished
 
     // MARK: Creation
 
@@ -201,9 +201,9 @@ public final class Promise<T> {
         case rejected(Error)
     }
 
-    private struct Handlers { // boxed handlers
-        var fulfill = ContiguousArray<(T) -> Void>()
-        var reject = ContiguousArray<(Error) -> Void>()
+    private struct Handlers {
+        var fulfill = [(T) -> Void]()
+        var reject = [(Error) -> Void]()
     }
 }
 
