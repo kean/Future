@@ -64,7 +64,7 @@ public final class Future<Value, Error> {
         self.state = newState
         assert(handlers != nil)
         switch newState {
-        case .pending: break // wait till future is resovled
+        case .pending: fatalError("Invalid transition")
         case let .success(value): handlers?.success.forEach { $0(value) }
         case let .failure(error): handlers?.failure.forEach { $0(error) }
         }
@@ -75,7 +75,7 @@ public final class Future<Value, Error> {
 
     /// Returns a future which callbacks are observed on the given queue. The
     /// default queue is `.main` queue.
-    public func observedOn(_ queue: DispatchQueue) -> Future {
+    public func observeOn(_ queue: DispatchQueue) -> Future {
         return Future(queue: queue) { succeed, fail in
             observe(success: succeed, failure: fail)
         }
@@ -140,33 +140,6 @@ public final class Future<Value, Error> {
         }
     }
 
-    // MARK: And
-
-    /// Returns a future which succeedes when both futures succeed. If one of
-    /// the futures fails, the returned future fails immediately.
-    public func and<SecondValue>(_ future: Future<SecondValue, Error>) -> Future<(Value, SecondValue), Error> {
-        let lock = NSLock()
-        var firstValue: Value?
-        var secondValue: SecondValue?
-        return Future<(Value, SecondValue), Error>(queue: queue) { succeed, fail in
-            func succeedIfPossible() {
-                guard let firstValue = firstValue, let secondValue = secondValue else { return }
-                succeed((firstValue, secondValue))
-            }
-            self.observe(success: { value in
-                lock.lock(); defer { lock.unlock() }
-                firstValue = value
-                succeedIfPossible()
-            }, failure: fail) // whichever fails first
-
-            future.observe(success: { value in
-                lock.lock(); defer { lock.unlock() }
-                secondValue = value
-                succeedIfPossible()
-            }, failure: fail) // whichever fails first
-        }
-    }
-
     // MARK: Observing Results
 
     /// The given closures execute asynchronously when the future has a result.
@@ -200,6 +173,33 @@ public final class Future<Value, Error> {
         lock.lock(); defer { lock.unlock() }
         guard case let .failure(error) = state else { return nil }
         return error
+    }
+
+    // MARK: And
+
+    /// Returns a future which succeedes when both futures succeed. If one of
+    /// the futures fails, the returned future fails immediately.
+    public func and<SecondValue>(_ future: Future<SecondValue, Error>) -> Future<(Value, SecondValue), Error> {
+        let lock = NSLock()
+        var firstValue: Value?
+        var secondValue: SecondValue?
+        return Future<(Value, SecondValue), Error>(queue: queue) { succeed, fail in
+            func succeedIfPossible() {
+                guard let firstValue = firstValue, let secondValue = secondValue else { return }
+                succeed((firstValue, secondValue))
+            }
+            self.observe(success: { value in
+                lock.lock(); defer { lock.unlock() }
+                firstValue = value
+                succeedIfPossible()
+            }, failure: fail) // whichever fails first
+
+            future.observe(success: { value in
+                lock.lock(); defer { lock.unlock() }
+                secondValue = value
+                succeedIfPossible()
+            }, failure: fail) // whichever fails first
+        }
     }
 
     // MARK: State (Private)

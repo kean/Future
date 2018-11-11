@@ -37,7 +37,7 @@ class FutureTests: XCTestCase {
     func testObserveOn() {
         // GIVEN the promise with a a custom observe queue
         let future = Future<Int, MyError>(value: 1)
-            .observedOn(DispatchQueue.global())
+            .observeOn(DispatchQueue.global())
 
         // EXPECT maps to be called on global queue
         _ = future.map { _ -> Int in
@@ -62,7 +62,7 @@ class FutureTests: XCTestCase {
     func testObserveOnFlatMap() {
         // GIVEN the promise with a a custom observe queue
         let future = Future<Int, MyError>(value: 1)
-            .observedOn(DispatchQueue.global())
+            .observeOn(DispatchQueue.global())
             .flatMap { value in
                 return Future(value: value + 1)
             }
