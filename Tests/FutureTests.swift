@@ -87,9 +87,9 @@ class FutureTests: XCTestCase {
         )
     }
 
-    // MARK: And
+    // MARK: Zip (Tuple)
 
-    func testBothSucceed() {
+    func testZipBothSucceed() {
         // GIVEN two futures
         let promise = Promise<Int, String>()
         let future = promise.future
@@ -99,11 +99,11 @@ class FutureTests: XCTestCase {
 
         let expectation = self.expectation(description: "succees")
 
-        // EXPECT "and" future to succeed
-        future.and(future2).on(
-            success: { value in
-                XCTAssertEqual(value.0, 1)
-                XCTAssertEqual(value.1, 2)
+        // EXPECT "zipped" future to succeed
+        Future.zip(future, future2).on(
+            success: { v1, v2 in
+                XCTAssertEqual(v1, 1)
+                XCTAssertEqual(v2, 2)
                 expectation.fulfill()
             },
             failure: { _ in
@@ -120,7 +120,7 @@ class FutureTests: XCTestCase {
         wait()
     }
 
-    func testAndFirstFails() {
+    func testZipFirstFails() {
         // GIVEN two futures
         let promise = Promise<Int, String>()
         let future = promise.future
@@ -130,8 +130,8 @@ class FutureTests: XCTestCase {
 
         let expectation = self.expectation(description: "failure")
 
-        // EXPECT "and" future to fail
-        future.and(future2).on(
+        // EXPECT "zipped" future to fail
+        Future.zip(future, future2).on(
             success: { _ in
                 XCTFail()
             },
@@ -148,7 +148,7 @@ class FutureTests: XCTestCase {
         wait()
     }
 
-    func testAndSecondFails() {
+    func testZipSecondFails() {
         // GIVEN two futures
         let promise = Promise<Int, String>()
         let future = promise.future
@@ -158,8 +158,8 @@ class FutureTests: XCTestCase {
 
         let expectation = self.expectation(description: "failure")
 
-        // EXPECT "and" future to fail
-        future.and(future2).on(
+        // EXPECT "zipped" future to fail
+        Future.zip(future, future2).on(
             success: { _ in
                 XCTFail()
             },

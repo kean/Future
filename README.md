@@ -99,16 +99,15 @@ With an error:
 let future = Future<Int, Error>(error: Error.unknown)
 ```
 
-### Operators
+### Zip
 
-Use `func and(_ future:)` to wait for two futures to a result:
+Use  `static func zip(_lhs:_rhs:)` to combine the result of two futures:
 
 ```swift
 let user: Future<User, Error>
 let avatar: Future<UIImage, Error>
 
-user.and(avatar).on(success: { value in
-    let (user, avatar) = (value.0, value.1)
+Future.zip(user, avatar).on(success: { user, avatar in
     // use both values
 })
 ```

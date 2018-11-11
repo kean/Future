@@ -175,26 +175,26 @@ public final class Future<Value, Error> {
         return error
     }
 
-    // MARK: And
+    // MARK: Zip
 
     /// Returns a future which succeedes when both futures succeed. If one of
-    /// the futures fails, the returned future fails immediately.
-    public func and<SecondValue>(_ future: Future<SecondValue, Error>) -> Future<(Value, SecondValue), Error> {
+    /// the futures fail, the returned future also fails immediately.
+    public static func zip<SecondValue>(_ lhs: Future<Value, Error>, _ rhs: Future<SecondValue, Error>) -> Future<(Value, SecondValue), Error> {
         var firstValue: Value?
         var secondValue: SecondValue?
-        return Future<(Value, SecondValue), Error>(queue: queue) { succeed, fail in
+        return Future<(Value, SecondValue), Error>(queue: lhs.queue) { succeed, fail in
             func succeedIfPossible() {
                 // This is thread safe because both futures are observed on the
                 // same queue.
                 guard let firstValue = firstValue, let secondValue = secondValue else { return }
                 succeed((firstValue, secondValue))
             }
-            self.on(success: { value in
+            lhs.on(success: { value in
                 firstValue = value
                 succeedIfPossible()
             }, failure: fail) // whichever fails first
 
-            future.observeOn(queue).on(success: { value in
+            rhs.observeOn(lhs.queue).on(success: { value in
                 secondValue = value
                 succeedIfPossible()
             }, failure: fail) // whichever fails first
