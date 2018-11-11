@@ -5,14 +5,15 @@
 import Foundation
 
 /// A promise represents a value which may be available now, or in the future,
-/// or never. Use `then()` to get the result of the promise. Use `catch()`
-/// to catch errors.
+/// or never. Use `on(value:)` to observe the result of the promise. Use `on(error:)`
+/// to observe error.
 ///
 /// Promises start in a *pending* state and either get *fulfilled* with a
 /// value or get *rejected* with an error.
 public final class Promise<Value, Error> {
     private var state: State = .pending
     private var handlers: Handlers? // nil when finished
+    private let queue: DispatchQueue // Queue on which promise is observed
 
     // MARK: Creation
 
@@ -21,11 +22,16 @@ public final class Promise<Value, Error> {
     /// - parameter closure: The closure is called immediately on the current
     /// thread. You should start an asynchronous task and call either `fulfill`
     /// or `reject` when it completes.
-    public init(_ closure: (_ fulfill: @escaping (Value) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
-        handlers = Handlers()
+    public convenience init(_ closure: (_ fulfill: @escaping (Value) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
+        self.init(queue: .main, closure)
+    }
+
+    private init(queue: DispatchQueue, _ closure: (_ fulfill: @escaping (Value) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
+        self.queue = queue
+        self.handlers = Handlers()
         closure({ self._fulfill($0) }, { self._reject($0) }) // retain self
     }
-    
+
     private func _fulfill(_ value: Value) {
         _transitionToState(.fulfilled(value))
     }
@@ -41,34 +47,42 @@ public final class Promise<Value, Error> {
             return // already resolved
         }
         self.state = newState
-        let handlers = self.handlers! // handlers can't be nil at this point
+        assert(handlers != nil)
         switch newState {
         case .pending: break // wait till promise is resovled
-        case let .fulfilled(value): handlers.fulfill.forEach { $0(value) }
-        case let .rejected(error): handlers.reject.forEach { $0(error) }
+        case let .fulfilled(value): handlers?.fulfill.forEach { $0(value) }
+        case let .rejected(error): handlers?.reject.forEach { $0(error) }
         }
         self.handlers = nil
     }
 
     /// Creates a promise fulfilled with a given value.
     public init(value: Value) {
-        state = .fulfilled(value)
+        self.queue = .main
+        self.state = .fulfilled(value)
     }
 
     /// Creates a promise rejected with a given error.
     public init(error: Error) {
-        state = .rejected(error)
+        self.queue = .main
+        self.state = .rejected(error)
     }
 
     // MARK: Callbacks
-    
-    private func _observe(on queue: DispatchQueue, fulfill: @escaping (Value) -> Void, reject: @escaping (Error) -> Void) {
-        _register(fulfill: { value in queue.async { fulfill(value) } },
-                  reject: { error in queue.async { reject(error) } })
+
+    /// Change the queue on which the promise callbacks are called. All callbacks
+    /// are called on the main queue by default.
+    public func observeOn(_ queue: DispatchQueue) -> Promise {
+        return Promise(queue: queue) { fulfill, reject in
+            _observe(fulfill: fulfill, reject: reject)
+        }
     }
 
-    /// Registers observers if pending. Returns state at the time or registration.
-    private func _register(fulfill: @escaping (Value) -> Void, reject: @escaping (Error) -> Void) {
+    private func _observe(fulfill: @escaping (Value) -> Void, reject: @escaping (Error) -> Void) {
+        let queue = self.queue
+        let fulfill: (Value) -> Void = { value in queue.async { fulfill(value) } }
+        let reject: (Error) -> Void = { value in queue.async { reject(value) } }
+
         lock.lock(); defer { lock.unlock() }
         switch state {
         case .pending:
@@ -83,86 +97,59 @@ public final class Promise<Value, Error> {
     
     /// The given closure executes asynchronously when the promise is fulfilled.
     ///
-    /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise fulfilled with a value returned by the closure.
-    @discardableResult public func map<NewValue>(on queue: DispatchQueue = .main, _ closure: @escaping (Value) -> NewValue) -> Promise<NewValue, Error> {
-        return flatMap(on: queue, { value in
+    public func map<NewValue>(_ closure: @escaping (Value) -> NewValue) -> Promise<NewValue, Error> {
+        return flatMap { value in
             Promise<NewValue, Error>(value: closure(value))
-        })
+        }
     }
 
     /// The given closure executes asynchronously when the promise is fulfilled.
     ///
-    /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise that resolves by the promise returned by the closure.
-    @discardableResult public func flatMap<NewValue>(on queue: DispatchQueue = .main, _ closure: @escaping (Value) -> Promise<NewValue, Error>) -> Promise<NewValue, Error> {
-        return Promise<NewValue, Error> { fulfill, reject in
-            _observe(on: queue, fulfill: { value in
-                closure(value)._observe(on: queue, fulfill: fulfill, reject: reject)
+    public func flatMap<NewValue>(_ closure: @escaping (Value) -> Promise<NewValue, Error>) -> Promise<NewValue, Error> {
+        return Promise<NewValue, Error>(queue: queue) { fulfill, reject in
+            _observe(fulfill: { value in
+                closure(value)._observe(fulfill: fulfill, reject: reject)
             }, reject: reject)
         }
     }
 
-
-    // MARK: Catch
-
     /// The given closure executes asynchronously when the promise is rejected.
     ///
-    /// A promise bubbles up errors. It allows you to catch all errors returned
-    /// by a chain of promises with a single `catch()`.
-    ///
-    /// - parameter on: A queue on which the closure is run. `.main` by default.
-    @discardableResult public func `catch`(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Void) -> Promise {
-        return _catch(on: queue) { error, _, reject in
-            closure(error)
-            reject(error) // bubble the previous error up
+    /// - returns: A promise rejected with an error returned by the closure..
+    public func mapError<NewError>(_ closure: @escaping (Error) -> NewError) -> Promise<Value, NewError> {
+        return flatMapError { error in
+            Promise<Value, NewError>(error: closure(error))
         }
     }
 
-    /// Unlike `catch` `recover` allows you to continue the chain of promises
-    /// by recovering from the error by returning a new value.
+    /// The given closure executes asynchronously when the promise is rejected.
+    /// Allows you to continue the chain of promises by recovering from the error
+    /// by creating a new promise.
     ///
-    /// - parameter on: A queue on which the closure is run. `.main` by default.
-    /// - returns: A promise fulfilled with a value returned by the closure.
-    @discardableResult public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Value) -> Promise {
-        return _catch(on: queue) { error, fulfill, _ in
-            fulfill(closure(error))
-        }
-    }
-    
-    /// Unlike `catch` `recover` allows you to continue the chain of promises
-    /// by recovering from the error by creating a new promise.
-    ///
-    /// - parameter on: A queue on which the closure is run. `.main` by default.
     /// - returns: A promise that resolves by the promise returned by the closure.
-    @discardableResult public func recover(on queue: DispatchQueue = .main, _ closure: @escaping (Error) -> Promise) -> Promise {
-        return _catch(on: queue) { error, fulfill, reject in
-            closure(error)._observe(on: queue, fulfill: fulfill, reject: reject)
-        }
-    }
-    
-    /// Returns a new promise.
-    /// - when `self` is fufilled the promise is fulfilled
-    /// - when `self` is rejected the closure is called (you control it)
-    private func _catch(on queue: DispatchQueue, _ closure: @escaping (Error, @escaping (Value) -> Void, @escaping (Error) -> Void) -> Void) -> Promise {
-        return Promise() { fulfill, reject in
-            _observe(on: queue, fulfill: fulfill, reject: {
-                closure($0, fulfill, reject)
+    public func flatMapError<NewError>(_ closure: @escaping (Error) -> Promise<Value, NewError>) -> Promise<Value, NewError> {
+        return Promise<Value, NewError>(queue: queue) { fulfill, reject in
+            _observe(fulfill: fulfill, reject: { error in
+                closure(error)._observe(fulfill: fulfill, reject: reject)
             })
         }
     }
-    
-    // MARK: Finally
-    
-    /// The provided closure executes asynchronously when the promise is
-    /// either fulfilled or rejected. Returns `self`.
+
+    // MARK: Observing Results
+
+    /// The given closures execute asynchronously when the promise is resolved.
     ///
-    /// - parameter on: A queue on which the closure is run. `.main` by default.
-    @discardableResult public func finally(on queue: DispatchQueue = .main, _ closure: @escaping () -> Void) -> Promise {
-        _observe(on: queue, fulfill: { _ in closure() }, reject: { _ in closure() })
-        return self
+    /// - parameter queue: A queue on which the closures are run. `.main` by default.
+    /// - parameter value: Gets called when promise is fulfilled.
+    /// - parameter error: Gets called when promise is rejected.
+    /// - parameter completed: Gets called when promise is resolved.
+    public func on(value: ((Value) -> Void)? = nil, error: ((Error) -> Void)? = nil, completed: (() -> Void)? = nil) {
+        _observe(fulfill: { value?($0); completed?() },
+                 reject: { error?($0); completed?() })
     }
-    
+
     // MARK: Synchronous Inspection
 
     /// Returns `true` the promise hasn't resolved yet.

@@ -19,6 +19,9 @@
 		0C20715C1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
 		0C20715D1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
 		0C20715E1D4E83A700EA5BEF /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C20715A1D4E83A700EA5BEF /* Promise.swift */; };
+		0C9F15B921984DAF002EB416 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F15B721984D90002EB416 /* Tests.swift */; };
+		0C9F15BA21984DB0002EB416 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F15B721984D90002EB416 /* Tests.swift */; };
+		0C9F15BB21984DB1002EB416 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F15B721984D90002EB416 /* Tests.swift */; };
 		0CAA5D0A1DB1458F001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CAA5D0B1DB14595001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CAA5D0C1DB1459A001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -89,6 +92,7 @@
 		0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		0C7E0EB81DBA0E3E00BA75EC /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		0C7E0EB91DBA0F1900BA75EC /* Pill.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pill.podspec; sourceTree = "<group>"; };
+		0C9F15B721984D90002EB416 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D091DB14588001F6D96 /* Pill.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pill.h; sourceTree = "<group>"; };
@@ -247,6 +251,7 @@
 			children = (
 				0CAA5D1E1DB14780001F6D96 /* Info.plist */,
 				0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */,
+				0C9F15B721984D90002EB416 /* Tests.swift */,
 				0CAA5D221DB14859001F6D96 /* Extensions.swift */,
 				0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */,
 				0C03FF521FEEAC9600111928 /* Host */,
@@ -660,6 +665,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CAA5D211DB14780001F6D96 /* A+Tests.swift in Sources */,
+				0C9F15B921984DAF002EB416 /* Tests.swift in Sources */,
 				0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -669,6 +675,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CAA5D331DB14912001F6D96 /* A+Tests.swift in Sources */,
+				0C9F15BA21984DB0002EB416 /* Tests.swift in Sources */,
 				0CAA5D341DB14912001F6D96 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -678,6 +685,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CAA5D441DB1496B001F6D96 /* A+Tests.swift in Sources */,
+				0C9F15BB21984DB1002EB416 /* Tests.swift in Sources */,
 				0CAA5D451DB1496B001F6D96 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
