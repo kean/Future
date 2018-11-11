@@ -180,22 +180,21 @@ public final class Future<Value, Error> {
     /// Returns a future which succeedes when both futures succeed. If one of
     /// the futures fails, the returned future fails immediately.
     public func and<SecondValue>(_ future: Future<SecondValue, Error>) -> Future<(Value, SecondValue), Error> {
-        let lock = NSLock()
         var firstValue: Value?
         var secondValue: SecondValue?
         return Future<(Value, SecondValue), Error>(queue: queue) { succeed, fail in
             func succeedIfPossible() {
+                // This is thread safe because both futures are observed on the
+                // same queue.
                 guard let firstValue = firstValue, let secondValue = secondValue else { return }
                 succeed((firstValue, secondValue))
             }
-            self.observe(success: { value in
-                lock.lock(); defer { lock.unlock() }
+            self.on(success: { value in
                 firstValue = value
                 succeedIfPossible()
             }, failure: fail) // whichever fails first
 
-            future.observe(success: { value in
-                lock.lock(); defer { lock.unlock() }
+            future.observeOn(queue).on(success: { value in
                 secondValue = value
                 succeedIfPossible()
             }, failure: fail) // whichever fails first
