@@ -67,7 +67,7 @@ func after(ticks: Int, execute body: @escaping () -> Void) {
 
 // MARK: Promise
 
-enum Error: Swift.Error {
+enum MyError: Swift.Error {
     case e1
     case e2
 }
@@ -75,25 +75,25 @@ enum Error: Swift.Error {
 let sentinel = 1
 
 extension Promise {
-    class func deferred() -> (promise: Promise, fulfill: (T) -> Void, reject: (Error) -> Void) {
-        var fulfill: ((T) -> Void)!
+    class func deferred() -> (promise: Promise, fulfill: (Value) -> Void, reject: (Error) -> Void) {
+        var fulfill: ((Value) -> Void)!
         var reject: ((Error) -> Void)!
         let promise = self.init { fulfill = $0; reject = $1 }
         return (promise, fulfill, reject)
     }
     
-    class func fulfilledAsync() -> Promise<Int> {
-        return Promise<Int>() { fulfill, _ in
+    class func fulfilledAsync() -> Promise<Int, Error> {
+        return Promise<Int, Error>() { fulfill, _ in
             DispatchQueue.global().async {
                 fulfill(sentinel)
             }
         }
     }
 
-    class func rejectedAsync() -> Promise<Int> {
-        return Promise<Int>() { _, reject in
+    class func rejectedAsync() -> Promise<Int, MyError> {
+        return Promise<Int, MyError>() { _, reject in
             DispatchQueue.global().async {
-                reject(Error.e1)
+                reject(MyError.e1)
             }
         }
     }

@@ -13,7 +13,7 @@ class APlusTests: XCTestCase {
         test("2.1.2.1: When fulfilled, a promise: must not transition to any other state.") {
 
             expect("trying to fulfill then immediately fulfill with a different value") { finish in
-                let promise = Promise<Int>() { fulfill, _ in
+                let promise = Promise<Int, MyError>() { fulfill, _ in
                     fulfill(0)
                     fulfill(1)
                 }
@@ -24,9 +24,9 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill then immediately reject") { finish in
-                let promise = Promise<Int>() { fulfill, reject in
+                let promise = Promise<Int, MyError>() { fulfill, reject in
                     fulfill(0)
-                    reject(Error.e1)
+                    reject(MyError.e1)
                 }
                 promise.then {
                     XCTAssertEqual($0, 0)
@@ -35,10 +35,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill then reject, delayed") { finish in
-                let promise = Promise<Int>() { fulfill, reject in
+                let promise = Promise<Int, MyError>() { fulfill, reject in
                     after(ticks: 5) {
                         fulfill(0)
-                        reject(Error.e1)
+                        reject(MyError.e1)
                     }
                 }
                 promise.then {
@@ -48,10 +48,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill immediately then reject delayed") { finish in
-                let promise = Promise<Int>() { fulfill, reject in
+                let promise = Promise<Int, MyError>() { fulfill, reject in
                     fulfill(0)
                     after(ticks: 5) {
-                        reject(Error.e1)
+                        reject(MyError.e1)
                     }
                 }
                 promise.then {
@@ -66,49 +66,49 @@ class APlusTests: XCTestCase {
         test("2.1.3.1: When rejected, a promise: must not transition to any other state.") {
 
             expect("reject then reject with different error") { finish in
-                let promise = Promise<Int>() { _, reject in
-                    reject(Error.e1)
-                    reject(Error.e2)
+                let promise = Promise<Int, MyError>() { _, reject in
+                    reject(MyError.e1)
+                    reject(MyError.e2)
                 }
                 promise.catch {
-                    XCTAssertEqual($0 as? Error, Error.e1)
+                    XCTAssertEqual($0, MyError.e1)
                     finish()
                 }
             }
 
             expect("trying to reject then immediately fulfill") { finish in
-                let promise = Promise<Int>() { fulfill, reject in
-                    reject(Error.e1)
+                let promise = Promise<Int, MyError>() { fulfill, reject in
+                    reject(MyError.e1)
                     fulfill(1)
                 }
                 promise.catch {
-                    XCTAssertEqual($0 as? Error, Error.e1)
+                    XCTAssertEqual($0, MyError.e1)
                     finish()
                 }
             }
 
             expect("trying to reject then fulfill, delayed") { finish in
-                let promise = Promise<Int>() { fulfill, reject in
+                let promise = Promise<Int, MyError>() { fulfill, reject in
                     after(ticks: 5) {
-                        reject(Error.e1)
+                        reject(MyError.e1)
                         fulfill(1)
                     }
                 }
                 promise.catch {
-                    XCTAssertEqual($0 as? Error, Error.e1)
+                    XCTAssertEqual($0, MyError.e1)
                     finish()
                 }
             }
 
             expect("trying to reject immediately then fulfill delayed") { finish in
-                let promise = Promise<Int>() { fulfill, reject in
-                    reject(Error.e1)
+                let promise = Promise<Int, MyError>() { fulfill, reject in
+                    reject(MyError.e1)
                     after(ticks: 5) {
                         fulfill(1)
                     }
                 }
                 promise.catch {
-                    XCTAssertEqual($0 as? Error, Error.e1)
+                    XCTAssertEqual($0, MyError.e1)
                     finish()
                 }
             }
@@ -126,14 +126,14 @@ class APlusTests: XCTestCase {
 
             test("2.2.2.1: it must be called after `promise` is fulfilled, with `promise`’s fulfillment value as its first argument.") {
                 expect("fulfill delayed") { finish in
-                    Promise<Int>.fulfilledAsync().then {
+                    Promise<Int, MyError>.fulfilledAsync().then {
                         XCTAssertEqual($0, sentinel)
                         finish()
                     }
                 }
 
                 expect("fulfill immediately") { finish in
-                    Promise<Int>(value: sentinel).then {
+                    Promise<Int, MyError>(value: sentinel).then {
                         XCTAssertEqual($0, sentinel)
                         finish()
                     }
@@ -142,7 +142,7 @@ class APlusTests: XCTestCase {
 
             test("2.2.2.2: it must not be called before `promise` is fulfilled") {
                 expect("fulfilled after a delay") { finish in
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var called = false
                     promise.then { _ -> Void in
@@ -159,7 +159,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("never fulfilled") { finish in
-                    let (promise, _, _) = Promise<Int>.deferred()
+                    let (promise, _, _) = Promise<Int, MyError>.deferred()
 
                     promise.then { _ -> Void in
                         XCTFail()
@@ -172,7 +172,7 @@ class APlusTests: XCTestCase {
 
             test("2.2.2.3: it must not be called more than once.") {
                 expect("already-fulfilled") { finish in
-                    let promise = Promise<Int>(value: sentinel)
+                    let promise = Promise<Int, MyError>(value: sentinel)
 
                     var timesCalled = 0
                     promise.then { _ -> Void in
@@ -187,7 +187,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to fulfill a pending promise more than once, immediately") { finish in
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
                     promise.then { _ -> Void in
@@ -206,7 +206,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to fulfill a pending promise more than once, delayed") { finish in
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
                     promise.then { _ -> Void in
@@ -227,7 +227,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to fulfill a pending promise more than once, immediately then delayed") { finish in
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
                     promise.then {
@@ -249,7 +249,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when multiple `then` calls are made, spaced apart in time") { finish in
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
 
@@ -284,7 +284,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when `then` is interleaved with fulfillment") { finish in
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
 
@@ -311,15 +311,15 @@ class APlusTests: XCTestCase {
         test("2.2.3: If `onRejected` is a function,") {
             test("2.2.3.1: it must be called after `promise` is rejected, with `promise`’s rejection reason as its first argument.") {
                 expect("rejected after delay") { finish in
-                    Promise<Int>.rejectedAsync().catch {
-                        XCTAssertEqual($0 as! Error, Error.e1)
+                    Promise<Int, MyError>.rejectedAsync().catch {
+                        XCTAssertEqual($0, MyError.e1)
                         finish()
                     }
                 }
 
                 expect("already-rejected") { finish in
-                    Promise<Int>(error: Error.e1).catch {
-                        XCTAssertEqual($0 as! Error, Error.e1)
+                    Promise<Int, MyError>(error: MyError.e1).catch {
+                        XCTAssertEqual($0, MyError.e1)
                         finish()
                     }
                 }
@@ -328,7 +328,7 @@ class APlusTests: XCTestCase {
             test("2.2.3.2: it must not be called before `promise` is rejected") {
 
                 expect("rejected after a delay") { finish in
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var called = false
                     promise.catch { _ -> Void in
@@ -340,12 +340,12 @@ class APlusTests: XCTestCase {
                     }
                     after(ticks: 5) {
                         XCTAssertFalse(called)
-                        reject(Error.e1)
+                        reject(MyError.e1)
                     }
                 }
 
                 expect("never rejected") { finish in
-                    let (promise, _, _) = Promise<Int>.deferred()
+                    let (promise, _, _) = Promise<Int, MyError>.deferred()
 
                     promise.catch { _ -> Void in
                         XCTFail()
@@ -358,11 +358,11 @@ class APlusTests: XCTestCase {
 
             test("2.2.3.3: it must not be called more than once.") {
                 expect("already-rejected") { finish in
-                    let promise = Promise<Int>(error: Error.e1)
+                    let promise = Promise<Int, MyError>(error: MyError.e1)
 
                     var timesCalled = 0
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
@@ -374,17 +374,17 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to reject a pending promise more than once, immediately") { finish in
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, .e1)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
 
-                    reject(Error.e1)
-                    reject(Error.e1)
+                    reject(MyError.e1)
+                    reject(MyError.e1)
 
                     after(ticks: 25) {
                         finish()
@@ -393,18 +393,18 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to reject a pending promise more than once, delayed") { finish in
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
 
                     after(ticks: 5) {
-                        reject(Error.e1)
-                        reject(Error.e1)
+                        reject(MyError.e1)
+                        reject(MyError.e1)
                     }
 
                     after(ticks: 25) {
@@ -414,18 +414,18 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to reject a pending promise more than once, immediately then delayed") { finish in
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
 
-                    reject(Error.e1)
+                    reject(MyError.e1)
                     after(ticks: 5) {
-                        reject(Error.e1)
+                        reject(MyError.e1)
                     }
 
                     after(ticks: 25) {
@@ -435,18 +435,18 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when multiple `then` calls are made, spaced apart in time") { finish in
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
 
                     after(ticks: 5) {
                         promise.catch {
-                            XCTAssertEqual($0 as? Error, Error.e1)
+                            XCTAssertEqual($0, MyError.e1)
                             timesCalled += 1
                             XCTAssertEqual(timesCalled, 2)
                         }
@@ -454,7 +454,7 @@ class APlusTests: XCTestCase {
 
                     after(ticks: 10) {
                         promise.catch {
-                            XCTAssertEqual($0 as? Error, Error.e1)
+                            XCTAssertEqual($0, MyError.e1)
                             timesCalled += 1
                             XCTAssertEqual(timesCalled, 3)
                             finish()
@@ -462,24 +462,24 @@ class APlusTests: XCTestCase {
                     }
 
                     after(ticks: 15) {
-                        reject(Error.e1)
+                        reject(MyError.e1)
                     }
                 }
 
                 expect("when `then` is interleaved with rejection") { finish in
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var timesCalled = 0
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 1)
                     }
 
-                    reject(Error.e1)
+                    reject(MyError.e1)
 
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         timesCalled += 1
                         XCTAssertEqual(timesCalled, 2)
                         finish()
@@ -494,7 +494,7 @@ class APlusTests: XCTestCase {
         "platform code.") {
             test("`then` returns before the promise becomes fulfilled or rejected") {
                 expect("`then`") { finish in
-                    let promise = Promise<Int>(value: sentinel)
+                    let promise = Promise<Int, MyError>(value: sentinel)
 
                     var thenHasReturned = false
 
@@ -507,7 +507,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("`catch`") { finish in
-                    let promise = Promise<Int>(error: Error.e1)
+                    let promise = Promise<Int, MyError>(error: MyError.e1)
 
                     var catchHasReturned = false
 
@@ -522,7 +522,7 @@ class APlusTests: XCTestCase {
 
             test("Clean-stack execution ordering tests (fulfillment case)") {
                 test("when `onFulfilled` is added immediately before the promise is fulfilled") {
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var thenCalled = false;
 
@@ -536,7 +536,7 @@ class APlusTests: XCTestCase {
                 }
 
                 test("when `onFulfilled` is added immediately after the promise is fulfilled") {
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var thenCalled = false;
 
@@ -550,7 +550,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when one `onFulfilled` is added inside another `onFulfilled`") { finish in
-                    let promise = Promise<Int>(value: sentinel)
+                    let promise = Promise<Int, MyError>(value: sentinel)
 
                     var firstOnFulfilledFinished = false
 
@@ -564,8 +564,8 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when `onFulfilled` is added inside an `onRejected`") { finish in
-                    let promise = Promise<Int>(error: Error.e1)
-                    let promise2 = Promise<Int>(value: sentinel)
+                    let promise = Promise<Int, MyError>(error: MyError.e1)
+                    let promise2 = Promise<Int, MyError>(value: sentinel)
 
                     var firstOnRejectedFinished = false
 
@@ -579,7 +579,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when the promise is fulfilled asynchronously") { finish in
-                    let (promise, fulfill, _) = Promise<Int>.deferred()
+                    let (promise, fulfill, _) = Promise<Int, MyError>.deferred()
 
                     var firstStackFinished = false
 
@@ -597,7 +597,7 @@ class APlusTests: XCTestCase {
 
             test("Clean-stack execution ordering tests (rejection case)") {
                 test("when `onRejected` is added immediately before the promise is rejected") {
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var catchCalled = false;
 
@@ -605,17 +605,17 @@ class APlusTests: XCTestCase {
                         catchCalled = true;
                     }
 
-                    reject(Error.e1)
+                    reject(MyError.e1)
 
                     XCTAssertEqual(catchCalled, false)
                 }
 
                 test("when `onRejected` is added immediately after the promise is rejected") {
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var catchCalled = false;
 
-                    reject(Error.e1)
+                    reject(MyError.e1)
 
                     promise.catch { _ in
                         catchCalled = true;
@@ -625,7 +625,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when one `onRejected` is added inside another `onRejected`") { finish in
-                    let promise = Promise<Int>(error: Error.e1)
+                    let promise = Promise<Int, MyError>(error: MyError.e1)
 
                     var firstOnRejectedFinished = false
 
@@ -639,8 +639,8 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when `onRejected` is added inside an `onFulfilled`") { finish in
-                    let promise = Promise<Int>(value: sentinel)
-                    let promise2 = Promise<Int>(error: Error.e1)
+                    let promise = Promise<Int, MyError>(value: sentinel)
+                    let promise2 = Promise<Int, MyError>(error: MyError.e1)
 
                     var firstOnFulfilledFinished = false
 
@@ -654,12 +654,12 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when the promise is rejected asynchronously") { finish in
-                    let (promise, _, reject) = Promise<Int>.deferred()
+                    let (promise, _, reject) = Promise<Int, MyError>.deferred()
 
                     var firstStackFinished = false
 
                     after(ticks: 1) {
-                        reject(Error.e1)
+                        reject(MyError.e1)
                         firstStackFinished = true
                     }
                     
@@ -684,7 +684,7 @@ class APlusTests: XCTestCase {
         test("2.2.6: `then` may be called multiple times on the same promise.") {
             test("2.2.6.1: If/when `promise` is fulfilled, all respective `onFulfilled` callbacks must execute in the order of their originating calls to `then`.") {
                 expect("multiple boring fulfillment handlers") { finish in
-                    let promise = Promise<Int>.fulfilledAsync()
+                    let promise = Promise<Int, MyError>.fulfilledAsync()
 
                     let finisher = Finisher(finish, 3)
 
@@ -711,7 +711,7 @@ class APlusTests: XCTestCase {
                 expect("results in multiple branching chains with their own fulfillment values") { finish in
                     let finisher = Finisher(finish, 3)
 
-                    let promise = Promise<Int>.fulfilledAsync()
+                    let promise = Promise<Int, MyError>.fulfilledAsync()
 
                     promise.then { val -> Int in
                         XCTAssertEqual(val, sentinel)
@@ -739,7 +739,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("`onFulfilled` handlers are called in the original order") { finish in
-                    let promise = Promise<Int>.fulfilledAsync()
+                    let promise = Promise<Int, MyError>.fulfilledAsync()
                     var callCount = 0
 
                     promise.then {
@@ -766,7 +766,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("even when one handler is added inside another handle") { finish in
-                    let promise = Promise<Int>.fulfilledAsync()
+                    let promise = Promise<Int, MyError>.fulfilledAsync()
                     var callCount = 0
 
                     promise.then {
@@ -792,22 +792,22 @@ class APlusTests: XCTestCase {
 
             test("2.2.6.2: If/when `promise` is rejected, all respective `onRejected` callbacks must execute in the order of their originating calls to `then`.") {
                 expect("multiple boring rejection handlers") { finish in
-                    let promise = Promise<Int>.rejectedAsync()
+                    let promise = Promise<Int, MyError>.rejectedAsync()
 
                     let finisher = Finisher(finish, 3)
 
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         finisher.finish()
                     }
 
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         finisher.finish()
                     }
 
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         finisher.finish()
                     }
                 }
@@ -817,24 +817,24 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("`onRejected` handlers are called in the original order") { finish in
-                    let promise = Promise<Int>.rejectedAsync()
+                    let promise = Promise<Int, MyError>.rejectedAsync()
                     var callCount = 0
 
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         callCount += 1
                         XCTAssertEqual(callCount, 1)
                     }
 
 
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         callCount += 1
                         XCTAssertEqual(callCount, 2)
                     }
 
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         callCount += 1
                         XCTAssertEqual(callCount, 3)
                         finish()
@@ -844,21 +844,21 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("even when one handler is added inside another handle") { finish in
-                    let promise = Promise<Int>.rejectedAsync()
+                    let promise = Promise<Int, MyError>.rejectedAsync()
                     var callCount = 0
 
                     promise.catch {
-                        XCTAssertEqual($0 as? Error, Error.e1)
+                        XCTAssertEqual($0, MyError.e1)
                         callCount += 1
                         XCTAssertEqual(callCount, 1)
 
                         promise.catch {
-                            XCTAssertEqual($0 as? Error, Error.e1)
+                            XCTAssertEqual($0, MyError.e1)
                             callCount += 1
                             XCTAssertEqual(callCount, 2)
                             
                             promise.catch {
-                                XCTAssertEqual($0 as? Error, Error.e1)
+                                XCTAssertEqual($0, MyError.e1)
                                 callCount += 1
                                 XCTAssertEqual(callCount, 3)
                                 finish()
@@ -908,7 +908,7 @@ class APlusTests: XCTestCase {
                 test("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") {
                     expect("via return from a fulfilled promise") { finish in
                         let promise = Promise(value: 1).then { _ in
-                            return Promise<Int> { (_,_) in } // pending
+                            return Promise<Int, MyError> { (_,_) in } // pending
                         }
                         promise.finally {
                             XCTFail()
@@ -919,8 +919,8 @@ class APlusTests: XCTestCase {
                     }
                  
                     expect("via return from a rejected promise") { finish in
-                        let promise = Promise<Int>(error: Error.e1).recover { _ in
-                            return Promise<Int> { (_,_) in } // pending
+                        let promise = Promise<Int, MyError>(error: MyError.e1).recover { _ in
+                            return Promise<Int, MyError> { (_,_) in } // pending
                         }
                         promise.finally {
                             XCTFail()
@@ -933,7 +933,7 @@ class APlusTests: XCTestCase {
 
                 test("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
                     expect("`x` is already-fulfilled") { finish in
-                        let promise = Promise<Int>(value: sentinel).then { return $0 }
+                        let promise = Promise<Int, MyError>(value: sentinel).then { return $0 }
                         promise.then {
                             XCTAssertEqual($0, sentinel)
                             finish()
@@ -941,7 +941,7 @@ class APlusTests: XCTestCase {
                     }
 
                     expect("`x` is eventually-fulfilled") { finish in
-                        let promise = Promise<Int>.fulfilledAsync().then { return $0 }
+                        let promise = Promise<Int, MyError>.fulfilledAsync().then { return $0 }
                         promise.then {
                             XCTAssertEqual($0, sentinel)
                             finish()
@@ -952,17 +952,17 @@ class APlusTests: XCTestCase {
 
                 test("2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.") {
                     expect("`x` is already-rejected") { finish in
-                        let promise = Promise<Int>(error: Error.e1).then { _ in }
+                        let promise = Promise<Int, MyError>(error: MyError.e1).then { _ in }
                         promise.catch {
-                            XCTAssertEqual($0 as? Error, Error.e1)
+                            XCTAssertEqual($0, MyError.e1)
                             finish()
                         }
                     }
 
                     expect("`x` is eventually-rejected") { finish in
-                        let promise = Promise<Int>.rejectedAsync().then { _ in }
+                        let promise = Promise<Int, MyError>.rejectedAsync().then { _ in }
                         promise.catch {
-                            XCTAssertEqual($0 as? Error, Error.e1)
+                            XCTAssertEqual($0, MyError.e1)
                             finish()
                         }
                     }
