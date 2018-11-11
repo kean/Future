@@ -101,7 +101,7 @@ let future = Future<Int, Error>(error: Error.unknown)
 
 ### Zip
 
-Use  `static func zip(_lhs:_rhs:)` to combine the result of two futures:
+Use  `zip`  to combine the result of two futures into a single tuple:
 
 ```swift
 let user: Future<User, Error>
@@ -109,6 +109,27 @@ let avatar: Future<UIImage, Error>
 
 Future.zip(user, avatar).on(success: { user, avatar in
     // use both values
+})
+```
+
+Or to wait for the result of multiple futures:
+
+```swift
+Future.zip([future1, future2]).on(success: { values in
+    // use an array of values
+})
+```
+
+### Reduce
+
+Use `reduce` to combine the results of multiple futures:
+
+```swift
+let future1 = Future<Int, Error>(value: 1)
+let future2 = Future<Int, Error>(value: 2)
+
+Future.reduce(0, [future1, future2], +).on(success: { value in
+    print(value) // prints "3"
 })
 ```
 

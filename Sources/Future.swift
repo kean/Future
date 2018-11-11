@@ -179,6 +179,8 @@ public final class Future<Value, Error> {
 
     /// Returns a future which succeedes when both futures succeed. If one of
     /// the futures fail, the returned future also fails immediately.
+    ///
+    /// - note: The resulting future is observed on the first future's queue.
     public static func zip<SecondValue>(_ lhs: Future<Value, Error>, _ rhs: Future<SecondValue, Error>) -> Future<(Value, SecondValue), Error> {
         var firstValue: Value?
         var secondValue: SecondValue?
@@ -199,6 +201,40 @@ public final class Future<Value, Error> {
                 succeedIfPossible()
             }, failure: fail) // whichever fails first
         }
+    }
+
+    /// Returns a future which succeedes when all of the given futures succeed.
+    /// If one of the futures fail, the returned future also fails.
+    ///
+    /// - note: The resulting future is observed on the first future's queue.
+    public static func zip(_ futures: [Future<Value, Error>]) -> Future<[Value], Error> {
+        return Future<[Value], Error>.reduce([], futures) { result, value in
+            result + [value]
+        }
+    }
+
+    // MARK: Reduce
+
+    /// Returns a future that succeeded only when all the provided futures
+    /// succeed. The future contains the result of combining all of the
+    /// values of the given futures. If any of the futures fail the resulting
+    /// future also fails.
+    ///
+    /// - note: The resulting future is observed on the first future's queue.
+    public func reduce<SecondValue>(_ futures: [Future<SecondValue, Error>], _ combiningFunction: @escaping (Value, SecondValue) -> Value) -> Future<Value, Error> {
+        return futures.reduce(self) { lhs, rhs in
+            return Future.zip(lhs, rhs).map(combiningFunction)
+        }
+    }
+
+    /// Returns a future that succeeded only when all the provided futures
+    /// succeed. The future contains the result of combining the
+    /// `initialResult` with the values of all the given future. If any of the
+    /// futures fail the resulting future also fails.
+    ///
+    /// - note: The resulting future is observed on the first future's queue.
+    public static func reduce<SecondValue>(_ initialResult: Value, _ futures: [Future<SecondValue, Error>], _ combiningFunction: @escaping (Value, SecondValue) -> Value) -> Future<Value, Error> {
+        return Future(value: initialResult).reduce(futures, combiningFunction)
     }
 
     // MARK: State (Private)
