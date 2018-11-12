@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name             = 'Pill'
-    s.version          = '0.6'
-    s.summary          = 'Micro Promise/A+ under 100 lines of code'
+    s.version          = '0.7'
+    s.summary          = 'A streamlined Future<Value, Error> implementation with a functional API'
     s.homepage         = 'https://github.com/kean/Pill'
     s.license          = 'MIT'
     s.author           = 'Alexander Grebenyuk'

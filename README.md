@@ -101,7 +101,7 @@ let future = Future<Int, Error>(error: Error.unknown)
 
 ### Zip
 
-Use  `zip`  to combine the result of two futures into a single tuple:
+Use  `zip`  to combine the result of up to three futures in a single future:
 
 ```swift
 let user: Future<User, Error>

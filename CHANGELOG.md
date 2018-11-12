@@ -1,3 +1,7 @@
+## Pill 0.7
+
+- Add `zip` with three arguments
+
 ## Pill 0.6
 
 Pill 0.6 is a complete reimagining of the library. See [a post](https://kean.github.io/post/future) for a complete overview of the changes.
