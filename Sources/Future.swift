@@ -30,6 +30,7 @@ public final class Future<Value, Error> {
     private var state: State = .pending
     private var handlers: Handlers? // nil when finished
     private let queue: DispatchQueue // queue on which events are observed
+    private let lock = locks[Int.random(in: 0..<lockCount)]
 
     // MARK: Create
 
@@ -294,7 +295,8 @@ public final class Future<Value, Error> {
 // Using the same lock across instances is safe because Future doesn't invoke
 // any client code directly, it always does so after asynchronously dispatching
 // the work to the provided dispatch queue.
-private let lock = NSLock()
+private let lockCount = 10
+private let locks = Array(0..<lockCount).map { _ in NSLock() }
 
 /// A promise to provide a result later.
 public struct Promise<Value, Error> {
