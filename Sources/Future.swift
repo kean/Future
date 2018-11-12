@@ -4,8 +4,29 @@
 
 import Foundation
 
-/// A future represents a result which may be available now, or in the future,
-/// or never. Use `on(success:failure:)` to observe the result.
+/// A future represents a result of computation which may be available now, or
+/// in the future, or never. Essentially, a future is an object to which you
+/// attach callbacks, instead of passing callbacks into a function that performs
+/// a computation.
+///
+/// To attach a callback to the `Future` use `on(success:failure:completion:)`
+/// method:
+///
+/// ```
+/// let user: Future<User, Error>
+/// user.on(
+///     success: { print("received entity: \($0)" },
+///     failure: { print("failed with error: \($0)" },
+///     completion: { print("either succeeded or failed" }
+/// )
+/// ```
+///
+/// Futures are easily composable. `Future<Value, Error>` provides a set of
+/// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
+///
+/// By default, all of the callbacks and composing functions are executed on the
+/// main queue (`DispatchQueue.main`). To change the queue use `observeOn` method
+/// which creates a new future observed on the given queue.
 public final class Future<Value, Error> {
     private var state: State = .pending
     private var handlers: Handlers? // nil when finished

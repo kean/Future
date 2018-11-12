@@ -7,29 +7,29 @@
 <a href="https://travis-ci.org/kean/Pill"><img src="https://img.shields.io/travis/kean/Pill/master.svg"></a>
 </p>
 
-A streamlined `Future<Value, Error>` implementation with typed errors and a Swifty API.
+A streamlined `Future<Value, Error>` implementation with a functional API.
 
-## Requirements
+## Future
 
-- iOS 9.0 / watchOS 2.0 / OS X 10.11 / tvOS 9.0
-- Xcode 10
-- Swift 4.2
+A future represents a result of computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation.
+
+Futures are easily composable. `Future<Value, Error>` provides a set of functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures. 
 
 ## Quick Start
 
-To access the result of the `Future`, use `func on(success:failure:completion:)`:
+To attach a callback to the `Future` use  `on(success:failure:completion:)` method:
 
 ```swift
-let future = Future<Int, Error>(value: 1)
+let user: Future<User, Error>
 
-future.on(
-    success: { print("value: \($0)" },
-    failure: { print("error: \($0)" },
+user.on(
+    success: { print("received entity: \($0)" },
+    failure: { print("failed with error: \($0)" },
     completion: { print("either succeeded or failed" }
 )
 ```
 
-By default, all the callbacks are called on the main queue. To observe changes on a different queue use `func observeOn(_queue:)`:
+By default, all of the callbacks and composing functions are executed on the main queue (`DispatchQueue.main`). To change the queue use `observeOn` method which creates a new future observed on the given queue:
 
 ```swift
 future.observeOn(DispatchQueue.global())
@@ -142,6 +142,12 @@ class Future {
     var error: Error?
 }
 ```
+
+## Requirements
+
+- iOS 9.0 / watchOS 2.0 / OS X 10.11 / tvOS 9.0
+- Xcode 10
+- Swift 4.2
 
 ## License
 
