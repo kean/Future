@@ -25,8 +25,7 @@ import Foundation
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
 ///
 /// By default, all of the callbacks and composing functions are executed on the
-/// main queue (`DispatchQueue.main`). To change the queue use `observeOn` method
-/// which creates a new future observed on the given queue.
+/// main queue (`DispatchQueue.main`). To change the queue use `observeOn` method.
 public final class Future<Value, Error> {
     private var state: State = .pending
     private var handlers: Handlers? // nil when finished
@@ -39,13 +38,11 @@ public final class Future<Value, Error> {
     /// - parameter closure: The closure is called immediately on the current
     /// thread. You should start an asynchronous task and call either `succeed`
     /// or `fail` when it completes.
-    public convenience init(_ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
-        self.init(queue: .main, closure)
-    }
-
-    convenience init(queue: DispatchQueue, _ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
+    /// - parameter queue: A queue on which the future is observed. `.main` by
+    /// default.
+    public convenience init(queue: DispatchQueue = .main, _ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
         self.init(queue: queue)
-        closure({ self.succeed($0) }, { self.fail($0) }) // retain self
+        closure(self.succeed, self.fail) // retain self
     }
 
     init(queue: DispatchQueue = .main) {
@@ -54,17 +51,19 @@ public final class Future<Value, Error> {
     }
 
     /// Creates a future with a given value.
-    public init(value: Value) {
-        self.queue = .main
-        self.state = .success(value)
-        // no need to create handlers
+    public convenience init(value: Value) {
+        self.init(state: .success(value))
     }
 
     /// Creates a future with a given error.
-    public init(error: Error) {
+    public convenience init(error: Error) {
+        self.init(state: .failure(error))
+    }
+
+    private init(state: State) {
         self.queue = .main
-        self.state = .failure(error)
-        // no need to create handlers
+        self.state = state
+        // No need to create handlers
     }
 
     // MARK: State Transitions
@@ -83,6 +82,7 @@ public final class Future<Value, Error> {
             return // already finished
         }
         self.state = newState
+
         assert(handlers != nil)
         switch newState {
         case .pending: fatalError("Invalid transition")
@@ -96,9 +96,12 @@ public final class Future<Value, Error> {
 
     /// The given closures execute asynchronously when the future has a result.
     ///
+    /// By default, all of the callbacks and composing functions are executed on
+    /// the main queue (`DispatchQueue.main`). To change the queue use `observeOn`.
+    ///
     /// - parameter success: Gets called when the future has a value.
     /// - parameter failure: Gets called when the future has an error.
-    /// - parameter completed: Gets called when the future has any result.
+    /// - parameter completion: Gets called when the future has any result.
     public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
         observe(success: { success?($0); completion?() },
                 failure: { failure?($0); completion?() })
@@ -285,7 +288,7 @@ private let lock = NSLock()
 public struct Promise<Value, Error> {
     public let future: Future<Value, Error>
 
-    public init(on queue: DispatchQueue = .main) {
+    public init(queue: DispatchQueue = .main) {
         self.future = Future(queue: queue)
     }
 
