@@ -21,6 +21,7 @@ class FutureTests: XCTestCase {
         }
 
         // EXPECT on(...) to be called on the main queue
+        let expectation = self.expectation(description: "completion")
         future.on(
             success: { _ in
                 XCTAssertTrue(Thread.isMainThread)
@@ -30,8 +31,10 @@ class FutureTests: XCTestCase {
             },
             completion: {
                 XCTAssertTrue(Thread.isMainThread)
+                expectation.fulfill()
             }
         )
+        wait()
     }
 
     func testObserveOn() {
@@ -46,6 +49,7 @@ class FutureTests: XCTestCase {
         }
 
         // EXPECT on(...) to be called on the global queue
+        let expectation = self.expectation(description: "completion")
         future.on(
             success: { _ in
                 XCTAssertFalse(Thread.isMainThread)
@@ -55,12 +59,14 @@ class FutureTests: XCTestCase {
             },
             completion: {
                 XCTAssertFalse(Thread.isMainThread)
+                expectation.fulfill()
             }
         )
+        wait()
     }
 
     func testObserveOnFlatMap() {
-        // GIVEN the promise with a a custom observe queue
+        // GIVEN a future with a a custom observe queue
         let future = Future<Int, MyError>(value: 1)
             .observeOn(DispatchQueue.global())
             .flatMap { value in
@@ -74,6 +80,7 @@ class FutureTests: XCTestCase {
         }
 
         // EXPECT on(...) to be called on the global queue
+        let expectation = self.expectation(description: "completion")
         future.on(
             success: { _ in
                 XCTAssertFalse(Thread.isMainThread)
@@ -83,8 +90,84 @@ class FutureTests: XCTestCase {
             },
             completion: {
                 XCTAssertFalse(Thread.isMainThread)
+                expectation.fulfill()
             }
         )
+        wait()
+    }
+
+    func testObserveOnTheSameQueue() {
+        let future = Future<Int, MyError>(value: 1)
+
+        // WHEN calling observeOn
+        let new = future.observeOn(DispatchQueue.main)
+
+        // EXPECT on(...) to be called on the global queue
+        let expectation = self.expectation(description: "completion")
+        new.on(
+            success: { _ in
+                XCTAssertTrue(Thread.isMainThread)
+            },
+            completion: {
+                XCTAssertTrue(Thread.isMainThread)
+                expectation.fulfill()
+            }
+        )
+        wait()
+    }
+
+    // MARK: Synchronous Inspection
+
+    func testSynchronousInspectionPending() {
+        // GIVEN a pending promise
+        let promise = Promise<Int, MyError>()
+        let future = promise.future
+
+        // EXPECT future to be pending
+        XCTAssertTrue(future.isPending)
+        XCTAssertNil(future.value)
+        XCTAssertNil(future.error)
+    }
+
+    func testSynchronousInspectionSuccess() {
+        // GIVEN successful future
+        let future = Future<Int, MyError>(value: 1)
+
+        // EXPECT future to return value
+        XCTAssertFalse(future.isPending)
+        XCTAssertEqual(future.value, 1)
+        XCTAssertNil(future.error)
+    }
+
+    func testSynchronousInspectionFailure() {
+        // GIVEN failed future
+        let future = Future<Int, MyError>(error: .e1)
+
+        // EXPECT future to return value
+        XCTAssertFalse(future.isPending)
+        XCTAssertNil(future.value)
+        XCTAssertEqual(future.error, .e1)
+    }
+}
+
+class MapErrorTest: XCTestCase {
+    func testMapError() {
+        // GIVEN failed future
+        let future = Future<Int, MyError>(error: .e1)
+
+        // WHEN mapping error
+        let mapped = future.mapError { _ in
+            return "e1"
+        }
+
+        // EXPECT mapped future to return a new error
+        let expectation = self.expectation(description: "failure")
+        mapped.on(failure: { error in
+            XCTAssertEqual(mapped.error, "e1")
+            expectation.fulfill()
+        })
+
+        wait()
     }
 }
 
