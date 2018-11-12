@@ -258,17 +258,7 @@ public final class Future<Value, Error> {
     ///
     /// - note: The resulting future is observed on the first future's queue.
     public static func reduce<V2>(_ initialResult: Value, _ futures: [Future<V2, Error>], _ combiningFunction: @escaping (Value, V2) -> Value) -> Future<Value, Error> {
-        return Future(value: initialResult).reduce(futures, combiningFunction)
-    }
-
-    /// Returns a future that succeeded only when all the provided futures
-    /// succeed. The future contains the result of combining all of the
-    /// values of the given futures. If any of the futures fail the resulting
-    /// future also fails.
-    ///
-    /// - note: The resulting future is observed on the first future's queue.
-    private func reduce<V2>(_ futures: [Future<V2, Error>], _ combiningFunction: @escaping (Value, V2) -> Value) -> Future<Value, Error> {
-        return futures.reduce(self) { lhs, rhs in
+        return futures.reduce(Future(value: initialResult)) { lhs, rhs in
             return Future.zip(lhs, rhs).map(combiningFunction)
         }
     }
