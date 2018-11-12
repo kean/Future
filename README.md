@@ -143,6 +143,10 @@ class Future {
 }
 ```
 
+### Cancelation
+
+Pill considers cancellation to be a concern orthogonal to `Future`. There are multiple cancellation approaches. There are arguments for failing futures with an error on cancelation, there is also an argument for never resolving futures when the associated work gets canceled. In order to implement cancelation you might want to consider  [`CancellationToken`](https://kean.github.io/post/cancellation-token) or other similar patterns.    
+
 ## Requirements
 
 - iOS 9.0 / watchOS 2.0 / OS X 10.11 / tvOS 9.0
