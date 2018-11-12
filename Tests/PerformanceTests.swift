@@ -18,16 +18,16 @@ class PromisePerformanceTests: XCTestCase {
     }
 
     func testOnValue() {
-        let promises = (0..<50_000).map { _ in Future<Int, Void>(value: 1) }
+        let futures = (0..<50_000).map { _ in Future<Int, Void>(value: 1) }
 
         let expectation = self.makeExpectation()
         var finished = 0
 
         measure {
-            for promise in promises {
+            for promise in futures {
                 promise.on(success: { _ in
                     finished += 1
-                    if finished == promises.count {
+                    if finished == futures.count {
                         expectation.fulfill()
                     }
 
@@ -63,6 +63,18 @@ class PromisePerformanceTests: XCTestCase {
         }
 
         wait() // wait so that next test aren't affecteds
+    }
+
+    func testObserveOnTheSameQueue() {
+        let futures = (0..<50_000).map { _ in Future<Int, Void>(value: 1) }
+
+        measure {
+            for future in futures {
+                // We expect this to be instantaneous thanks to the performance
+                // optimization
+                _ = future.observeOn(.main)
+            }
+        }
     }
 }
 

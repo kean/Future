@@ -94,12 +94,14 @@ public final class Future<Value, Error> {
 
     // MARK: Callbacks
 
-    /// Returns a future which callbacks are observed on the given queue. The
-    /// default queue is `.main` queue.
-    public func observeOn(_ queue: DispatchQueue) -> Future {
-        return Future(queue: queue) { succeed, fail in
-            observe(success: succeed, failure: fail)
-        }
+    /// The given closures execute asynchronously when the future has a result.
+    ///
+    /// - parameter success: Gets called when the future has a value.
+    /// - parameter failure: Gets called when the future has an error.
+    /// - parameter completed: Gets called when the future has any result.
+    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
+        observe(success: { success?($0); completion?() },
+                failure: { failure?($0); completion?() })
     }
 
     private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
@@ -114,6 +116,20 @@ public final class Future<Value, Error> {
             handlers?.failure.append(failure)
         case let .success(value): success(value)
         case let .failure(error): failure(error)
+        }
+    }
+
+    /// Returns a new future which callbacks are observed on the given queue. The
+    /// default queue is `.main` queue.
+    ///
+    /// - note: In case the given queue is the same as the current future's
+    /// queue the method retuns the current future saving an allocation.
+    public func observeOn(_ queue: DispatchQueue) -> Future {
+        if queue === self.queue {
+            return self // We're already on that queue
+        }
+        return Future(queue: queue) { succeed, fail in
+            observe(success: succeed, failure: fail)
         }
     }
 
@@ -159,18 +175,6 @@ public final class Future<Value, Error> {
                 closure(error).observe(success: succeed, failure: fail)
             })
         }
-    }
-
-    // MARK: Observing Results
-
-    /// The given closures execute asynchronously when the future has a result.
-    ///
-    /// - parameter success: Gets called when the future has a value.
-    /// - parameter failure: Gets called when the future has an error.
-    /// - parameter completed: Gets called when the future has any result.
-    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
-        observe(success: { success?($0); completion?() },
-                failure: { failure?($0); completion?() })
     }
 
     // MARK: Synchronous Inspection
@@ -279,9 +283,11 @@ private let lock = NSLock()
 
 /// A promise to provide a result later.
 public struct Promise<Value, Error> {
-    public let future = Future<Value, Error>()
+    public let future: Future<Value, Error>
 
-    public init() {}
+    public init(on queue: DispatchQueue = .main) {
+        self.future = Future(queue: queue)
+    }
 
     public func succeed(value: Value) {
         future.succeed(value)
