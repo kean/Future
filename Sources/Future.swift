@@ -215,33 +215,28 @@ public final class Future<Value, Error> {
     // MARK: Zip
 
     /// Returns a future which succeedes when both futures succeed. If one of
-    /// the futures fail, the returned future also fails immediately.
+    /// the futures fails, the returned future also fails immediately.
     ///
     /// - note: The resulting future is observed on the first future's queue.
-    public static func zip<SecondValue>(_ lhs: Future<Value, Error>, _ rhs: Future<SecondValue, Error>) -> Future<(Value, SecondValue), Error> {
-        let future = Future<(Value, SecondValue), Error>(queue: lhs.queue)
-
-        var firstValue: Value?
-        var secondValue: SecondValue?
-        func succeedIfPossible() {
-            // This is thread safe because both futures are observed on the
-            // same queue.
-            guard let firstValue = firstValue, let secondValue = secondValue else { return }
-            future.succeed((firstValue, secondValue))
+    public static func zip<V2>(_ lhs: Future<Value, Error>, _ rhs: Future<V2, Error>) -> Future<(Value, V2), Error> {
+        let future = Future<(Value, V2), Error>(queue: lhs.queue)
+        func success(value: Any) {
+            guard let v1 = lhs.value, let v2 = rhs.value else { return }
+            future.succeed((v1, v2))
         }
-
-        lhs.observe(success: { value in
-            firstValue = value
-            succeedIfPossible()
-        }, failure: future.fail) // whichever fails first
-
-        // Use observeOn to make sure that both futures run on the same queue.
-        rhs.observeOn(lhs.queue).observe(success: { value in
-            secondValue = value
-            succeedIfPossible()
-        }, failure: future.fail) // whichever fails first
-
+        lhs.observe(success: success, failure: future.fail)
+        rhs.observe(success: success, failure: future.fail)
         return future
+    }
+
+    /// Returns a future which succeedes when all three futures succeed. If one
+    /// of `the futures fails, the returned future also fails immediately.
+    ///
+    /// - note: The resulting future is observed on the first future's queue.
+    public static func zip<V2, V3>(_ f1: Future<Value, Error>, _ f2: Future<V2, Error>, _ f3: Future<V3, Error>) -> Future<(Value, V2, V3), Error> {
+        return Future.zip(f1, Future<V2, Error>.zip(f2, f3)).map { value in
+            return (value.0, value.1.0, value.1.1)
+        }
     }
 
     /// Returns a future which succeedes when all of the given futures succeed.
@@ -262,7 +257,7 @@ public final class Future<Value, Error> {
     /// futures fail the resulting future also fails.
     ///
     /// - note: The resulting future is observed on the first future's queue.
-    public static func reduce<SecondValue>(_ initialResult: Value, _ futures: [Future<SecondValue, Error>], _ combiningFunction: @escaping (Value, SecondValue) -> Value) -> Future<Value, Error> {
+    public static func reduce<V2>(_ initialResult: Value, _ futures: [Future<V2, Error>], _ combiningFunction: @escaping (Value, V2) -> Value) -> Future<Value, Error> {
         return Future(value: initialResult).reduce(futures, combiningFunction)
     }
 
@@ -272,7 +267,7 @@ public final class Future<Value, Error> {
     /// future also fails.
     ///
     /// - note: The resulting future is observed on the first future's queue.
-    private func reduce<SecondValue>(_ futures: [Future<SecondValue, Error>], _ combiningFunction: @escaping (Value, SecondValue) -> Value) -> Future<Value, Error> {
+    private func reduce<V2>(_ futures: [Future<V2, Error>], _ combiningFunction: @escaping (Value, V2) -> Value) -> Future<Value, Error> {
         return futures.reduce(self) { lhs, rhs in
             return Future.zip(lhs, rhs).map(combiningFunction)
         }

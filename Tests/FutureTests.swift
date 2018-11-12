@@ -88,7 +88,7 @@ class FutureTests: XCTestCase {
     }
 }
 
-class ZipTests: XCTestCase {
+class Zip2Tests: XCTestCase {
     // MARK: Zip (Tuple)
 
     func testBothSucceed() {
