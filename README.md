@@ -2,9 +2,10 @@
 
 <p align="left">
 <img src="https://img.shields.io/cocoapods/v/Pill.svg?label=version">
-<img src="https://img.shields.io/badge/supports-CocoaPods%20%7C%20Carthage%20%7C%20SwiftPM-green.svg">
-<img src="https://img.shields.io/cocoapods/p/Pill.svg?style=flat)">
+<img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
+<img src="https://img.shields.io/badge/supports-CocoaPods%2C%20Carthage%2C%20SwiftPM-green.svg">
 <a href="https://travis-ci.org/kean/Pill"><img src="https://img.shields.io/travis/kean/Pill/master.svg"></a>
+<img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
 </p>
 
 A streamlined `Future<Value, Error>` implementation with a functional API.
