@@ -189,23 +189,25 @@ public final class Future<Value, Error> {
 
     /// Returns true if the future is still pending.
     public var isPending: Bool {
-        lock.lock(); defer { lock.unlock() }
-        guard case .pending = state else { return false }
+        guard case .pending = inspectState() else { return false }
         return true
     }
 
     /// Returns the value if the future has a value.
     public var value: Value? {
-        lock.lock(); defer { lock.unlock() }
-        guard case let .success(value) = state else { return nil }
+        guard case let .success(value) = inspectState() else { return nil }
         return value
     }
 
     /// Returns the error if the future has an error.
     public var error: Error? {
-        lock.lock(); defer { lock.unlock() }
-        guard case let .failure(error) = state else { return nil }
+        guard case let .failure(error) = inspectState() else { return nil }
         return error
+    }
+
+    private func inspectState() -> State {
+        lock.lock(); defer { lock.unlock() }
+        return state
     }
 
     // MARK: Zip
