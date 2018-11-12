@@ -32,7 +32,7 @@ extension XCTestCase {
         wait()
     }
 
-    func makeExpectation() -> XCTestExpectation {
+    func expectation() -> XCTestExpectation {
         return self.expectation(description: "GenericExpectation")
     }
 

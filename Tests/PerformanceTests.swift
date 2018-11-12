@@ -20,7 +20,7 @@ class PromisePerformanceTests: XCTestCase {
     func testOnValue() {
         let futures = (0..<50_000).map { _ in Future<Int, Void>(value: 1) }
 
-        let expectation = self.makeExpectation()
+        let expectation = self.expectation()
         var finished = 0
 
         measure {
@@ -42,7 +42,7 @@ class PromisePerformanceTests: XCTestCase {
     func testFulfill() {
         let items = (0..<100_000).map { _ in Promise<Int, Void>() }
 
-        let expectation = self.makeExpectation()
+        let expectation = self.expectation()
         var finished = 0
 
         for item in items {

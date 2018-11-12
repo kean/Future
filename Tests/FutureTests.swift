@@ -21,7 +21,7 @@ class FutureTests: XCTestCase {
         }
 
         // EXPECT on(...) to be called on the main queue
-        let expectation = self.expectation(description: "completion")
+        let expectation = self.expectation()
         future.on(
             success: { _ in
                 XCTAssertTrue(Thread.isMainThread)
@@ -49,7 +49,7 @@ class FutureTests: XCTestCase {
         }
 
         // EXPECT on(...) to be called on the global queue
-        let expectation = self.expectation(description: "completion")
+        let expectation = self.expectation()
         future.on(
             success: { _ in
                 XCTAssertFalse(Thread.isMainThread)
@@ -80,7 +80,7 @@ class FutureTests: XCTestCase {
         }
 
         // EXPECT on(...) to be called on the global queue
-        let expectation = self.expectation(description: "completion")
+        let expectation = self.expectation()
         future.on(
             success: { _ in
                 XCTAssertFalse(Thread.isMainThread)
@@ -103,7 +103,7 @@ class FutureTests: XCTestCase {
         let new = future.observeOn(DispatchQueue.main)
 
         // EXPECT on(...) to be called on the global queue
-        let expectation = self.expectation(description: "completion")
+        let expectation = self.expectation()
         new.on(
             success: { _ in
                 XCTAssertTrue(Thread.isMainThread)
@@ -161,7 +161,7 @@ class MapErrorTest: XCTestCase {
         }
 
         // EXPECT mapped future to return a new error
-        let expectation = self.expectation(description: "failure")
+        let expectation = self.expectation()
         mapped.on(failure: { error in
             XCTAssertEqual(mapped.error, "e1")
             expectation.fulfill()
@@ -181,7 +181,7 @@ class Zip2Tests: XCTestCase {
         let result = Future.zip(futures.0, futures.1)
 
         // EXPECT "zipped" future to succeed
-        let expectation = self.expectation(description: "success")
+        let expectation = self.expectation()
         result.on(
             success: { v1, v2 in
                 XCTAssertEqual(v1, 1)
@@ -209,7 +209,7 @@ class Zip2Tests: XCTestCase {
         let result = Future.zip(futures.0, futures.1)
 
         // EXPECT "zipped" future to fail
-        let expectation = self.expectation(description: "failure")
+        let expectation = self.expectation()
         result.on(
             success: { _ in
                 XCTFail()
@@ -234,7 +234,7 @@ class Zip2Tests: XCTestCase {
         let result = Future.zip(futures.0, futures.1)
 
         // EXPECT "zipped" future to fail
-        let expectation = self.expectation(description: "failure")
+        let expectation = self.expectation()
         result.on(
             success: { _ in
                 XCTFail()
@@ -261,7 +261,7 @@ class Zip3Tests: XCTestCase {
         let result = Future.zip(futures.0, futures.1, futures.2)
 
         // EXPECT "zipped" future to succeed
-        let expectation = self.expectation(description: "success")
+        let expectation = self.expectation()
         result.on(
             success: { v1, v2, v3 in
                 XCTAssertEqual(v1, 1)
@@ -293,7 +293,7 @@ class Zip3Tests: XCTestCase {
         let result = Future.zip(futures.0, futures.1, futures.2)
 
         // EXPECT "zipped" future to fail
-        let expectation = self.expectation(description: "failure")
+        let expectation = self.expectation()
         result.on(
             success: { _ in
                 XCTFail()
@@ -321,7 +321,7 @@ class ZipIntoArrayTests: XCTestCase {
         let result = Future.zip([futures.0, futures.1, futures.2])
 
         // EXPECT "zipped" future to succeed
-        let expectation = self.expectation(description: "succees")
+        let expectation = self.expectation()
         result.on(
             success: { value in
                 XCTAssertTrue(value == [1, 2, 3])
@@ -351,7 +351,7 @@ class ZipIntoArrayTests: XCTestCase {
         let result = Future.zip([futures.0, futures.1, futures.2])
 
         // EXPECT the resulting future to fail
-        let expectation = self.expectation(description: "failure")
+        let expectation = self.expectation()
         result.on(failure: { error in
             XCTAssertEqual(error, .e1)
             expectation.fulfill()
@@ -372,7 +372,7 @@ class ReduceTests: XCTestCase {
         let result = Future.reduce(0, [futures.0, futures.1], +)
 
         // EXPECT reduce to combine the results of all futures
-        let expectation = self.expectation(description: "success")
+        let expectation = self.expectation()
 
         result.on(success: { value in
             XCTAssertEqual(value, 3)
@@ -393,7 +393,7 @@ class ReduceTests: XCTestCase {
         let result = Future.reduce(0, [futures.0, futures.1], +)
 
         // EXPECT the resuling future to fail
-        let expectation = self.expectation(description: "failure")
+        let expectation = self.expectation()
         result.on(failure: { error in
             XCTAssertEqual(error, .e1)
             expectation.fulfill()
@@ -413,7 +413,7 @@ class ReduceTests: XCTestCase {
         let result = Future.reduce(0, [futures.0, futures.1], +)
 
         // EXPECT the resuling future to fail
-        let expectation = self.expectation(description: "failure")
+        let expectation = self.expectation()
         result.on(failure: { error in
             XCTAssertEqual(error, .e1)
             expectation.fulfill()
