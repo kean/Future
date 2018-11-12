@@ -92,17 +92,14 @@ class Zip2Tests: XCTestCase {
     // MARK: Zip (Tuple)
 
     func testBothSucceed() {
-        // GIVEN two futures
-        let promise = Promise<Int, String>()
-        let future = promise.future
+        let (promises, futures) = setUpFutures()
 
-        let promise2 = Promise<Int, String>()
-        let future2 = promise2.future
-
-        let expectation = self.expectation(description: "succees")
+        // WHEN zipping two futures
+        let result = Future.zip(futures.0, futures.1)
 
         // EXPECT "zipped" future to succeed
-        Future.zip(future, future2).on(
+        let expectation = self.expectation(description: "success")
+        result.on(
             success: { v1, v2 in
                 XCTAssertEqual(v1, 1)
                 XCTAssertEqual(v2, 2)
@@ -114,86 +111,79 @@ class Zip2Tests: XCTestCase {
         )
 
         // WHEN first both succeed
-        promise.succeed(value: 1)
+        promises.0.succeed(value: 1)
         DispatchQueue.global().async {
-            promise2.succeed(value: 2)
+            promises.1.succeed(value: 2)
         }
 
         wait()
     }
 
     func testFirstFails() {
-        // GIVEN two futures
-        let promise = Promise<Int, String>()
-        let future = promise.future
+        let (promises, futures) = setUpFutures()
 
-        let promise2 = Promise<Int, String>()
-        let future2 = promise2.future
-
-        let expectation = self.expectation(description: "failure")
+        // WHEN zipping two futures
+        let result = Future.zip(futures.0, futures.1)
 
         // EXPECT "zipped" future to fail
-        Future.zip(future, future2).on(
+        let expectation = self.expectation(description: "failure")
+        result.on(
             success: { _ in
                 XCTFail()
             },
             failure: { error in
-                XCTAssertEqual("error", error)
+                XCTAssertEqual(.e1, error)
                 expectation.fulfill()
             }
         )
 
         // WHEN first succeed, second fails
-        promise.succeed(value: 1)
-        promise2.fail(error: "error")
+        promises.0.succeed(value: 1)
+        promises.1.fail(error: .e1)
 
         wait()
     }
 
     func testSecondFails() {
-        // GIVEN two futures
-        let promise = Promise<Int, String>()
-        let future = promise.future
+        let (promises, futures) = setUpFutures()
 
-        let promise2 = Promise<Int, String>()
-        let future2 = promise2.future
-
-        let expectation = self.expectation(description: "failure")
+        // WHEN zipping two futures
+        let result = Future.zip(futures.0, futures.1)
 
         // EXPECT "zipped" future to fail
-        Future.zip(future, future2).on(
+        let expectation = self.expectation(description: "failure")
+        result.on(
             success: { _ in
                 XCTFail()
             },
             failure: { error in
-                XCTAssertEqual("error", error)
+                XCTAssertEqual(.e1, error)
                 expectation.fulfill()
             }
         )
 
         // WHEN first succeed, second fails
-        promise2.succeed(value: 1)
-        promise.fail(error: "error")
+        promises.1.succeed(value: 1)
+        promises.0.fail(error: .e1)
 
         wait()
     }
 }
 
-class ZipIntoArrayTests: XCTestCase {
-    func testBothSucceed() {
-        // GIVEN two futures
-        let promise = Promise<Int, String>()
-        let future = promise.future
+class Zip3Tests: XCTestCase {
+    func testAllSucceed() {
+        let (promises, futures) = setUpFutures()
 
-        let promise2 = Promise<Int, String>()
-        let future2 = promise2.future
-
-        let expectation = self.expectation(description: "succees")
+        // WHEN zipping two futures
+        let result = Future.zip(futures.0, futures.1, futures.2)
 
         // EXPECT "zipped" future to succeed
-        Future.zip([future, future2]).on(
-            success: { value in
-                XCTAssertTrue(value == [1, 2])
+        let expectation = self.expectation(description: "success")
+        result.on(
+            success: { v1, v2, v3 in
+                XCTAssertEqual(v1, 1)
+                XCTAssertEqual(v2, 2)
+                XCTAssertEqual(v3, 3)
                 expectation.fulfill()
             },
             failure: { _ in
@@ -201,35 +191,91 @@ class ZipIntoArrayTests: XCTestCase {
             }
         )
 
-        // WHEN first both succeed
-        promise.succeed(value: 1)
+        // WHEN all succeed
+        promises.0.succeed(value: 1)
         DispatchQueue.global().async {
-            promise2.succeed(value: 2)
+            promises.2.succeed(value: 3)
+        }
+        DispatchQueue.global().async {
+            promises.1.succeed(value: 2)
+        }
+
+        wait()
+    }
+
+    func testThirdFails() {
+        let (promises, futures) = setUpFutures()
+
+        // WHEN zipping two futures
+        let result = Future.zip(futures.0, futures.1, futures.2)
+
+        // EXPECT "zipped" future to fail
+        let expectation = self.expectation(description: "failure")
+        result.on(
+            success: { _ in
+                XCTFail()
+            },
+            failure: { error in
+                XCTAssertEqual(.e1, error)
+                expectation.fulfill()
+            }
+        )
+
+        // WHEN first succeed, second fails
+        promises.0.succeed(value: 1)
+        promises.1.succeed(value: 2)
+        promises.2.fail(error: .e1)
+
+        wait()
+    }
+}
+
+class ZipIntoArrayTests: XCTestCase {
+    func testBothSucceed() {
+        let (promises, futures) = setUpFutures()
+
+        // GIVEN array of three zipped futures
+        let result = Future.zip([futures.0, futures.1, futures.2])
+
+        // EXPECT "zipped" future to succeed
+        let expectation = self.expectation(description: "succees")
+        result.on(
+            success: { value in
+                XCTAssertTrue(value == [1, 2, 3])
+                expectation.fulfill()
+            },
+            failure: { _ in
+                XCTFail()
+            }
+        )
+
+        // WHEN all futures succeed
+        promises.0.succeed(value: 1)
+        DispatchQueue.global().async {
+            promises.2.succeed(value: 3)
+        }
+        DispatchQueue.global().async {
+            promises.1.succeed(value: 2)
         }
 
         wait()
     }
 
     func testFailsImmediatellyIfThirdFails() {
-        // GIVEN two futures
-        let promise = Promise<Int, String>()
-        let future = promise.future
+        let (promises, futures) = setUpFutures()
 
-        let promise2 = Promise<Int, String>()
-        let future2 = promise2.future
-
-        let promise3 = Promise<Int, String>()
-        let future3 = promise3.future
+        // GIVEN array of three zipped futures
+        let result = Future.zip([futures.0, futures.1, futures.2])
 
         // EXPECT the resulting future to fail
         let expectation = self.expectation(description: "failure")
-        Future.zip([future, future2, future3]).on(failure: { error in
-            XCTAssertEqual(error, "error")
+        result.on(failure: { error in
+            XCTAssertEqual(error, .e1)
             expectation.fulfill()
         })
 
         // WHEN third future fails
-        promise3.fail(error: "error")
+        promises.2.fail(error: .e1)
 
         wait()
     }
@@ -237,15 +283,12 @@ class ZipIntoArrayTests: XCTestCase {
 
 class ReduceTests: XCTestCase {
     func testBothSucceed() {
-        // GIVEN two futures
-        let promise = Promise<Int, String>()
-        let future = promise.future
+        let (promises, futures) = setUpFutures()
 
-        let promise2 = Promise<Int, String>()
-        let future2 = promise2.future
+        // WHEN reducing two futures
+        let result = Future.reduce(0, [futures.0, futures.1], +)
 
         // EXPECT reduce to combine the results of all futures
-        let result = Future.reduce(0, [future, future2], +)
         let expectation = self.expectation(description: "success")
 
         result.on(success: { value in
@@ -254,55 +297,58 @@ class ReduceTests: XCTestCase {
         })
 
         // WHEN both succeed
-        promise.succeed(value: 1)
-        promise2.succeed(value: 2)
+        promises.0.succeed(value: 1)
+        promises.1.succeed(value: 2)
 
         wait()
     }
 
     func testFirstFails() {
-        // GIVEN two futures
-        let promise = Promise<Int, String>()
-        let future = promise.future
+        let (promises, futures) = setUpFutures()
 
-        let promise2 = Promise<Int, String>()
-        let future2 = promise2.future
+        // WHEN reducing two futures
+        let result = Future.reduce(0, [futures.0, futures.1], +)
 
         // EXPECT the resuling future to fail
-        let result = Future.reduce(0, [future, future2], +)
         let expectation = self.expectation(description: "failure")
         result.on(failure: { error in
-            XCTAssertEqual(error, "error")
+            XCTAssertEqual(error, .e1)
             expectation.fulfill()
         })
 
         // WHEN first fails
-        promise2.succeed(value: 1)
-        promise.fail(error: "error")
+        promises.1.succeed(value: 1)
+        promises.0.fail(error: .e1)
 
         wait()
     }
 
     func testSecondFails() {
-        // GIVEN two futures
-        let promise = Promise<Int, String>()
-        let future = promise.future
+        let (promises, futures) = setUpFutures()
 
-        let promise2 = Promise<Int, String>()
-        let future2 = promise2.future
+        // WHEN reducing two futures
+        let result = Future.reduce(0, [futures.0, futures.1], +)
 
         // EXPECT the resuling future to fail
-        let result = Future.reduce(0, [future, future2], +)
         let expectation = self.expectation(description: "failure")
         result.on(failure: { error in
-            XCTAssertEqual(error, "error")
+            XCTAssertEqual(error, .e1)
             expectation.fulfill()
         })
 
         // WHEN second fails
-        promise.succeed(value: 1)
-        promise2.fail(error: "error")
+        promises.0.succeed(value: 1)
+        promises.1.fail(error: .e1)
 
         wait()
     }
+}
+
+private typealias P = Promise<Int, MyError>
+private typealias F = Future<Int, MyError>
+
+private func setUpFutures() -> (promises: (P, P, P), futures: (F, F, F)) {
+    let promises = (P(), P(), P())
+    let futures = (promises.0.future, promises.1.future, promises.2.future)
+    return (promises, futures)
 }

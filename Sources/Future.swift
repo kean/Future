@@ -218,14 +218,14 @@ public final class Future<Value, Error> {
     /// the futures fails, the returned future also fails immediately.
     ///
     /// - note: The resulting future is observed on the first future's queue.
-    public static func zip<V2>(_ lhs: Future<Value, Error>, _ rhs: Future<V2, Error>) -> Future<(Value, V2), Error> {
-        let future = Future<(Value, V2), Error>(queue: lhs.queue)
+    public static func zip<V2>(_ f1: Future<Value, Error>, _ f2: Future<V2, Error>) -> Future<(Value, V2), Error> {
+        let future = Future<(Value, V2), Error>(queue: f1.queue)
         func success(value: Any) {
-            guard let v1 = lhs.value, let v2 = rhs.value else { return }
+            guard let v1 = f1.value, let v2 = f2.value else { return }
             future.succeed((v1, v2))
         }
-        lhs.observe(success: success, failure: future.fail)
-        rhs.observe(success: success, failure: future.fail)
+        f1.observe(success: success, failure: future.fail)
+        f2.observe(success: success, failure: future.fail)
         return future
     }
 
