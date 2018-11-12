@@ -115,6 +115,7 @@ public final class Future<Value, Error> {
         lock.lock(); defer { lock.unlock() }
         switch state {
         case .pending:
+            assert(handlers != nil)
             handlers?.success.append(success)
             handlers?.failure.append(failure)
         case let .success(value): success(value)
@@ -297,16 +298,20 @@ private let lock = NSLock()
 
 /// A promise to provide a result later.
 public struct Promise<Value, Error> {
+    /// The future associated with the promise.
     public let future: Future<Value, Error>
 
+    /// Initializer the promise, creates a future with a given queue.
     public init(queue: DispatchQueue = .main) {
         self.future = Future(queue: queue)
     }
 
+    /// Sends a value to the associated future.
     public func succeed(value: Value) {
         future.succeed(value)
     }
 
+    /// Sends an error to the associated future.
     public func fail(error: Error) {
         future.fail(error)
     }
