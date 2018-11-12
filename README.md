@@ -60,45 +60,6 @@ request.mapError(MyError.init(urlError:))
 
 Use `flatMapError` to "recover" from an error.
 
-### Creating Futures
-
-Using `Promise`:
-
-```swift
-func someAsyncOperation(args) -> Future<Value, Error> {
-    let promise = Promise<Value, Error>()
-    someAsyncOperationWithCallback(args) { result -> Void in
-        // when finished...
-        promise.succeed(result: result)
-        // if error...
-        promise.fail(error: error)
-    }
-    return promise.future
-}
-```
-
-Using a convenience init method:
-
-```swift
-let future = Future<Int, Error> { succeed, fail in
-    someAsyncOperationWithCallback { value, error in
-        // succeed or fail
-    }
-}
-```
-
-With a value:
-
-```swift
-let future = Future<Int, Error>(value: 1)
-```
-
-With an error:
-
-```swift
-let future = Future<Int, Error>(error: Error.unknown)
-```
-
 ### Zip
 
 Use  `zip`  to combine the result of up to three futures in a single future:
@@ -131,6 +92,40 @@ let future2 = Future<Int, Error>(value: 2)
 Future.reduce(0, [future1, future2], +).on(success: { value in
     print(value) // prints "3"
 })
+```
+
+### Creating Futures
+
+Using `Promise`:
+
+```swift
+func someAsyncOperation(args) -> Future<Value, Error> {
+    let promise = Promise<Value, Error>()
+    someAsyncOperationWithCallback(args) { result -> Void in
+        // when finished...
+        promise.succeed(result: result)
+        // if error...
+        promise.fail(error: error)
+    }
+    return promise.future
+}
+```
+
+Using a convenience init method:
+
+```swift
+let future = Future<Int, Error> { succeed, fail in
+    someAsyncOperationWithCallback { value, error in
+        // succeed or fail
+    }
+}
+```
+
+With a value or an error:
+
+```swift
+Future<Int, Error>(value: 1)
+Future<Int, Error>(error: Error.unknown)
 ```
 
 ### Synchronous Inspection
