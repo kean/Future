@@ -122,6 +122,11 @@ public final class Future<Value, Error> {
         }
     }
 
+    /// Resolves the given future with the result of the current future.
+    private func cascade(_ future: Future) {
+        observe(success: future.succeed, failure: future.fail)
+    }
+
     /// Returns a new future which callbacks are observed on the given queue. The
     /// default queue is `.main` queue.
     ///
@@ -131,9 +136,9 @@ public final class Future<Value, Error> {
         if queue === self.queue {
             return self // We're already on that queue
         }
-        return Future(queue: queue) { succeed, fail in
-            observe(success: succeed, failure: fail)
-        }
+        let future = Future(queue: queue)
+        cascade(future)
+        return future
     }
 
     // MARK: Map
@@ -151,11 +156,11 @@ public final class Future<Value, Error> {
     ///
     /// - returns: A future with a result of the future returned by the closure.
     public func flatMap<NewValue>(_ closure: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
-        return Future<NewValue, Error>(queue: queue) { succeed, fail in
-            observe(success: { value in
-                closure(value).observe(success: succeed, failure: fail)
-            }, failure: fail)
-        }
+        let future = Future<NewValue, Error>(queue: queue)
+        observe(success: { value in
+            closure(value).cascade(future)
+        }, failure: future.fail)
+        return future
     }
 
     /// The closure executes asynchronously when the future fails.
@@ -173,11 +178,11 @@ public final class Future<Value, Error> {
     ///
     /// - returns: A future with a result of the future returned by the closure.
     public func flatMapError<NewError>(_ closure: @escaping (Error) -> Future<Value, NewError>) -> Future<Value, NewError> {
-        return Future<Value, NewError>(queue: queue) { succeed, fail in
-            observe(success: succeed, failure: { error in
-                closure(error).observe(success: succeed, failure: fail)
-            })
-        }
+        let future = Future<Value, NewError>(queue: queue)
+        observe(success: future.succeed, failure: { error in
+            closure(error).cascade(future)
+        })
+        return future
     }
 
     // MARK: Synchronous Inspection
@@ -210,25 +215,29 @@ public final class Future<Value, Error> {
     ///
     /// - note: The resulting future is observed on the first future's queue.
     public static func zip<SecondValue>(_ lhs: Future<Value, Error>, _ rhs: Future<SecondValue, Error>) -> Future<(Value, SecondValue), Error> {
+        let future = Future<(Value, SecondValue), Error>(queue: lhs.queue)
+
         var firstValue: Value?
         var secondValue: SecondValue?
-        return Future<(Value, SecondValue), Error>(queue: lhs.queue) { succeed, fail in
-            func succeedIfPossible() {
-                // This is thread safe because both futures are observed on the
-                // same queue.
-                guard let firstValue = firstValue, let secondValue = secondValue else { return }
-                succeed((firstValue, secondValue))
-            }
-            lhs.on(success: { value in
-                firstValue = value
-                succeedIfPossible()
-            }, failure: fail) // whichever fails first
-
-            rhs.observeOn(lhs.queue).on(success: { value in
-                secondValue = value
-                succeedIfPossible()
-            }, failure: fail) // whichever fails first
+        func succeedIfPossible() {
+            // This is thread safe because both futures are observed on the
+            // same queue.
+            guard let firstValue = firstValue, let secondValue = secondValue else { return }
+            future.succeed((firstValue, secondValue))
         }
+
+        lhs.observe(success: { value in
+            firstValue = value
+            succeedIfPossible()
+        }, failure: future.fail) // whichever fails first
+
+        // Use observeOn to make sure that both futures run on the same queue.
+        rhs.observeOn(lhs.queue).observe(success: { value in
+            secondValue = value
+            succeedIfPossible()
+        }, failure: future.fail) // whichever fails first
+
+        return future
     }
 
     /// Returns a future which succeedes when all of the given futures succeed.
