@@ -241,18 +241,6 @@ public final class Future<Value, Error> {
     // MARK: Reduce
 
     /// Returns a future that succeeded only when all the provided futures
-    /// succeed. The future contains the result of combining all of the
-    /// values of the given futures. If any of the futures fail the resulting
-    /// future also fails.
-    ///
-    /// - note: The resulting future is observed on the first future's queue.
-    public func reduce<SecondValue>(_ futures: [Future<SecondValue, Error>], _ combiningFunction: @escaping (Value, SecondValue) -> Value) -> Future<Value, Error> {
-        return futures.reduce(self) { lhs, rhs in
-            return Future.zip(lhs, rhs).map(combiningFunction)
-        }
-    }
-
-    /// Returns a future that succeeded only when all the provided futures
     /// succeed. The future contains the result of combining the
     /// `initialResult` with the values of all the given future. If any of the
     /// futures fail the resulting future also fails.
@@ -260,6 +248,18 @@ public final class Future<Value, Error> {
     /// - note: The resulting future is observed on the first future's queue.
     public static func reduce<SecondValue>(_ initialResult: Value, _ futures: [Future<SecondValue, Error>], _ combiningFunction: @escaping (Value, SecondValue) -> Value) -> Future<Value, Error> {
         return Future(value: initialResult).reduce(futures, combiningFunction)
+    }
+
+    /// Returns a future that succeeded only when all the provided futures
+    /// succeed. The future contains the result of combining all of the
+    /// values of the given futures. If any of the futures fail the resulting
+    /// future also fails.
+    ///
+    /// - note: The resulting future is observed on the first future's queue.
+    private func reduce<SecondValue>(_ futures: [Future<SecondValue, Error>], _ combiningFunction: @escaping (Value, SecondValue) -> Value) -> Future<Value, Error> {
+        return futures.reduce(self) { lhs, rhs in
+            return Future.zip(lhs, rhs).map(combiningFunction)
+        }
     }
 
     // MARK: State (Private)
