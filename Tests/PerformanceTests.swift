@@ -24,8 +24,8 @@ class PromisePerformanceTests: XCTestCase {
         var finished = 0
 
         measure {
-            for promise in futures {
-                promise.on(success: { _ in
+            for future in futures {
+                future.on(success: { _ in
                     finished += 1
                     if finished == futures.count {
                         expectation.fulfill()

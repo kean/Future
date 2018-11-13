@@ -124,11 +124,6 @@ public final class Future<Value, Error> {
         }
     }
 
-    /// Resolves the given future with the result of the current future.
-    private func cascade(_ future: Future) {
-        observe(success: future.succeed, failure: future.fail)
-    }
-
     /// Returns a new future which callbacks are observed on the given queue. The
     /// default queue is `.main` queue.
     ///
@@ -143,15 +138,28 @@ public final class Future<Value, Error> {
         return future
     }
 
+    /// Resolves the given future with the result of the current future.
+    private func cascade(_ future: Future) {
+        observe(success: future.succeed, failure: future.fail)
+    }
+
+    private func cascade<NewValue>(_ future: Future<NewValue, Error>, success: @escaping (Value) -> Void) {
+        observe(success: success, failure: future.fail)
+    }
+
+    private func cascade<NewError>(_ future: Future<Value, NewError>, failure: @escaping (Error) -> Void) {
+        observe(success: future.succeed , failure: failure)
+    }
+
     // MARK: Map
     
     /// The closure executes asynchronously when the future has a value.
     ///
     /// - returns: A future with a value returned by the closure.
     public func map<NewValue>(_ closure: @escaping (Value) -> NewValue) -> Future<NewValue, Error> {
-        return flatMap { value in
-            Future<NewValue, Error>(value: closure(value))
-        }
+        let future = Future<NewValue, Error>(queue: queue)
+        cascade(future, success: { future.succeed(closure($0)) })
+        return future
     }
 
     /// The closure executes asynchronously when the future has a value.
@@ -159,9 +167,7 @@ public final class Future<Value, Error> {
     /// - returns: A future with a result of the future returned by the closure.
     public func flatMap<NewValue>(_ closure: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
         let future = Future<NewValue, Error>(queue: queue)
-        observe(success: { value in
-            closure(value).cascade(future)
-        }, failure: future.fail)
+        cascade(future, success: { closure($0).cascade(future) })
         return future
     }
 
@@ -169,9 +175,9 @@ public final class Future<Value, Error> {
     ///
     /// - returns: A future with an error returned by the closure.
     public func mapError<NewError>(_ closure: @escaping (Error) -> NewError) -> Future<Value, NewError> {
-        return flatMapError { error in
-            Future<Value, NewError>(error: closure(error))
-        }
+        let future = Future<Value, NewError>(queue: queue)
+        cascade(future, failure: { future.fail(closure($0)) })
+        return future
     }
 
     /// The closure executes asynchronously when the future fails.
@@ -181,9 +187,7 @@ public final class Future<Value, Error> {
     /// - returns: A future with a result of the future returned by the closure.
     public func flatMapError<NewError>(_ closure: @escaping (Error) -> Future<Value, NewError>) -> Future<Value, NewError> {
         let future = Future<Value, NewError>(queue: queue)
-        observe(success: future.succeed, failure: { error in
-            closure(error).cascade(future)
-        })
+        cascade(future, failure: { closure($0).cascade(future) })
         return future
     }
 
@@ -224,8 +228,8 @@ public final class Future<Value, Error> {
             guard let v1 = f1.value, let v2 = f2.value else { return }
             future.succeed((v1, v2))
         }
-        f1.observe(success: success, failure: future.fail)
-        f2.observe(success: success, failure: future.fail)
+        f1.cascade(future, success: success)
+        f2.cascade(future, success: success)
         return future
     }
 
