@@ -24,12 +24,11 @@ import Foundation
 /// Futures are easily composable. `Future<Value, Error>` provides a set of
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
 ///
-/// By default, all of the callbacks and composing functions are executed on the
-/// main queue (`DispatchQueue.main`). To change the queue use `observeOn` method.
+/// By default, all of the callbacks and composing functions are executed
+/// asynchronously on the main queue (`DispatchQueue.main`).
 public final class Future<Value, Error> {
     private var state: State = .pending
     private var handlers: Handlers? // nil when finished
-    private let queue: DispatchQueue // queue on which events are observed
     private let lock = locks[Int.random(in: 0..<lockCount)]
 
     // MARK: Create
@@ -39,32 +38,23 @@ public final class Future<Value, Error> {
     /// - parameter closure: The closure is called immediately on the current
     /// thread. You should start an asynchronous task and call either `succeed`
     /// or `fail` when it completes.
-    /// - parameter queue: A queue on which the future is observed. `.main` by
-    /// default.
-    public convenience init(queue: DispatchQueue = .main, _ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
-        self.init(queue: queue)
+    public convenience init(_ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
+        self.init()
         closure(self.succeed, self.fail) // retain self
     }
 
-    init(queue: DispatchQueue = .main) {
-        self.queue = queue
+    init() {
         self.handlers = Handlers()
     }
 
     /// Creates a future with a given value.
-    public convenience init(value: Value) {
-        self.init(state: .success(value))
+    public init(value: Value) {
+        self.state = .success(value)
     }
 
     /// Creates a future with a given error.
-    public convenience init(error: Error) {
-        self.init(state: .failure(error))
-    }
-
-    private init(state: State) {
-        self.queue = .main
-        self.state = state
-        // No need to create handlers
+    public init(error: Error) {
+        self.state = .failure(error)
     }
 
     // MARK: State Transitions
@@ -78,11 +68,15 @@ public final class Future<Value, Error> {
     }
 
     private func transitionToState(_ newState: State) {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
         guard case .pending = self.state else {
+            lock.unlock()
             return // already finished
         }
         self.state = newState
+        let handlers = self.handlers
+        self.handlers = nil
+        lock.unlock()
 
         assert(handlers != nil)
         switch newState {
@@ -90,7 +84,6 @@ public final class Future<Value, Error> {
         case let .success(value): handlers?.success.forEach { $0(value) }
         case let .failure(error): handlers?.failure.forEach { $0(error) }
         }
-        self.handlers = nil
     }
 
     // MARK: Callbacks
@@ -100,42 +93,30 @@ public final class Future<Value, Error> {
     /// By default, all of the callbacks and composing functions are executed on
     /// the main queue (`DispatchQueue.main`). To change the queue use `observeOn`.
     ///
+    /// - parameter queue: A queue on which the callbacks are dispatched. `.main` by
+    /// default. Pass `nil` to receive callbacks synchronously when value is received.
     /// - parameter success: Gets called when the future has a value.
     /// - parameter failure: Gets called when the future has an error.
     /// - parameter completion: Gets called when the future has any result.
-    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
-        observe(success: { success?($0); completion?() },
-                failure: { failure?($0); completion?() })
+    public func on(queue: DispatchQueue? = .main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
+        func dispatch(_ closure: @escaping () -> Void) {
+            queue?.async(execute: closure) ?? closure()
+        }
+        observe(success: { value in dispatch { success?(value); completion?() } },
+                failure: { error in dispatch { failure?(error); completion?() } })
     }
 
     private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
-        let queue = self.queue
-        let success: (Value) -> Void = { value in queue.async { success(value) } }
-        let failure: (Error) -> Void = { error in queue.async { failure(error) } }
-
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
         switch state {
         case .pending:
             assert(handlers != nil)
             handlers?.success.append(success)
             handlers?.failure.append(failure)
-        case let .success(value): success(value)
-        case let .failure(error): failure(error)
+            lock.unlock()
+        case let .success(value): lock.unlock(); success(value)
+        case let .failure(error): lock.unlock(); failure(error)
         }
-    }
-
-    /// Returns a new future which callbacks are observed on the given queue. The
-    /// default queue is `.main` queue.
-    ///
-    /// - note: In case the given queue is the same as the current future's
-    /// queue the method retuns the current future saving an allocation.
-    public func observeOn(_ queue: DispatchQueue) -> Future {
-        if queue === self.queue {
-            return self // We're already on that queue
-        }
-        let future = Future(queue: queue)
-        cascade(future)
-        return future
     }
 
     /// Resolves the given future with the result of the current future.
@@ -157,7 +138,7 @@ public final class Future<Value, Error> {
     ///
     /// - returns: A future with a value returned by the closure.
     public func map<NewValue>(_ closure: @escaping (Value) -> NewValue) -> Future<NewValue, Error> {
-        let future = Future<NewValue, Error>(queue: queue)
+        let future = Future<NewValue, Error>()
         cascade(future, success: { future.succeed(closure($0)) })
         return future
     }
@@ -166,7 +147,7 @@ public final class Future<Value, Error> {
     ///
     /// - returns: A future with a result of the future returned by the closure.
     public func flatMap<NewValue>(_ closure: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
-        let future = Future<NewValue, Error>(queue: queue)
+        let future = Future<NewValue, Error>()
         cascade(future, success: { closure($0).cascade(future) })
         return future
     }
@@ -175,7 +156,7 @@ public final class Future<Value, Error> {
     ///
     /// - returns: A future with an error returned by the closure.
     public func mapError<NewError>(_ closure: @escaping (Error) -> NewError) -> Future<Value, NewError> {
-        let future = Future<Value, NewError>(queue: queue)
+        let future = Future<Value, NewError>()
         cascade(future, failure: { future.fail(closure($0)) })
         return future
     }
@@ -186,7 +167,7 @@ public final class Future<Value, Error> {
     ///
     /// - returns: A future with a result of the future returned by the closure.
     public func flatMapError<NewError>(_ closure: @escaping (Error) -> Future<Value, NewError>) -> Future<Value, NewError> {
-        let future = Future<Value, NewError>(queue: queue)
+        let future = Future<Value, NewError>()
         cascade(future, failure: { closure($0).cascade(future) })
         return future
     }
@@ -220,10 +201,8 @@ public final class Future<Value, Error> {
 
     /// Returns a future which succeedes when both futures succeed. If one of
     /// the futures fails, the returned future also fails immediately.
-    ///
-    /// - note: The resulting future is observed on the first future's queue.
     public static func zip<V2>(_ f1: Future<Value, Error>, _ f2: Future<V2, Error>) -> Future<(Value, V2), Error> {
-        let future = Future<(Value, V2), Error>(queue: f1.queue)
+        let future = Future<(Value, V2), Error>()
         func success(value: Any) {
             guard let v1 = f1.value, let v2 = f2.value else { return }
             future.succeed((v1, v2))
@@ -235,8 +214,6 @@ public final class Future<Value, Error> {
 
     /// Returns a future which succeedes when all three futures succeed. If one
     /// of `the futures fails, the returned future also fails immediately.
-    ///
-    /// - note: The resulting future is observed on the first future's queue.
     public static func zip<V2, V3>(_ f1: Future<Value, Error>, _ f2: Future<V2, Error>, _ f3: Future<V3, Error>) -> Future<(Value, V2, V3), Error> {
         return Future.zip(f1, Future<V2, Error>.zip(f2, f3)).map { value in
             return (value.0, value.1.0, value.1.1)
@@ -245,8 +222,6 @@ public final class Future<Value, Error> {
 
     /// Returns a future which succeedes when all of the given futures succeed.
     /// If one of the futures fail, the returned future also fails.
-    ///
-    /// - note: The resulting future is observed on the first future's queue.
     public static func zip(_ futures: [Future<Value, Error>]) -> Future<[Value], Error> {
         return Future<[Value], Error>.reduce([], futures) { result, value in
             result + [value]
@@ -259,8 +234,6 @@ public final class Future<Value, Error> {
     /// succeed. The future contains the result of combining the
     /// `initialResult` with the values of all the given future. If any of the
     /// futures fail the resulting future also fails.
-    ///
-    /// - note: The resulting future is observed on the first future's queue.
     public static func reduce<V2>(_ initialResult: Value, _ futures: [Future<V2, Error>], _ combiningFunction: @escaping (Value, V2) -> Value) -> Future<Value, Error> {
         return futures.reduce(Future(value: initialResult)) { lhs, rhs in
             return Future.zip(lhs, rhs).map(combiningFunction)
@@ -293,8 +266,8 @@ public struct Promise<Value, Error> {
     public let future: Future<Value, Error>
 
     /// Initializer the promise, creates a future with a given queue.
-    public init(queue: DispatchQueue = .main) {
-        self.future = Future(queue: queue)
+    public init() {
+        self.future = Future()
     }
 
     /// Sends a value to the associated future.

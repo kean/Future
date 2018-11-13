@@ -11,7 +11,7 @@ class FutureTests: XCTestCase {
     // MARK: - Observe On
 
     func testObserveOnMainThreadByDefault() {
-        // GIVEN the default promise
+        // GIVEN the default future
         let future = Future<Int, MyError>(value: 1)
 
         // EXPECT maps to be called on main queue
@@ -38,19 +38,12 @@ class FutureTests: XCTestCase {
     }
 
     func testObserveOn() {
-        // GIVEN the promise with a a custom observe queue
         let future = Future<Int, MyError>(value: 1)
-            .observeOn(DispatchQueue.global())
-
-        // EXPECT maps to be called on global queue
-        _ = future.map { _ -> Int in
-            XCTAssertFalse(Thread.isMainThread)
-            return 2
-        }
 
         // EXPECT on(...) to be called on the global queue
         let expectation = self.expectation()
         future.on(
+            queue: .global(),
             success: { _ in
                 XCTAssertFalse(Thread.isMainThread)
             },
@@ -65,55 +58,83 @@ class FutureTests: XCTestCase {
         wait()
     }
 
-    func testObserveOnFlatMap() {
-        // GIVEN a future with a a custom observe queue
+    // MARK: Synchronous `on`
+
+    func testValueIsDispatchedSynchronously() {
         let future = Future<Int, MyError>(value: 1)
-            .observeOn(DispatchQueue.global())
-            .flatMap { value in
-                return Future(value: value + 1)
-            }
 
-        // EXPECT maps to be called on global queue
-        _ = future.map { _ -> Int in
-            XCTAssertFalse(Thread.isMainThread)
-            return 2
-        }
-
-        // EXPECT on(...) to be called on the global queue
-        let expectation = self.expectation()
+        var callbacks = 0
         future.on(
-            success: { _ in
-                XCTAssertFalse(Thread.isMainThread)
-            },
-            failure: { _ in
-                XCTAssertFalse(Thread.isMainThread)
-            },
-            completion: {
-                XCTAssertFalse(Thread.isMainThread)
-                expectation.fulfill()
-            }
+            queue: nil,
+            success: { _ in callbacks += 1 },
+            completion: { callbacks += 1 }
         )
-        wait()
+
+        XCTAssertEqual(callbacks, 2)
     }
 
-    func testObserveOnTheSameQueue() {
-        let future = Future<Int, MyError>(value: 1)
+    func testErrorIsDispatchedSynchronously() {
+        let future = Future<Int, MyError>(error: .e1)
 
-        // WHEN calling observeOn
-        let new = future.observeOn(DispatchQueue.main)
-
-        // EXPECT on(...) to be called on the global queue
-        let expectation = self.expectation()
-        new.on(
-            success: { _ in
-                XCTAssertTrue(Thread.isMainThread)
-            },
-            completion: {
-                XCTAssertTrue(Thread.isMainThread)
-                expectation.fulfill()
-            }
+        var callbacks = 0
+        future.on(
+            queue: nil,
+            failure: { _ in callbacks += 1 },
+            completion: { callbacks += 1 }
         )
-        wait()
+
+        XCTAssertEqual(callbacks, 2)
+    }
+
+    func testValueIsDispatchedSynchronouslyOnResolve() {
+        let promise = Promise<Int, MyError>()
+        let future = promise.future
+
+        var callbacks = 0
+        future.on(
+            queue: nil,
+            success: { _ in callbacks += 1 },
+            completion: { callbacks += 1 }
+        )
+
+        promise.succeed(value: 1)
+
+        XCTAssertEqual(callbacks, 2)
+    }
+
+    func testErrorIsDispatchedSynchronouslyOnResolve() {
+        let promise = Promise<Int, MyError>()
+        let future = promise.future
+
+        var callbacks = 0
+        future.on(
+            queue: nil,
+            failure: { _ in callbacks += 1 },
+            completion: { callbacks += 1 }
+        )
+
+        promise.fail(error: .e1)
+
+        XCTAssertEqual(callbacks, 2)
+    }
+
+    func testSynchronousOnWithMap() {
+        let promise = Promise<Int, MyError>()
+        let future = promise.future
+
+        var callbacks = 0
+        future.map { $0 + 1}.on(
+            queue: nil,
+            success: { value in
+                XCTAssertEqual(value, 2)
+                callbacks += 1
+            },
+            completion: { callbacks += 1 }
+        )
+
+        promise.succeed(value: 1)
+
+        XCTAssertEqual(callbacks, 2)
     }
 
     // MARK: Synchronous Inspection

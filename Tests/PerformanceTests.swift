@@ -65,15 +65,46 @@ class PromisePerformanceTests: XCTestCase {
         wait() // wait so that next test aren't affecteds
     }
 
-    func testObserveOnTheSameQueue() {
-        let futures = (0..<50_000).map { _ in Future<Int, Void>(value: 1) }
-
+    func testChain() {
         measure {
-            for future in futures {
-                // We expect this to be instantaneous thanks to the performance
-                // optimization
-                _ = future.observeOn(.main)
+            var remaining = 5000
+            let expecation = self.expectation()
+            for _ in Array(0..<5000) {
+                let future = Future<Int, Void>(value: 1)
+                    .map { $0 + 1 }
+                    .flatMap { Future<Int, Void>(value: $0 + 1) }
+                    .mapError { $0 }
+
+                future.on(success: { _ in
+                    remaining -= 1
+                    if remaining == 0 {
+                        expecation.fulfill()
+                    }
+                })
             }
+            wait()
+        }
+    }
+
+    func testZip() {
+        measure {
+            var remaining = 5000
+            let expecation = self.expectation()
+            for _ in Array(0..<5000) {
+                let future = Future.zip([
+                    Future<Int, Void>(value: 1),
+                    Future<Int, Void>(value: 2),
+                    Future<Int, Void>(value: 4)]
+                )
+
+                future.on(success: { _ in
+                    remaining -= 1
+                    if remaining == 0 {
+                        expecation.fulfill()
+                    }
+                })
+            }
+            wait()
         }
     }
 }
