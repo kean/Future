@@ -30,6 +30,7 @@ public final class Future<Value, Error> {
     private var state: State = .pending
     private var handlers: Handlers? // nil when finished
     private let lock = locks[Int.random(in: 0..<lockCount)]
+    private var isResolved: Int32 = 0
 
     // MARK: Create
 
@@ -68,11 +69,9 @@ public final class Future<Value, Error> {
     }
 
     private func transitionToState(_ newState: State) {
+        guard OSAtomicCompareAndSwap32(0, 1, &isResolved) else { return }
+
         lock.lock()
-        guard case .pending = self.state else {
-            lock.unlock()
-            return // already finished
-        }
         self.state = newState
         let handlers = self.handlers
         self.handlers = nil
@@ -108,14 +107,18 @@ public final class Future<Value, Error> {
 
     private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
         lock.lock()
-        switch state {
-        case .pending:
+        let state = self.state
+        if case .pending = state {
             assert(handlers != nil)
             handlers?.success.append(success)
             handlers?.failure.append(failure)
-            lock.unlock()
-        case let .success(value): lock.unlock(); success(value)
-        case let .failure(error): lock.unlock(); failure(error)
+        }
+        lock.unlock()
+
+        switch state {
+        case .pending: break
+        case let .success(value): success(value)
+        case let .failure(error): failure(error)
         }
     }
 

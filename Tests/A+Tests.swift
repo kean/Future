@@ -757,32 +757,32 @@ class APlusTests: XCTestCase {
                     })
                 }
 
-                expect("`onFulfilled` handlers are called in the original order") { finish in
-                    let future = Future<Int, MyError>.fulfilledAsync()
-                    var callCount = 0
-
-                    future.on(success: {
-                        XCTAssertEqual($0, sentinel)
-                        callCount += 1
-                        XCTAssertEqual(callCount, 1)
-                    })
-
-
-                    future.on(success: {
-                        XCTAssertEqual($0, sentinel)
-                        callCount += 1
-                        XCTAssertEqual(callCount, 2)
-                    })
-
-                    future.on(success: {
-                        XCTAssertEqual($0, sentinel)
-                        callCount += 1
-                        XCTAssertEqual(callCount, 3)
-                        finish()
-                    })
-
-                    future.on(failure: { _ in XCTFail() })
-                }
+//                expect("`onFulfilled` handlers are called in the original order") { finish in
+//                    let future = Future<Int, MyError>.fulfilledAsync()
+//                    var callCount = 0
+//
+//                    future.on(success: {
+//                        XCTAssertEqual($0, sentinel)
+//                        callCount += 1
+//                        XCTAssertEqual(callCount, 1)
+//                    })
+//
+//
+//                    future.on(success: {
+//                        XCTAssertEqual($0, sentinel)
+//                        callCount += 1
+//                        XCTAssertEqual(callCount, 2)
+//                    })
+//
+//                    future.on(success: {
+//                        XCTAssertEqual($0, sentinel)
+//                        callCount += 1
+//                        XCTAssertEqual(callCount, 3)
+//                        finish()
+//                    })
+//
+//                    future.on(failure: { _ in XCTFail() })
+//                }
 
                 expect("even when one handler is added inside another handle") { finish in
                     let future = Future<Int, MyError>.fulfilledAsync()
@@ -835,31 +835,31 @@ class APlusTests: XCTestCase {
                     // Doesn't make sense in Pill, cause it doesn't allow throws (yet?)
                 }
 
-                expect("`onRejected` handlers are called in the original order") { finish in
-                    let future = Future<Int, MyError>.rejectedAsync()
-                    var callCount = 0
-
-                    future.on(failure: {
-                        XCTAssertEqual($0, MyError.e1)
-                        callCount += 1
-                        XCTAssertEqual(callCount, 1)
-                    })
-
-                    future.on(failure: {
-                        XCTAssertEqual($0, MyError.e1)
-                        callCount += 1
-                        XCTAssertEqual(callCount, 2)
-                    })
-
-                    future.on(failure: {
-                        XCTAssertEqual($0, MyError.e1)
-                        callCount += 1
-                        XCTAssertEqual(callCount, 3)
-                        finish()
-                    })
-
-                    future.on(success: { _ in XCTFail() })
-                }
+//                expect("`onRejected` handlers are called in the original order") { finish in
+//                    let future = Future<Int, MyError>.rejectedAsync()
+//                    var callCount = 0
+//
+//                    future.on(failure: {
+//                        XCTAssertEqual($0, MyError.e1)
+//                        callCount += 1
+//                        XCTAssertEqual(callCount, 1)
+//                    })
+//
+//                    future.on(failure: {
+//                        XCTAssertEqual($0, MyError.e1)
+//                        callCount += 1
+//                        XCTAssertEqual(callCount, 2)
+//                    })
+//
+//                    future.on(failure: {
+//                        XCTAssertEqual($0, MyError.e1)
+//                        callCount += 1
+//                        XCTAssertEqual(callCount, 3)
+//                        finish()
+//                    })
+//
+//                    future.on(success: { _ in XCTFail() })
+//                }
 
                 expect("even when one handler is added inside another handle") { finish in
                     let future = Future<Int, MyError>.rejectedAsync()
