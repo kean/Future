@@ -9,11 +9,9 @@ import Foundation
 /// attach callbacks, instead of passing callbacks into a function that performs
 /// a computation.
 ///
-/// To attach a callback to the `Future` use `on(success:failure:completion:)`
-/// method:
+/// To attach a callback to the `Future` use `on` method:
 ///
 /// ```
-/// let user: Future<User, Error>
 /// user.on(
 ///     success: { print("received entity: \($0)" },
 ///     failure: { print("failed with error: \($0)" },

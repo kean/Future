@@ -1,3 +1,7 @@
+## Pill 0.8.1
+
+- Documentation improvements
+
 ## Pill 0.8
 
 - `map`, `flatMap`, `mapError`, `flatMapError` now run on the queue on which the future was resolved. It increases the performance of a typical chain by up to 3 times and also simplifies debugging - there are less `queue.async` operations performed.
