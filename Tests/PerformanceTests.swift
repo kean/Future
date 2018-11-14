@@ -65,6 +65,21 @@ class PromisePerformanceTests: XCTestCase {
         wait() // wait so that next test aren't affecteds
     }
 
+    func testAttachingCallbacksToResolvedFuture() {
+        measure {
+            for _ in Array(0..<5000) {
+                let promise = Promise<Int, Error>()
+                let future = promise.future
+
+                promise.succeed(value: 1)
+
+                future.on(success: { _ in })
+            }
+        }
+    }
+
+    // MARK: - How Long the Whole Chain Takes
+
     func testChain() {
         measure {
             var remaining = 5000

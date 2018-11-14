@@ -29,7 +29,6 @@ import Foundation
 public final class Future<Value, Error> {
     private var state: State = .pending
     private var handlers: Handlers? // nil when finished
-    private let lock = locks[Int.random(in: 0..<lockCount)]
     private var isResolved: Int32 = 0
 
     // MARK: Create
@@ -39,14 +38,11 @@ public final class Future<Value, Error> {
     /// - parameter closure: The closure is called immediately on the current
     /// thread. You should start an asynchronous task and call either `succeed`
     /// or `fail` when it completes.
-    public convenience init(_ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
-        self.init()
+    public init(_ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
         closure(self.succeed, self.fail) // retain self
     }
 
-    init() {
-        self.handlers = Handlers()
-    }
+    init() {}
 
     /// Creates a future with a given value.
     public init(value: Value) {
@@ -77,7 +73,6 @@ public final class Future<Value, Error> {
         self.handlers = nil
         lock.unlock()
 
-        assert(handlers != nil)
         switch newState {
         case .pending: fatalError("Invalid transition")
         case let .success(value): handlers?.success.forEach { $0(value) }
@@ -109,7 +104,8 @@ public final class Future<Value, Error> {
         lock.lock()
         let state = self.state
         if case .pending = state {
-            assert(handlers != nil)
+            // Create handlers lazily - in some cases they are no needed
+            handlers = handlers ?? Handlers()
             handlers?.success.append(success)
             handlers?.failure.append(failure)
         }
@@ -258,10 +254,8 @@ public final class Future<Value, Error> {
 }
 
 // Using the same lock across instances is safe because Future doesn't invoke
-// any client code directly, it always does so after asynchronously dispatching
-// the work to the provided dispatch queue.
-private let lockCount = 10
-private let locks = Array(0..<lockCount).map { _ in NSLock() }
+// any client code directly.
+private let lock = NSLock()
 
 /// A promise to provide a result later.
 public struct Promise<Value, Error> {
