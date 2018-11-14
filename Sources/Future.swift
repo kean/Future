@@ -186,8 +186,8 @@ public final class Future<Value, Error> {
 
     // MARK: Zip
 
-    /// Returns a future which succeedes when both futures succeed. If one of
-    /// the futures fails, the returned future also fails immediately.
+    /// Returns a future which succeedes when all the given futures succeed. If
+    /// any of the futures fail, the returned future also fails with that error.
     public static func zip<V2>(_ f1: Future<Value, Error>, _ f2: Future<V2, Error>) -> Future<(Value, V2), Error> {
         let future = Future<(Value, V2), Error>()
         func success(value: Any) {
@@ -199,16 +199,16 @@ public final class Future<Value, Error> {
         return future
     }
 
-    /// Returns a future which succeedes when all three futures succeed. If one
-    /// of `the futures fails, the returned future also fails immediately.
+    /// Returns a future which succeedes when all the given futures succeed. If
+    /// any of the futures fail, the returned future also fails with that error.
     public static func zip<V2, V3>(_ f1: Future<Value, Error>, _ f2: Future<V2, Error>, _ f3: Future<V3, Error>) -> Future<(Value, V2, V3), Error> {
         return Future.zip(f1, Future<V2, Error>.zip(f2, f3)).map { value in
             return (value.0, value.1.0, value.1.1)
         }
     }
 
-    /// Returns a future which succeedes when all of the given futures succeed.
-    /// If one of the futures fail, the returned future also fails.
+    /// Returns a future which succeedes when all the given futures succeed. If
+    /// any of the futures fail, the returned future also fails with that error.
     public static func zip(_ futures: [Future<Value, Error>]) -> Future<[Value], Error> {
         return Future<[Value], Error>.reduce([], futures) { result, value in
             result + [value]
@@ -249,7 +249,7 @@ public struct Promise<Value, Error> {
     /// The future associated with the promise.
     public let future: Future<Value, Error>
 
-    /// Initializer the promise, creates a future with a given queue.
+    /// Initializer the promise and creates a future associated with it.
     public init() {
         self.future = Future()
     }
