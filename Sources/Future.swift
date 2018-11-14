@@ -27,9 +27,8 @@ import Foundation
 /// By default, all of the callbacks and composing functions are executed
 /// asynchronously on the main queue (`DispatchQueue.main`).
 public final class Future<Value, Error> {
-    private var state: State = .pending
-    private var handlers: Handlers? // nil when finished
-    private var isResolved: Int32 = 0
+    private var result: Result? // nil when pending
+    private var handlers: Handlers?
 
     // MARK: Create
 
@@ -46,35 +45,35 @@ public final class Future<Value, Error> {
 
     /// Creates a future with a given value.
     public init(value: Value) {
-        self.state = .success(value)
+        self.result = .success(value)
     }
 
     /// Creates a future with a given error.
     public init(error: Error) {
-        self.state = .failure(error)
+        self.result = .failure(error)
     }
 
     // MARK: State Transitions
 
     func succeed(_ value: Value) {
-        transitionToState(.success(value))
+        resolve(with: .success(value))
     }
 
     func fail(_ error: Error) {
-        transitionToState(.failure(error))
+        resolve(with: .failure(error))
     }
 
-    private func transitionToState(_ newState: State) {
-        guard OSAtomicCompareAndSwap32(0, 1, &isResolved) else { return }
-
+    private func resolve(with result: Result) {
         lock.lock()
-        self.state = newState
+        guard self.result == nil else {
+            lock.unlock(); return
+        }
+        self.result = result
         let handlers = self.handlers
         self.handlers = nil
         lock.unlock()
 
-        switch newState {
-        case .pending: fatalError("Invalid transition")
+        switch result {
         case let .success(value): handlers?.success.forEach { $0(value) }
         case let .failure(error): handlers?.failure.forEach { $0(error) }
         }
@@ -102,17 +101,16 @@ public final class Future<Value, Error> {
 
     private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
         lock.lock()
-        let state = self.state
-        if case .pending = state {
+        guard let result = self.result else {
             // Create handlers lazily - in some cases they are no needed
             handlers = handlers ?? Handlers()
             handlers?.success.append(success)
             handlers?.failure.append(failure)
+            lock.unlock(); return
         }
         lock.unlock()
 
-        switch state {
-        case .pending: break
+        switch result {
         case let .success(value): success(value)
         case let .failure(error): failure(error)
         }
@@ -175,25 +173,24 @@ public final class Future<Value, Error> {
 
     /// Returns true if the future is still pending.
     public var isPending: Bool {
-        guard case .pending = inspectState() else { return false }
-        return true
+        return inspectResult() == nil
     }
 
     /// Returns the value if the future has a value.
     public var value: Value? {
-        guard case let .success(value) = inspectState() else { return nil }
+        guard let result = inspectResult(), case let .success(value) = result else { return nil }
         return value
     }
 
     /// Returns the error if the future has an error.
     public var error: Error? {
-        guard case let .failure(error) = inspectState() else { return nil }
+        guard let result = inspectResult(), case let .failure(error) = result else { return nil }
         return error
     }
 
-    private func inspectState() -> State {
+    private func inspectResult() -> Result? {
         lock.lock(); defer { lock.unlock() }
-        return state
+        return result
     }
 
     // MARK: Zip
@@ -241,8 +238,7 @@ public final class Future<Value, Error> {
 
     // MARK: State (Private)
 
-    private enum State {
-        case pending
+    private enum Result {
         case success(Value)
         case failure(Error)
     }
