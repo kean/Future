@@ -179,13 +179,13 @@ public final class Future<Value, Error> {
 
     /// Returns the value if the future has a value.
     public var value: Value? {
-        guard let result = inspectResult(), case let .success(value) = result else { return nil }
+        guard case let .success(value)? = inspectResult() else { return nil }
         return value
     }
 
     /// Returns the error if the future has an error.
     public var error: Error? {
-        guard let result = inspectResult(), case let .failure(error) = result else { return nil }
+        guard case let .failure(error)? = inspectResult() else { return nil }
         return error
     }
 
