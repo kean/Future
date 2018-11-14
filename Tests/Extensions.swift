@@ -12,7 +12,7 @@ import Pill
 var descriptions = [String]() // stack of test descriptions
 
 extension XCTestCase {
-    func test(_ description: String, _ block: () -> Void = {}) -> Void {
+    func describe(_ description: String, _ block: () -> Void = {}) -> Void {
         precondition(Thread.isMainThread)
 
         descriptions.append(description)

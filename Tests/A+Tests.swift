@@ -10,7 +10,7 @@ import Pill
 class APlusTests: XCTestCase {
         
     func test_2_1_2() {
-        test("2.1.2.1: When fulfilled, a promise: must not transition to any other state.") {
+        describe("2.1.2.1: When fulfilled, a promise: must not transition to any other state.") {
 
             expect("trying to fulfill then immediately fulfill with a different value") { finish in
                 let future = Future<Int, MyError>() { succeed, _ in
@@ -63,7 +63,7 @@ class APlusTests: XCTestCase {
     }
     
     func test_2_1_3() {
-        test("2.1.3.1: When rejected, a promise: must not transition to any other state.") {
+        describe("2.1.3.1: When rejected, a promise: must not transition to any other state.") {
 
             expect("reject then reject with different error") { finish in
                 let future = Future<Int, MyError>() { _, fail in
@@ -116,15 +116,15 @@ class APlusTests: XCTestCase {
     }
 
     func test_2_2_1() {
-        test("2.2.1: Both `onFulfilled` and `onRejected` are optional arguments.")
+        describe("2.2.1: Both `onFulfilled` and `onRejected` are optional arguments.")
 
         // Doesn't make sense in Swift
     }
 
     func test_2_2_2() {
-        test("2.2.2: If `onFulfilled` is a function") {
+        describe("2.2.2: If `onFulfilled` is a function") {
 
-            test("2.2.2.1: it must be called after `promise` is fulfilled, with `promise`’s fulfillment value as its first argument.") {
+            describe("2.2.2.1: it must be called after `promise` is fulfilled, with `promise`’s fulfillment value as its first argument.") {
                 expect("fulfill delayed") { finish in
                     Future<Int, MyError>.eventuallySuccessfull().on(success: {
                         XCTAssertEqual($0, sentinel)
@@ -140,7 +140,7 @@ class APlusTests: XCTestCase {
                 }
             }
 
-            test("2.2.2.2: it must not be called before `promise` is fulfilled") {
+            describe("2.2.2.2: it must not be called before `promise` is fulfilled") {
                 expect("fulfilled after a delay") { finish in
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
@@ -171,7 +171,7 @@ class APlusTests: XCTestCase {
                 }
             }
 
-            test("2.2.2.3: it must not be called more than once.") {
+            describe("2.2.2.3: it must not be called more than once.") {
                 expect("already-fulfilled") { finish in
                     let future = Future<Int, MyError>(value: sentinel)
 
@@ -314,8 +314,8 @@ class APlusTests: XCTestCase {
     }
 
     func test_2_2_3() {
-        test("2.2.3: If `onRejected` is a function,") {
-            test("2.2.3.1: it must be called after `promise` is rejected, with `promise`’s rejection reason as its first argument.") {
+        describe("2.2.3: If `onRejected` is a function,") {
+            describe("2.2.3.1: it must be called after `promise` is rejected, with `promise`’s rejection reason as its first argument.") {
                 expect("rejected after delay") { finish in
                     Future<Int, MyError>.eventuallyFailed().on(failure: {
                         XCTAssertEqual($0, MyError.e1)
@@ -331,7 +331,7 @@ class APlusTests: XCTestCase {
                 }
             }
 
-            test("2.2.3.2: it must not be called before `promise` is rejected") {
+            describe("2.2.3.2: it must not be called before `promise` is rejected") {
 
                 expect("rejected after a delay") { finish in
                     let promise = Promise<Int, MyError>()
@@ -364,7 +364,7 @@ class APlusTests: XCTestCase {
                 }
             }
 
-            test("2.2.3.3: it must not be called more than once.") {
+            describe("2.2.3.3: it must not be called more than once.") {
                 expect("already-rejected") { finish in
                     let future = Future<Int, MyError>(error: MyError.e1)
 
@@ -503,9 +503,9 @@ class APlusTests: XCTestCase {
     }
 
     func test_2_2_4() {
-        test("2.2.4: `onFulfilled` or `onRejected` must not be called until the execution context stack contains only " +
+        describe("2.2.4: `onFulfilled` or `onRejected` must not be called until the execution context stack contains only " +
         "platform code.") {
-            test("`then` returns before the promise becomes fulfilled or rejected") {
+            describe("`then` returns before the promise becomes fulfilled or rejected") {
                 expect("`then`") { finish in
                     let future = Future<Int, MyError>(value: sentinel)
 
@@ -533,8 +533,8 @@ class APlusTests: XCTestCase {
                 }
             }
 
-            test("Clean-stack execution ordering tests (fulfillment case)") {
-                test("when `onFulfilled` is added immediately before the promise is fulfilled") {
+            describe("Clean-stack execution ordering tests (fulfillment case)") {
+                describe("when `onFulfilled` is added immediately before the promise is fulfilled") {
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
 
@@ -549,7 +549,7 @@ class APlusTests: XCTestCase {
                     XCTAssertEqual(onSucceesCalled, false)
                 }
 
-                test("when `onFulfilled` is added immediately after the promise is fulfilled") {
+                describe("when `onFulfilled` is added immediately after the promise is fulfilled") {
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
 
@@ -611,8 +611,8 @@ class APlusTests: XCTestCase {
                 }
             }
 
-            test("Clean-stack execution ordering tests (rejection case)") {
-                test("when `onRejected` is added immediately before the promise is rejected") {
+            describe("Clean-stack execution ordering tests (rejection case)") {
+                describe("when `onRejected` is added immediately before the promise is rejected") {
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
 
@@ -627,7 +627,7 @@ class APlusTests: XCTestCase {
                     XCTAssertEqual(onFailureCalled, false)
                 }
 
-                test("when `onRejected` is added immediately after the promise is rejected") {
+                describe("when `onRejected` is added immediately after the promise is rejected") {
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
 
@@ -692,7 +692,7 @@ class APlusTests: XCTestCase {
     }
 
     func test_2_2_5() {
-        test("2.2.5 `onFulfilled` and `onRejected` must be called as functions (i.e. with no `this` value).")
+        describe("2.2.5 `onFulfilled` and `onRejected` must be called as functions (i.e. with no `this` value).")
 
         // Doesn't make sense in Swift
     }
@@ -700,8 +700,8 @@ class APlusTests: XCTestCase {
 
 
     func test_2_2_6() {
-        test("2.2.6: `then` may be called multiple times on the same promise.") {
-            test("2.2.6.1: If/when `promise` is fulfilled, all respective `onFulfilled` callbacks must execute in the order of their originating calls to `then`.") {
+        describe("2.2.6: `then` may be called multiple times on the same promise.") {
+            describe("2.2.6.1: If/when `promise` is fulfilled, all respective `onFulfilled` callbacks must execute in the order of their originating calls to `then`.") {
                 expect("multiple boring fulfillment handlers", count: 3) { finish in
                     let future = Future<Int, MyError>.eventuallySuccessfull()
 
@@ -721,7 +721,7 @@ class APlusTests: XCTestCase {
                     })
                 }
 
-                test("multiple fulfillment handlers, one of which throws") {
+                describe("multiple fulfillment handlers, one of which throws") {
                     // Doesn't make sense in Pill, cause it doesn't allow throws (yet?)
                 }
 
@@ -805,7 +805,7 @@ class APlusTests: XCTestCase {
                 }
             }
 
-            test("2.2.6.2: If/when `promise` is rejected, all respective `onRejected` callbacks must execute in the order of their originating calls to `then`.") {
+            describe("2.2.6.2: If/when `promise` is rejected, all respective `onRejected` callbacks must execute in the order of their originating calls to `then`.") {
                 expect("multiple boring rejection handlers", count: 3) { finish in
                     let future = Future<Int, MyError>.eventuallyFailed()
 
@@ -825,7 +825,7 @@ class APlusTests: XCTestCase {
                     })
                 }
 
-                test("multiple rejection handlers, one of which throws") {
+                describe("multiple rejection handlers, one of which throws") {
                     // Doesn't make sense in Pill, cause it doesn't allow throws (yet?)
                 }
 
@@ -882,32 +882,32 @@ class APlusTests: XCTestCase {
         }
 
         func test_2_2_7() {
-            test("2.2.7: `then` must return a promise: `promise2 = promise1.then(onFulfilled, onRejected)") {
+            describe("2.2.7: `then` must return a promise: `promise2 = promise1.then(onFulfilled, onRejected)") {
 
-                test("is a promise") {
+                describe("is a promise") {
                     // Doesn't make sense in Swift
                 }
                 
-                test("2.2.7.1: If either `onFulfilled` or `onRejected` returns a value `x`, run the Promise Resolution procedure `[[Resolve]](promise2, x)`") {
+                describe("2.2.7.1: If either `onFulfilled` or `onRejected` returns a value `x`, run the Promise Resolution procedure `[[Resolve]](promise2, x)`") {
                     // See separate 3.3 tests
                 }
                 
-                test("2.2.7.2: If either `onFulfilled` or `onRejected` throws an exception `e`, `promise2` must be rejected with `e` as the reason.") {
+                describe("2.2.7.2: If either `onFulfilled` or `onRejected` throws an exception `e`, `promise2` must be rejected with `e` as the reason.") {
                     // We don't test that since we don't allow then/catch to throw
                 }
                 
-                test("2.2.7.3: If `onFulfilled` is not a function and `promise1` is fulfilled, `promise2` must be fulfilled with the same value.") {
+                describe("2.2.7.3: If `onFulfilled` is not a function and `promise1` is fulfilled, `promise2` must be fulfilled with the same value.") {
                     // Doesn't make sense in Swift
                 }
                 
-                test("2.2.7.4: If `onRejected` is not a function and `promise1` is rejected, `promise2` must be rejected with the same reason.") {
+                describe("2.2.7.4: If `onRejected` is not a function and `promise1` is rejected, `promise2` must be rejected with the same reason.") {
                     // Doesn't make sense in Swift
                 }
             }
         }
         
         func test_2_3_1() {
-            test("2.3.1: If `promise` and `x` refer to the same object, reject `promise` with a `TypeError' as the reason.") {
+            describe("2.3.1: If `promise` and `x` refer to the same object, reject `promise` with a `TypeError' as the reason.") {
                 // First of, this is really a fatal error which is a result of
                 // a programmatic error - it's not 'just an error'.
                 // Second of, Pill doesn't (yet) support this since it seems
@@ -916,8 +916,8 @@ class APlusTests: XCTestCase {
         }
         
         func test_2_3_2() {
-            test("2.3.2: If `x` is a promise, adopt its state") {
-                test("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") {
+            describe("2.3.2: If `x` is a promise, adopt its state") {
+                describe("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") {
                     expect("via return from a fulfilled promise") { finish in
                         let future = Future(value: 1).flatMap { _ in
                             return Future<Int, MyError> { (_,_) in } // pending
@@ -943,7 +943,7 @@ class APlusTests: XCTestCase {
                     }
                 }
 
-                test("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
+                describe("2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.") {
                     expect("`x` is already-fulfilled") { finish in
                         let future = Future<Int, MyError>(value: sentinel).map { return $0 }
                         future.on(success: {
@@ -962,7 +962,7 @@ class APlusTests: XCTestCase {
                 }
 
 
-                test("2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.") {
+                describe("2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.") {
                     expect("`x` is already-rejected") { finish in
                         let future = Future<Int, MyError>(error: MyError.e1).map { _ in }
                         future.on(failure: {
@@ -983,14 +983,14 @@ class APlusTests: XCTestCase {
         }
 
         func test_2_3_3() {
-            test("2.3.3: Otherwise, if `x` is an object or function,") {
+            describe("2.3.3: Otherwise, if `x` is an object or function,") {
                 // Most of those tests doesn't make sense in Swift
                 // FIXME: Get back to it later, there might be some usefull tests
             }
         }
 
         func test_2_3_4() {
-            test("2.3.4: If `x` is not an object or function, fulfill `promise` with `x`") {
+            describe("2.3.4: If `x` is not an object or function, fulfill `promise` with `x`") {
                 // Doesn't make sense in Swift
             }
         }

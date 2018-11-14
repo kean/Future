@@ -145,6 +145,46 @@ class MapErrorTest: XCTestCase {
     }
 }
 
+class FlatMapErrorTests: XCTestCase {
+    func testFlatMapErrorSuccess() {
+        // GIVEN failed future
+        let future = Future<Int, MyError>(error: .e1)
+
+        // WHEN recovering from error with a value
+        let mapped = future.flatMapError { _ in
+            return Future<Int, MyError>(value: 3)
+        }
+
+        // EXPECT mapped future to return a value
+        let expectation = self.expectation()
+        mapped.on(success: { value in
+            XCTAssertEqual(value, 3)
+            expectation.fulfill()
+        })
+
+        wait()
+    }
+
+    func testFlatMapErrorFail() {
+        // GIVEN failed future
+        let future = Future<Int, MyError>(error: .e1)
+
+        // WHEN recovering from error and failing again
+        let mapped = future.flatMapError { _ in
+            return Future<Int, MyError>(error: .e2)
+        }
+
+        // EXPECT mapped future to return an error
+        let expectation = self.expectation()
+        mapped.on(failure: { error in
+            XCTAssertEqual(error, .e2)
+            expectation.fulfill()
+        })
+
+        wait()
+    }
+}
+
 class Zip2Tests: XCTestCase {
     // MARK: Zip (Tuple)
 
