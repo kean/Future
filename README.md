@@ -8,7 +8,7 @@
 <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
 </p>
 
-A streamlined `Future<Value, Error>` implementation with a functional API.
+A streamlined `Future<Value, Error>` implementation.
 
 ## Future
 
@@ -30,11 +30,10 @@ user.on(
 )
 ```
 
-By default, all of the callbacks and composing functions are executed on the main queue (`DispatchQueue.main`). To change the queue use `observeOn` method which creates a new future observed on the given queue:
+By default, all of the callbacks are executed on the main queue (`DispatchQueue.main`). To change the queue pass one into `on` method:
 
 ```swift
-future.observeOn(DispatchQueue.global())
-    .on(success: { print("value: \($0)" })
+future.on(queue: .global(), success: { print("value: \($0)" })
 ```
 
 ### Mapping Values

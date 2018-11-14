@@ -241,7 +241,7 @@ public final class Future<Value, Error> {
 }
 
 // Using the same lock across instances is safe because Future doesn't invoke
-// any client code directly.
+// any client code inside it.
 private let lock = NSLock()
 
 /// A promise to provide a result later.
