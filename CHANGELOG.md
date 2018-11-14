@@ -1,3 +1,9 @@
+## Pill 0.8
+
+- `map`, `flatMap`, `mapError`, `flatMapError` now run on the queue on which the future was resolved. It increases the performance of a typical chain by up to 3 times and also simplifies debugging - there are less `queue.async` operations performed.
+- `map` and `mapError` now no longer require intermediate `Future` instance to be created, increased performance by up to 40%.
+- Remove `observeOn`. It was introducing unwanted state in `Future`. To observe success/failure on a different queue use a new `queue` parameter (`DispatchQueue.main` by default) of `on` method. 
+
 ## Pill 0.7
 
 - Add `zip` with three arguments

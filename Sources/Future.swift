@@ -23,9 +23,6 @@ import Foundation
 ///
 /// Futures are easily composable. `Future<Value, Error>` provides a set of
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
-///
-/// By default, all of the callbacks and composing functions are executed
-/// asynchronously on the main queue (`DispatchQueue.main`).
 public final class Future<Value, Error> {
     private var result: Result? // nil when pending
     private var handlers: Handlers?
@@ -66,7 +63,7 @@ public final class Future<Value, Error> {
     private func resolve(with result: Result) {
         lock.lock()
         guard self.result == nil else {
-            lock.unlock(); return
+            lock.unlock(); return // Already resolved
         }
         self.result = result
         let handlers = self.handlers
@@ -83,20 +80,14 @@ public final class Future<Value, Error> {
 
     /// The given closures execute asynchronously when the future has a result.
     ///
-    /// By default, all of the callbacks and composing functions are executed on
-    /// the main queue (`DispatchQueue.main`). To change the queue use `observeOn`.
-    ///
-    /// - parameter queue: A queue on which the callbacks are dispatched. `.main` by
-    /// default. Pass `nil` to receive callbacks synchronously when value is received.
-    /// - parameter success: Gets called when the future has a value.
-    /// - parameter failure: Gets called when the future has an error.
-    /// - parameter completion: Gets called when the future has any result.
-    public func on(queue: DispatchQueue? = .main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
-        func dispatch(_ closure: @escaping () -> Void) {
-            queue?.async(execute: closure) ?? closure()
-        }
-        observe(success: { value in dispatch { success?(value); completion?() } },
-                failure: { error in dispatch { failure?(error); completion?() } })
+    /// - parameters:
+    ///   - queue: A queue on which the callbacks are called. `.main` by default.
+    ///   - success: Gets called when the future has a value.
+    ///   - failure: Gets called when the future has an error.
+    ///   - completion: Gets called when the future has any result.
+    public func on(queue: DispatchQueue = .main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
+        observe(success: { value in queue.async { success?(value); completion?() } },
+                failure: { error in queue.async { failure?(error); completion?() } })
     }
 
     private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
@@ -106,7 +97,7 @@ public final class Future<Value, Error> {
             handlers = handlers ?? Handlers()
             handlers?.success.append(success)
             handlers?.failure.append(failure)
-            lock.unlock(); return
+            lock.unlock(); return // Still pending, handlers attached
         }
         lock.unlock()
 

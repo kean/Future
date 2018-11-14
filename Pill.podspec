@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'Pill'
-    s.version          = '0.7'
+    s.version          = '0.8'
     s.summary          = 'A streamlined Future<Value, Error> implementation with a functional API'
     s.homepage         = 'https://github.com/kean/Pill'
     s.license          = 'MIT'

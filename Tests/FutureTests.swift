@@ -58,83 +58,36 @@ class FutureTests: XCTestCase {
         wait()
     }
 
-    // MARK: Synchronous `on`
+    // MARK: Synchronous Resolution
 
-    func testValueIsDispatchedSynchronously() {
-        let future = Future<Int, MyError>(value: 1)
-
-        var callbacks = 0
-        future.on(
-            queue: nil,
-            success: { _ in callbacks += 1 },
-            completion: { callbacks += 1 }
-        )
-
-        XCTAssertEqual(callbacks, 2)
-    }
-
-    func testErrorIsDispatchedSynchronously() {
-        let future = Future<Int, MyError>(error: .e1)
-
-        var callbacks = 0
-        future.on(
-            queue: nil,
-            failure: { _ in callbacks += 1 },
-            completion: { callbacks += 1 }
-        )
-
-        XCTAssertEqual(callbacks, 2)
-    }
-
-    func testValueIsDispatchedSynchronouslyOnResolve() {
+    func testSynchronousSuccess() {
         let promise = Promise<Int, MyError>()
         let future = promise.future
-
-        var callbacks = 0
-        future.on(
-            queue: nil,
-            success: { _ in callbacks += 1 },
-            completion: { callbacks += 1 }
-        )
-
         promise.succeed(value: 1)
-
-        XCTAssertEqual(callbacks, 2)
+        XCTAssertEqual(future.value, 1)
     }
 
-    func testErrorIsDispatchedSynchronouslyOnResolve() {
+    func testSynchronousFail() {
         let promise = Promise<Int, MyError>()
         let future = promise.future
-
-        var callbacks = 0
-        future.on(
-            queue: nil,
-            failure: { _ in callbacks += 1 },
-            completion: { callbacks += 1 }
-        )
-
         promise.fail(error: .e1)
-
-        XCTAssertEqual(callbacks, 2)
+        XCTAssertEqual(future.error, .e1)
     }
 
-    func testSynchronousOnWithMap() {
+    func testSynchronousSuccessWithMap() {
         let promise = Promise<Int, MyError>()
         let future = promise.future
-
-        var callbacks = 0
-        future.map { $0 + 1}.on(
-            queue: nil,
-            success: { value in
-                XCTAssertEqual(value, 2)
-                callbacks += 1
-            },
-            completion: { callbacks += 1 }
-        )
-
+        let result = future.map { $0 + 1}
         promise.succeed(value: 1)
+        XCTAssertEqual(result.value, 2)
+    }
 
-        XCTAssertEqual(callbacks, 2)
+    func testSynchronousSuccessWithFlatMap() {
+        let promise = Promise<Int, MyError>()
+        let future = promise.future
+        let result = future.flatMap { Future(value: $0 + 1) }
+        promise.succeed(value: 1)
+        XCTAssertEqual(result.value, 2)
     }
 
     // MARK: Synchronous Inspection
