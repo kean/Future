@@ -20,11 +20,12 @@ extension XCTestCase {
         descriptions.removeLast()
     }
     
-    func expect(_ description: String = "GenericExpectation", file: StaticString = #file, line: UInt = #line, _ block: (_ fulfill: @escaping () -> Void) -> Void) {
+    func expect(_ description: String = "GenericExpectation", count: Int = 1, file: StaticString = #file, line: UInt = #line, _ block: (_ fulfill: @escaping () -> Void) -> Void) {
         precondition(Thread.isMainThread)
 
         descriptions.append(description)
         let expectation = self.expectation(description: descriptions.joined(separator: " -> "))
+        expectation.expectedFulfillmentCount = count
         descriptions.removeLast()
 
         block({ expectation.fulfill() })
@@ -75,39 +76,19 @@ enum MyError: Swift.Error {
 let sentinel = 1
 
 extension Future {    
-    class func fulfilledAsync() -> Future<Int, Error> {
-        return Future<Int, Error>() { fulfill, _ in
+    class func eventuallySuccessfull() -> Future<Int, Error> {
+        return Future<Int, Error>() { success, _ in
             DispatchQueue.global().async {
-                fulfill(sentinel)
+                success(sentinel)
             }
         }
     }
 
-    class func rejectedAsync() -> Future<Int, MyError> {
-        return Future<Int, MyError>() { _, reject in
+    class func eventuallyFailed() -> Future<Int, MyError> {
+        return Future<Int, MyError>() { _, fail in
             DispatchQueue.global().async {
-                reject(MyError.e1)
+                fail(MyError.e1)
             }
-        }
-    }
-}
-
-// MARK: Finisher
-
-class Finisher {
-    private var _count: Int
-    private let _finish: () -> Void
-
-    init(_ finish: @escaping () -> Void, _ count: Int) {
-        self._finish = finish
-        self._count = count
-    }
-
-    func finish() {
-        _count -= 1
-        XCTAssert(_count >= 0)
-        if _count == 0 {
-            _finish()
         }
     }
 }

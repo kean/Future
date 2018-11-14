@@ -13,9 +13,9 @@ class APlusTests: XCTestCase {
         test("2.1.2.1: When fulfilled, a promise: must not transition to any other state.") {
 
             expect("trying to fulfill then immediately fulfill with a different value") { finish in
-                let future = Future<Int, MyError>() { fulfill, _ in
-                    fulfill(0)
-                    fulfill(1)
+                let future = Future<Int, MyError>() { succeed, _ in
+                    succeed(0)
+                    succeed(1)
                 }
                 future.on(success: {
                     XCTAssertEqual($0, 0)
@@ -24,9 +24,9 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill then immediately reject") { finish in
-                let future = Future<Int, MyError>() { fulfill, reject in
-                    fulfill(0)
-                    reject(MyError.e1)
+                let future = Future<Int, MyError>() { succeed, fail in
+                    succeed(0)
+                    fail(MyError.e1)
                 }
                 future.on(success: {
                     XCTAssertEqual($0, 0)
@@ -35,10 +35,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill then reject, delayed") { finish in
-                let future = Future<Int, MyError>() { fulfill, reject in
+                let future = Future<Int, MyError>() { succeed, fail in
                     after(ticks: 5) {
-                        fulfill(0)
-                        reject(MyError.e1)
+                        succeed(0)
+                        fail(MyError.e1)
                     }
                 }
                 future.on(success: {
@@ -48,10 +48,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill immediately then reject delayed") { finish in
-                let future = Future<Int, MyError>() { fulfill, reject in
-                    fulfill(0)
+                let future = Future<Int, MyError>() { succeed, fail in
+                    succeed(0)
                     after(ticks: 5) {
-                        reject(MyError.e1)
+                        fail(MyError.e1)
                     }
                 }
                 future.on(success: {
@@ -66,9 +66,9 @@ class APlusTests: XCTestCase {
         test("2.1.3.1: When rejected, a promise: must not transition to any other state.") {
 
             expect("reject then reject with different error") { finish in
-                let future = Future<Int, MyError>() { _, reject in
-                    reject(MyError.e1)
-                    reject(MyError.e2)
+                let future = Future<Int, MyError>() { _, fail in
+                    fail(MyError.e1)
+                    fail(MyError.e2)
                 }
                 future.on(failure: {
                     XCTAssertEqual($0, MyError.e1)
@@ -77,9 +77,9 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to reject then immediately fulfill") { finish in
-                let future = Future<Int, MyError>() { fulfill, reject in
-                    reject(MyError.e1)
-                    fulfill(1)
+                let future = Future<Int, MyError>() { succeed, fail in
+                    fail(MyError.e1)
+                    succeed(1)
                 }
                 future.on(failure: {
                     XCTAssertEqual($0, MyError.e1)
@@ -88,10 +88,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to reject then fulfill, delayed") { finish in
-                let future = Future<Int, MyError>() { fulfill, reject in
+                let future = Future<Int, MyError>() { succeed, fail in
                     after(ticks: 5) {
-                        reject(MyError.e1)
-                        fulfill(1)
+                        fail(MyError.e1)
+                        succeed(1)
                     }
                 }
                 future.on(failure: {
@@ -101,10 +101,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to reject immediately then fulfill delayed") { finish in
-                let future = Future<Int, MyError>() { fulfill, reject in
-                    reject(MyError.e1)
+                let future = Future<Int, MyError>() { succeed, fail in
+                    fail(MyError.e1)
                     after(ticks: 5) {
-                        fulfill(1)
+                        succeed(1)
                     }
                 }
                 future.on(failure: {
@@ -126,7 +126,7 @@ class APlusTests: XCTestCase {
 
             test("2.2.2.1: it must be called after `promise` is fulfilled, with `promise`’s fulfillment value as its first argument.") {
                 expect("fulfill delayed") { finish in
-                    Future<Int, MyError>.fulfilledAsync().on(success: {
+                    Future<Int, MyError>.eventuallySuccessfull().on(success: {
                         XCTAssertEqual($0, sentinel)
                         finish()
                     })
@@ -317,7 +317,7 @@ class APlusTests: XCTestCase {
         test("2.2.3: If `onRejected` is a function,") {
             test("2.2.3.1: it must be called after `promise` is rejected, with `promise`’s rejection reason as its first argument.") {
                 expect("rejected after delay") { finish in
-                    Future<Int, MyError>.rejectedAsync().on(failure: {
+                    Future<Int, MyError>.eventuallyFailed().on(failure: {
                         XCTAssertEqual($0, MyError.e1)
                         finish()
                     })
@@ -509,27 +509,27 @@ class APlusTests: XCTestCase {
                 expect("`then`") { finish in
                     let future = Future<Int, MyError>(value: sentinel)
 
-                    var thenHasReturned = false
+                    var onSuccessHasReturned = false
 
                     future.on(success: { _ in
-                        XCTAssertEqual(thenHasReturned, true)
+                        XCTAssertEqual(onSuccessHasReturned, true)
                         finish()
                     })
                     
-                    thenHasReturned = true;
+                    onSuccessHasReturned = true;
                 }
 
                 expect("`catch`") { finish in
                     let future = Future<Int, MyError>(error: MyError.e1)
 
-                    var catchHasReturned = false
+                    var onFailureHasReturned = false
 
                     future.on(failure: { _ in
-                        XCTAssertEqual(catchHasReturned, true)
+                        XCTAssertEqual(onFailureHasReturned, true)
                         finish()
                     })
 
-                    catchHasReturned = true
+                    onFailureHasReturned = true
                 }
             }
 
@@ -538,43 +538,43 @@ class APlusTests: XCTestCase {
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
 
-                    var thenCalled = false;
+                    var onSucceesCalled = false
 
                     future.on(success: { _ in
-                        thenCalled = true
+                        onSucceesCalled = true
                     })
 
                     promise.succeed(value: sentinel)
 
-                    XCTAssertEqual(thenCalled, false)
+                    XCTAssertEqual(onSucceesCalled, false)
                 }
 
                 test("when `onFulfilled` is added immediately after the promise is fulfilled") {
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
 
-                    var thenCalled = false
+                    var onSuccessCalled = false
 
                     promise.succeed(value: sentinel)
 
                     future.on(success: { _ in
-                        thenCalled = true
+                        onSuccessCalled = true
                     })
                     
-                    XCTAssertEqual(thenCalled, false)
+                    XCTAssertEqual(onSuccessCalled, false)
                 }
 
                 expect("when one `onFulfilled` is added inside another `onFulfilled`") { finish in
                     let future = Future<Int, MyError>(value: sentinel)
 
-                    var firstOnFulfilledFinished = false
+                    var firstOnSuccessFinished = false
 
                     future.on(success: { _ in
                         future.on(success: { _ in
-                            XCTAssertEqual(firstOnFulfilledFinished, true)
+                            XCTAssertEqual(firstOnSuccessFinished, true)
                             finish()
                         })
-                        firstOnFulfilledFinished = true
+                        firstOnSuccessFinished = true
                     })
                 }
 
@@ -582,14 +582,14 @@ class APlusTests: XCTestCase {
                     let future = Future<Int, MyError>(error: MyError.e1)
                     let future2 = Future<Int, MyError>(value: sentinel)
 
-                    var firstOnRejectedFinished = false
+                    var firstOnFailFinished = false
 
                     future.on(failure: { _ in
                         future2.on(success: { _ in
-                            XCTAssertEqual(firstOnRejectedFinished, true)
+                            XCTAssertEqual(firstOnFailFinished, true)
                             finish()
                         })
-                        firstOnRejectedFinished = true
+                        firstOnFailFinished = true
                     })
                 }
 
@@ -616,43 +616,43 @@ class APlusTests: XCTestCase {
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
 
-                    var catchCalled = false;
+                    var onFailureCalled = false;
 
                     future.on(failure: { _ in
-                        catchCalled = true;
+                        onFailureCalled = true;
                     })
 
                     promise.fail(error: MyError.e1)
 
-                    XCTAssertEqual(catchCalled, false)
+                    XCTAssertEqual(onFailureCalled, false)
                 }
 
                 test("when `onRejected` is added immediately after the promise is rejected") {
                     let promise = Promise<Int, MyError>()
                     let future = promise.future
 
-                    var catchCalled = false;
+                    var onFailureCalled = false;
 
                     promise.fail(error: MyError.e1)
 
                     future.on(failure: { _ in
-                        catchCalled = true;
+                        onFailureCalled = true
                     })
 
-                    XCTAssertEqual(catchCalled, false)
+                    XCTAssertEqual(onFailureCalled, false)
                 }
 
                 expect("when one `onRejected` is added inside another `onRejected`") { finish in
                     let future = Future<Int, MyError>(error: MyError.e1)
 
-                    var firstOnRejectedFinished = false
+                    var firstOnFailFinished = false
 
                     future.on(failure: { _ in
                         future.on(failure: { _ in
-                            XCTAssertEqual(firstOnRejectedFinished, true)
+                            XCTAssertEqual(firstOnFailFinished, true)
                             finish()
                         })
-                        firstOnRejectedFinished = true
+                        firstOnFailFinished = true
                     })
                 }
 
@@ -660,14 +660,14 @@ class APlusTests: XCTestCase {
                     let future = Future<Int, MyError>(value: sentinel)
                     let future2 = Future<Int, MyError>(error: MyError.e1)
 
-                    var firstOnFulfilledFinished = false
+                    var firstOnSuccessFinished = false
 
                     future.on(success: { _ in
                         future2.on(failure: { _ in
-                            XCTAssertEqual(firstOnFulfilledFinished, true)
+                            XCTAssertEqual(firstOnSuccessFinished, true)
                             finish()
                         })
-                        firstOnFulfilledFinished = true
+                        firstOnSuccessFinished = true
                     })
                 }
 
@@ -702,24 +702,22 @@ class APlusTests: XCTestCase {
     func test_2_2_6() {
         test("2.2.6: `then` may be called multiple times on the same promise.") {
             test("2.2.6.1: If/when `promise` is fulfilled, all respective `onFulfilled` callbacks must execute in the order of their originating calls to `then`.") {
-                expect("multiple boring fulfillment handlers") { finish in
-                    let future = Future<Int, MyError>.fulfilledAsync()
-
-                    let finisher = Finisher(finish, 3)
+                expect("multiple boring fulfillment handlers", count: 3) { finish in
+                    let future = Future<Int, MyError>.eventuallySuccessfull()
 
                     future.on(success: {
                         XCTAssertEqual($0, sentinel)
-                        finisher.finish()
+                        finish()
                     })
 
                     future.on(success: {
                         XCTAssertEqual($0, sentinel)
-                        finisher.finish()
+                        finish()
                     })
 
                     future.on(success: {
                         XCTAssertEqual($0, sentinel)
-                        finisher.finish()
+                        finish()
                     })
                 }
 
@@ -727,17 +725,15 @@ class APlusTests: XCTestCase {
                     // Doesn't make sense in Pill, cause it doesn't allow throws (yet?)
                 }
 
-                expect("results in multiple branching chains with their own fulfillment values") { finish in
-                    let finisher = Finisher(finish, 3)
-
-                    let future = Future<Int, MyError>.fulfilledAsync()
+                expect("results in multiple branching chains with their own fulfillment values", count: 3) { finish in
+                    let future = Future<Int, MyError>.eventuallySuccessfull()
 
                     future.map { val -> Int in
                         XCTAssertEqual(val, sentinel)
                         return 2
                     }.on(success: {
                         XCTAssertEqual($0, 2)
-                        finisher.finish()
+                        finish()
                     })
 
                     future.map { val -> Int in
@@ -745,7 +741,7 @@ class APlusTests: XCTestCase {
                         return 3
                     }.on(success: {
                         XCTAssertEqual($0, 3)
-                        finisher.finish()
+                        finish()
                     })
 
                     future.map { val -> Int in
@@ -753,12 +749,12 @@ class APlusTests: XCTestCase {
                         return 4
                     }.on(success: {
                         XCTAssertEqual($0, 4)
-                        finisher.finish()
+                        finish()
                     })
                 }
 
 //                expect("`onFulfilled` handlers are called in the original order") { finish in
-//                    let future = Future<Int, MyError>.fulfilledAsync()
+//                    let future = Future<Int, MyError>.eventuallySuccessfull()
 //                    var callCount = 0
 //
 //                    future.on(success: {
@@ -785,7 +781,7 @@ class APlusTests: XCTestCase {
 //                }
 
                 expect("even when one handler is added inside another handle") { finish in
-                    let future = Future<Int, MyError>.fulfilledAsync()
+                    let future = Future<Int, MyError>.eventuallySuccessfull()
                     var callCount = 0
 
                     future.on(success: {
@@ -810,24 +806,22 @@ class APlusTests: XCTestCase {
             }
 
             test("2.2.6.2: If/when `promise` is rejected, all respective `onRejected` callbacks must execute in the order of their originating calls to `then`.") {
-                expect("multiple boring rejection handlers") { finish in
-                    let future = Future<Int, MyError>.rejectedAsync()
-
-                    let finisher = Finisher(finish, 3)
+                expect("multiple boring rejection handlers", count: 3) { finish in
+                    let future = Future<Int, MyError>.eventuallyFailed()
 
                     future.on(failure: {
                         XCTAssertEqual($0, MyError.e1)
-                        finisher.finish()
+                        finish()
                     })
 
                     future.on(failure: {
                         XCTAssertEqual($0, MyError.e1)
-                        finisher.finish()
+                        finish()
                     })
 
                     future.on(failure: {
                         XCTAssertEqual($0, MyError.e1)
-                        finisher.finish()
+                        finish()
                     })
                 }
 
@@ -836,7 +830,7 @@ class APlusTests: XCTestCase {
                 }
 
 //                expect("`onRejected` handlers are called in the original order") { finish in
-//                    let future = Future<Int, MyError>.rejectedAsync()
+//                    let future = Future<Int, MyError>.eventuallyFailed()
 //                    var callCount = 0
 //
 //                    future.on(failure: {
@@ -862,7 +856,7 @@ class APlusTests: XCTestCase {
 //                }
 
                 expect("even when one handler is added inside another handle") { finish in
-                    let future = Future<Int, MyError>.rejectedAsync()
+                    let future = Future<Int, MyError>.eventuallyFailed()
                     var callCount = 0
 
                     future.on(failure: {
@@ -959,7 +953,7 @@ class APlusTests: XCTestCase {
                     }
 
                     expect("`x` is eventually-fulfilled") { finish in
-                        let future = Future<Int, MyError>.fulfilledAsync().map { return $0 }
+                        let future = Future<Int, MyError>.eventuallySuccessfull().map { return $0 }
                         future.on(success: {
                             XCTAssertEqual($0, sentinel)
                             finish()
@@ -978,7 +972,7 @@ class APlusTests: XCTestCase {
                     }
 
                     expect("`x` is eventually-rejected") { finish in
-                        let future = Future<Int, MyError>.rejectedAsync().map { _ in }
+                        let future = Future<Int, MyError>.eventuallyFailed().map { _ in }
                         future.on(failure: {
                             XCTAssertEqual($0, MyError.e1)
                             finish()
