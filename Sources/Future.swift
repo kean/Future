@@ -170,30 +170,6 @@ public final class Future<Value, Error> {
         return future
     }
 
-    // MARK: Synchronous Inspection
-
-    /// Returns true if the future is still pending.
-    public var isPending: Bool {
-        return inspectResult() == nil
-    }
-
-    /// Returns the value if the future has a value.
-    public var value: Value? {
-        guard case let .success(value)? = inspectResult() else { return nil }
-        return value
-    }
-
-    /// Returns the error if the future has an error.
-    public var error: Error? {
-        guard case let .failure(error)? = inspectResult() else { return nil }
-        return error
-    }
-
-    private func inspectResult() -> Result? {
-        lock.lock(); defer { lock.unlock() }
-        return result
-    }
-
     // MARK: Zip
 
     /// Returns a future which succeedes when all the given futures succeed. If
@@ -235,6 +211,30 @@ public final class Future<Value, Error> {
         return futures.reduce(Future(value: initialResult)) { lhs, rhs in
             return Future.zip(lhs, rhs).map(combiningFunction)
         }
+    }
+
+    // MARK: Synchronous Inspection
+
+    /// Returns true if the future is still pending.
+    public var isPending: Bool {
+        return inspectResult() == nil
+    }
+
+    /// Returns the value if the future has a value.
+    public var value: Value? {
+        guard case let .success(value)? = inspectResult() else { return nil }
+        return value
+    }
+
+    /// Returns the error if the future has an error.
+    public var error: Error? {
+        guard case let .failure(error)? = inspectResult() else { return nil }
+        return error
+    }
+
+    private func inspectResult() -> Result? {
+        lock.lock(); defer { lock.unlock() }
+        return result
     }
 
     // MARK: State (Private)
