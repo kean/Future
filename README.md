@@ -101,9 +101,9 @@ Using `Promise`:
 ```swift
 func someAsyncOperation(args) -> Future<Value, Error> {
     let promise = Promise<Value, Error>()
-    someAsyncOperationWithCallback(args) { result -> Void in
+    someAsyncOperationWithCallback(args) { value, error in
         // when finished...
-        promise.succeed(result: result)
+        promise.succeed(result: value)
         // if error...
         promise.fail(error: error)
     }
@@ -133,7 +133,7 @@ Future<Int, Error>(error: Error.unknown)
 ```swift
 class Future {
     var isPending: Bool
-    var value: T?
+    var value: Value?
     var error: Error?
 }
 ```

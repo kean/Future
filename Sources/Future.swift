@@ -121,42 +121,52 @@ public final class Future<Value, Error> {
     }
 
     // MARK: Map
-    
-    /// The closure executes asynchronously when the future has a value.
-    ///
-    /// - returns: A future with a value returned by the closure.
-    public func map<NewValue>(_ closure: @escaping (Value) -> NewValue) -> Future<NewValue, Error> {
+
+    /// Returns a future with the result of mapping the given closure over the
+    /// current future's value.
+    public func map<NewValue>(_ transform: @escaping (Value) -> NewValue) -> Future<NewValue, Error> {
         let future = Future<NewValue, Error>()
-        cascade(future, success: { future.succeed(closure($0)) })
+        cascade(future, success: { future.succeed(transform($0)) })
         return future
     }
 
-    /// The closure executes asynchronously when the future has a value.
+    /// Returns a future which is eventually resolved with the result of the
+    /// future returned by the `transform` closure. The `transform` closure is
+    /// called when the current future receives a value.
     ///
-    /// - returns: A future with a result of the future returned by the closure.
-    public func flatMap<NewValue>(_ closure: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
+    /// Allows you to "chain" multiple async operations:
+    ///
+    /// ```
+    /// let avatar = user
+    ///     .map { $0.avatarURL }
+    ///     .flatMap(loadAvatar)
+    ///
+    /// // user: Future<User, Error>
+    /// // func loadAvatar(url: URL) -> Future<Avatar, Error>
+    /// ```
+    public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
         let future = Future<NewValue, Error>()
-        cascade(future, success: { closure($0).cascade(future) })
+        cascade(future, success: { transform($0).cascade(future) })
         return future
     }
 
-    /// The closure executes asynchronously when the future fails.
-    ///
-    /// - returns: A future with an error returned by the closure.
-    public func mapError<NewError>(_ closure: @escaping (Error) -> NewError) -> Future<Value, NewError> {
+    /// Returns a future with the error which is the result of mapping the given
+    /// closure over the current future's error.
+    public func mapError<NewError>(_ transform: @escaping (Error) -> NewError) -> Future<Value, NewError> {
         let future = Future<Value, NewError>()
-        cascade(future, failure: { future.fail(closure($0)) })
+        cascade(future, failure: { future.fail(transform($0)) })
         return future
     }
 
-    /// The closure executes asynchronously when the future fails.
-    /// Allows you to continue the chain of futures by recovering from the error
-    /// by creating a new future.
+    /// Returns a future which is eventually resolved with the result of the
+    /// future returned by the `transform` closure. The `transform` closure is
+    /// called when the current future receives an error.
     ///
-    /// - returns: A future with a result of the future returned by the closure.
-    public func flatMapError<NewError>(_ closure: @escaping (Error) -> Future<Value, NewError>) -> Future<Value, NewError> {
+    /// Allows you to continue the chain of futures by "recovering" from an error
+    /// with a new future.
+    public func flatMapError<NewError>(_ transform: @escaping (Error) -> Future<Value, NewError>) -> Future<Value, NewError> {
         let future = Future<Value, NewError>()
-        cascade(future, failure: { closure($0).cascade(future) })
+        cascade(future, failure: { transform($0).cascade(future) })
         return future
     }
 
@@ -217,10 +227,10 @@ public final class Future<Value, Error> {
 
     // MARK: Reduce
 
-    /// Returns a future that succeeded only when all the provided futures
-    /// succeed. The future contains the result of combining the
-    /// `initialResult` with the values of all the given future. If any of the
-    /// futures fail the resulting future also fails.
+    /// Returns a future that succeeded when all the given futures succeed.
+    /// The future contains the result of combining the `initialResult` with
+    /// the values of all the given future. If any of the futures fail, the
+    /// returned future also fails with that error.
     public static func reduce<V2>(_ initialResult: Value, _ futures: [Future<V2, Error>], _ combiningFunction: @escaping (Value, V2) -> Value) -> Future<Value, Error> {
         return futures.reduce(Future(value: initialResult)) { lhs, rhs in
             return Future.zip(lhs, rhs).map(combiningFunction)
