@@ -128,13 +128,22 @@ Future<Int, Error>(value: 1)
 Future<Int, Error>(error: Error.unknown)
 ```
 
+### Wait
+
+Use `wait` method to block the current thread and wait until the future receives a result:
+
+```swift
+let result = future.wait()
+```
+
 ### Synchronous Inspection
 
 ```swift
-class Future {
-    var isPending: Bool
-    var value: Value?
-    var error: Error?
+class Future<Value, Error> {
+    var isPending: Bool { get }
+    var value: Value? { get }
+    var error: Error? { get }
+    var result: Result<Value, Error> { get }
 }
 ```
 

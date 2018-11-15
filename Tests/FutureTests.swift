@@ -441,6 +441,30 @@ class ReduceTests: XCTestCase {
     }
 }
 
+class WaitTests: XCTestCase {
+    func testWaitSuccess() {
+        let promise = Promise<Int, MyError>()
+        let future = promise.future
+
+        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10)) {
+            promise.succeed(value: 2)
+        }
+
+        XCTAssertEqual(future.wait().value, 2)
+    }
+
+    func testWaitFailure() {
+        let promise = Promise<Int, MyError>()
+        let future = promise.future
+
+        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10)) {
+            promise.fail(error: .e1)
+        }
+
+        XCTAssertEqual(future.wait().error, .e1)
+    }
+}
+
 private typealias P = Promise<Int, MyError>
 private typealias F = Future<Int, MyError>
 

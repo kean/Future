@@ -22,7 +22,7 @@ import Foundation
 /// Futures are easily composable. `Future<Value, Error>` provides a set of
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
 public final class Future<Value, Error> {
-    private var result: Result? // nil when pending
+    private var _result: Result? // nil when pending
     private var handlers: Handlers?
 
     // MARK: Create
@@ -40,12 +40,12 @@ public final class Future<Value, Error> {
 
     /// Creates a future with a given value.
     public init(value: Value) {
-        self.result = .success(value)
+        self._result = .success(value)
     }
 
     /// Creates a future with a given error.
     public init(error: Error) {
-        self.result = .failure(error)
+        self._result = .failure(error)
     }
 
     // MARK: State Transitions
@@ -60,10 +60,10 @@ public final class Future<Value, Error> {
 
     private func resolve(with result: Result) {
         lock.lock()
-        guard self.result == nil else {
+        guard self._result == nil else {
             lock.unlock(); return // Already resolved
         }
-        self.result = result
+        self._result = result
         let handlers = self.handlers
         self.handlers = nil
         lock.unlock()
@@ -90,7 +90,7 @@ public final class Future<Value, Error> {
 
     private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
         lock.lock()
-        guard let result = self.result else {
+        guard let result = self._result else {
             // Create handlers lazily - in some cases they are no needed
             handlers = handlers ?? Handlers()
             handlers?.success.append(success)
@@ -215,32 +215,60 @@ public final class Future<Value, Error> {
 
     /// Returns true if the future is still pending.
     public var isPending: Bool {
-        return inspectResult() == nil
+        return result == nil
     }
 
     /// Returns the value if the future has a value.
     public var value: Value? {
-        guard case let .success(value)? = inspectResult() else { return nil }
-        return value
+        return result?.value
     }
 
     /// Returns the error if the future has an error.
     public var error: Error? {
-        guard case let .failure(error)? = inspectResult() else { return nil }
-        return error
+        return result?.error
     }
 
-    private func inspectResult() -> Result? {
+    /// Returns the result if the future completed.
+    private var result: Result? {
         lock.lock(); defer { lock.unlock() }
-        return result
+        return _result
     }
 
-    // MARK: State (Private)
+    // MARK: Wait
 
-    private enum Result {
+    /// Waits for the future's result. The current thread blocks until the result
+    /// is received.
+    ///
+    /// - note: This methods waits for the completion on the private dispatch
+    /// queue so it's safe to call it from any thread. But avoid blocking the
+    /// main thread!
+    public func wait() -> Result {
+        let semaphore = DispatchSemaphore(value: 0)
+        on(queue: waitQueue, completion: { semaphore.signal() })
+        semaphore.wait()
+        return result! // Must have result at this point
+    }
+
+    // MARK: Result
+
+    public enum Result {
         case success(Value)
         case failure(Error)
+
+        /// Returns the value in case of success, `nil` otherwise.
+        public var value: Value? {
+            guard case let .success(value) = self else { return nil }
+            return value
+        }
+
+        /// Returns the value in case of failure, `nil` otherwise.
+        public var error: Error? {
+            guard case let .failure(error) = self else { return nil }
+            return error
+        }
     }
+
+    // MARK: Private
 
     private struct Handlers {
         var success = [(Value) -> Void]()
@@ -251,6 +279,8 @@ public final class Future<Value, Error> {
 // Using the same lock across instances is safe because Future doesn't invoke
 // any client code inside it.
 private let lock = NSLock()
+
+private let waitQueue = DispatchQueue(label:  "com.github.kean.pill.wait-queue", attributes: .concurrent)
 
 /// A promise to provide a result later.
 public struct Promise<Value, Error> {
