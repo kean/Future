@@ -4,19 +4,20 @@
 
 import Foundation
 
-/// A future represents a result of computation which may be available now, or
-/// in the future, or never. Essentially, a future is an object to which you
-/// attach callbacks, instead of passing callbacks into a function that performs
-/// a computation.
+/// A future represents a result of a task which may be available now, or
+/// in the future, or never. Once the future receives the result, its state can
+/// never be changed, either a value or an error is broadcasted to all observers.
 ///
 /// To attach a callback to the `Future` use `on` method:
 ///
 /// ```
-/// user.on(
-///     success: { print("received entity: \($0)" },
-///     failure: { print("failed with error: \($0)" },
-///     completion: { print("either succeeded or failed" }
-/// )
+/// let user: Future<User, Error>
+///
+/// user.on(success: { print("received entity: \($0)" },
+///         failure: { print("failed with error: \($0)" })
+///
+/// // As an alternative observe a completion:
+/// user.on(completion: { print("completed with result: \($0)" })
 /// ```
 ///
 /// Futures are easily composable. `Future<Value, Error>` provides a set of

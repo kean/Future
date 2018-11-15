@@ -12,7 +12,7 @@ A streamlined `Future<Value, Error>` implementation.
 
 ## Future
 
-A future represents a result of computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation.
+A future represents a result of computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. 
 
 Futures are easily composable. `Future<Value, Error>` provides a set of functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures. 
 
@@ -149,7 +149,19 @@ class Future<Value, Error> {
 
 ### Cancelation
 
-Pill considers cancellation to be a concern orthogonal to `Future`. There are multiple cancellation approaches. There are arguments for failing futures with an error on cancelation, there is also an argument for never resolving futures when the associated work gets canceled. In order to implement cancelation you might want to consider  [`CancellationToken`](https://kean.github.io/post/cancellation-token) or other similar patterns.    
+Pill considers cancellation to be a concern orthogonal to `Future`. There are multiple cancellation approaches. There are arguments for failing futures with an error on cancelation, there is also an argument for never resolving futures when the associated work gets canceled. In order to implement cancelation you might want to consider  [`CancellationToken`](https://kean.github.io/post/cancellation-token) or other similar patterns.
+
+### Anti-Patterns
+
+Avoid nesting futures, as this is the issue that futures are designed to solve:
+
+```swift
+loadUser().on(success: { user in
+    loadAvatar(url: user.avatarUrl).on(success: { avatar in
+        print("avatar loaded")
+    }   
+}
+```
 
 ## Requirements
 
