@@ -122,6 +122,14 @@ class FutureTests: XCTestCase {
         XCTAssertNil(future.value)
         XCTAssertEqual(future.error, .e1)
     }
+
+    func testSynchronousInspectionResult() {
+        // GIVEN successful future
+        let future = Future<Int, MyError>(value: 1)
+
+        // EXPECT future to return value
+        XCTAssertEqual(future.result?.value, 1)
+    }
 }
 
 class MapErrorTest: XCTestCase {

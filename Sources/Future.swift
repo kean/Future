@@ -229,7 +229,7 @@ public final class Future<Value, Error> {
     }
 
     /// Returns the result if the future completed.
-    private var result: Result? {
+    public var result: Result? {
         lock.lock(); defer { lock.unlock() }
         return memoizedResult
     }
