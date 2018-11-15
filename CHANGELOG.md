@@ -1,3 +1,9 @@
+## Pill 0.9
+
+- Add `wait` method that blocks the current thread and waits until the future receives a result
+- Make `Future.Result` type public
+- Pass result in the completion
+
 ## Pill 0.8.1
 
 - Documentation improvements
