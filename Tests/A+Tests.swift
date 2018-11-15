@@ -922,7 +922,7 @@ class APlusTests: XCTestCase {
                         let future = Future(value: 1).flatMap { _ in
                             return Future<Int, MyError> { (_,_) in } // pending
                         }
-                        future.on(completion: {
+                        future.on(completion: { _ in
                             XCTFail()
                         })
                         after(ticks: 20) {
@@ -934,7 +934,7 @@ class APlusTests: XCTestCase {
                         let future = Future<Int, MyError>(error: MyError.e1).flatMapError { _ in
                             return Future<Int, MyError> { (_,_) in } // pending
                         }
-                        future.on(completion: {
+                        future.on(completion: { _ in
                             XCTFail()
                         })
                         after(ticks: 20) {

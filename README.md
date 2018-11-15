@@ -23,11 +23,11 @@ To attach a callback to the `Future` use  `on(success:failure:completion:)` meth
 ```swift
 let user: Future<User, Error>
 
-user.on(
-    success: { print("received entity: \($0)" },
-    failure: { print("failed with error: \($0)" },
-    completion: { print("either succeeded or failed" }
-)
+user.on(success: { print("received entity: \($0)" },
+        failure: { print("failed with error: \($0)" })
+        
+// As an alternative observe a completion:
+user.on(completion: { print("completed with result: \($0)" })   
 ```
 
 By default, all of the callbacks are executed on the main queue (`DispatchQueue.main`). To change the queue pass one into `on` method:

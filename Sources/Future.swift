@@ -22,7 +22,7 @@ import Foundation
 /// Futures are easily composable. `Future<Value, Error>` provides a set of
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
 public final class Future<Value, Error> {
-    private var _result: Result? // nil when pending
+    private var memoizedResult: Result? // nil when pending
     private var handlers: Handlers?
 
     // MARK: Create
@@ -40,12 +40,12 @@ public final class Future<Value, Error> {
 
     /// Creates a future with a given value.
     public init(value: Value) {
-        self._result = .success(value)
+        self.memoizedResult = .success(value)
     }
 
     /// Creates a future with a given error.
     public init(error: Error) {
-        self._result = .failure(error)
+        self.memoizedResult = .failure(error)
     }
 
     // MARK: State Transitions
@@ -60,10 +60,10 @@ public final class Future<Value, Error> {
 
     private func resolve(with result: Result) {
         lock.lock()
-        guard self._result == nil else {
+        guard self.memoizedResult == nil else {
             lock.unlock(); return // Already resolved
         }
-        self._result = result
+        self.memoizedResult = result
         let handlers = self.handlers
         self.handlers = nil
         lock.unlock()
@@ -83,14 +83,14 @@ public final class Future<Value, Error> {
     ///   - success: Gets called when the future has a value.
     ///   - failure: Gets called when the future has an error.
     ///   - completion: Gets called when the future has any result.
-    public func on(queue: DispatchQueue = .main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
-        observe(success: { value in queue.async { success?(value); completion?() } },
-                failure: { error in queue.async { failure?(error); completion?() } })
+    public func on(queue: DispatchQueue = .main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) {
+        observe(success: { value in queue.async { success?(value); completion?(.success(value)) } },
+                failure: { error in queue.async { failure?(error); completion?(.failure(error)) } })
     }
 
     private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
         lock.lock()
-        guard let result = self._result else {
+        guard let result = self.memoizedResult else {
             // Create handlers lazily - in some cases they are no needed
             handlers = handlers ?? Handlers()
             handlers?.success.append(success)
@@ -231,7 +231,7 @@ public final class Future<Value, Error> {
     /// Returns the result if the future completed.
     private var result: Result? {
         lock.lock(); defer { lock.unlock() }
-        return _result
+        return memoizedResult
     }
 
     // MARK: Wait
@@ -244,7 +244,7 @@ public final class Future<Value, Error> {
     /// main thread!
     public func wait() -> Result {
         let semaphore = DispatchSemaphore(value: 0)
-        on(queue: waitQueue, completion: { semaphore.signal() })
+        on(queue: waitQueue, completion: { _ in semaphore.signal() })
         semaphore.wait()
         return result! // Must have result at this point
     }

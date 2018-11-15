@@ -29,7 +29,7 @@ class FutureTests: XCTestCase {
             failure: { _ in
                 XCTAssertTrue(Thread.isMainThread)
             },
-            completion: {
+            completion: { _ in
                 XCTAssertTrue(Thread.isMainThread)
                 expectation.fulfill()
             }
@@ -50,7 +50,7 @@ class FutureTests: XCTestCase {
             failure: { _ in
                 XCTAssertFalse(Thread.isMainThread)
             },
-            completion: {
+            completion: { _ in
                 XCTAssertFalse(Thread.isMainThread)
                 expectation.fulfill()
             }
