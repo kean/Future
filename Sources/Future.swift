@@ -151,92 +151,11 @@ public final class Future<Value, Error> {
         lock.lock(); defer { lock.unlock() }
         return memoizedResult
     }
-
-    // MARK: Wait
-
-    /// Waits for the future's result. The current thread blocks until the result
-    /// is received.
-    ///
-    /// - note: This methods waits for the completion on the private dispatch
-    /// queue so it's safe to call it from any thread. But avoid blocking the
-    /// main thread!
-    public func wait() -> Result {
-        let semaphore = DispatchSemaphore(value: 0)
-        on(scheduler: .queue(waitQueue), completion: { _ in semaphore.signal() })
-        semaphore.wait()
-        return result! // Must have result at this point
-    }
-
-    // MARK: Result
-
-    public enum Result {
-        case success(Value), failure(Error)
-
-        /// Returns the value in case of success, `nil` otherwise.
-        public var value: Value? {
-            guard case let .success(value) = self else { return nil }
-            return value
-        }
-
-        /// Returns the value in case of failure, `nil` otherwise.
-        public var error: Error? {
-            guard case let .failure(error) = self else { return nil }
-            return error
-        }
-    }
-
-    // MARK: Promise
-
-    /// A promise to provide a result later.
-    public struct Promise {
-        /// The future associated with the promise.
-        public let future = Future()
-
-        /// Sends a value to the associated future.
-        public func succeed(value: Value) {
-            future.succeed(value)
-        }
-
-        /// Sends an error to the associated future.
-        public func fail(error: Error) {
-            future.fail(error)
-        }
-    }
-
-    // MARK: Scheduler
-
-    public enum Scheduler {
-        /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
-        case main(immediate: Bool)
-        /// Runs asynchronously on the given queue.
-        case queue(DispatchQueue)
-        /// Immediately executes the given closure.
-        case immediate
-
-        func execute(_ closure: @escaping () -> Void) {
-            switch self {
-            case let .queue(queue): queue.async(execute: closure)
-            case let .main(immediate):
-                if immediate && Thread.isMainThread {
-                    closure()
-                } else {
-                    DispatchQueue.main.async(execute: closure)
-                }
-            case .immediate: closure()
-            }
-        }
-    }
-
-    // MARK: Private
-
-    private struct Handlers {
-        var success = [(Value) -> Void]()
-        var failure = [(Error) -> Void]()
-    }
 }
 
+// MARK: - Map, FlatMap, MapError, FlatMapError
+
 extension Future {
-    // MARK: Map
 
     /// Returns a future with the result of mapping the given closure over the
     /// current future's value.
@@ -285,13 +204,16 @@ extension Future {
         cascade(future, failure: { transform($0).cascade(future) })
         return future
     }
+}
 
-    // MARK: Zip
+// MARK: - Zip
+
+extension Future where Value == Any, Error == Any {
 
     /// Returns a future which succeedes when all the given futures succeed. If
     /// any of the futures fail, the returned future also fails with that error.
-    public static func zip<V2>(_ f1: Future<Value, Error>, _ f2: Future<V2, Error>) -> Future<(Value, V2), Error> {
-        let future = Future<(Value, V2), Error>()
+    public static func zip<V1, V2, E>(_ f1: Future<V1, E>, _ f2: Future<V2, E>) -> Future<(V1, V2), E> {
+        let future = Future<(V1, V2), E>()
         func success(value: Any) {
             guard let v1 = f1.value, let v2 = f2.value else { return }
             future.succeed((v1, v2))
@@ -303,32 +225,119 @@ extension Future {
 
     /// Returns a future which succeedes when all the given futures succeed. If
     /// any of the futures fail, the returned future also fails with that error.
-    public static func zip<V2, V3>(_ f1: Future<Value, Error>, _ f2: Future<V2, Error>, _ f3: Future<V3, Error>) -> Future<(Value, V2, V3), Error> {
-        return Future.zip(f1, Future<V2, Error>.zip(f2, f3)).map { value in
+    public static func zip<V1, V2, V3, E>(_ f1: Future<V1, E>, _ f2: Future<V2, E>, _ f3: Future<V3, E>) -> Future<(V1, V2, V3), E> {
+        return Future.zip(f1, Future.zip(f2, f3)).map { value in
             return (value.0, value.1.0, value.1.1)
         }
     }
 
     /// Returns a future which succeedes when all the given futures succeed. If
     /// any of the futures fail, the returned future also fails with that error.
-    public static func zip(_ futures: [Future<Value, Error>]) -> Future<[Value], Error> {
-        return Future<[Value], Error>.reduce([], futures) { result, value in
+    public static func zip<V, E>(_ futures: [Future<V, E>]) -> Future<[V], E> {
+        return Future.reduce([V](), futures) { result, value in
             result + [value]
         }
     }
+}
 
-    // MARK: Reduce
+// MARK: - Reduce
+
+extension Future where Value == Any, Error == Any {
 
     /// Returns a future that succeeded when all the given futures succeed.
     /// The future contains the result of combining the `initialResult` with
     /// the values of all the given future. If any of the futures fail, the
     /// returned future also fails with that error.
-    public static func reduce<V2>(_ initialResult: Value, _ futures: [Future<V2, Error>], _ combiningFunction: @escaping (Value, V2) -> Value) -> Future<Value, Error> {
-        return futures.reduce(Future(value: initialResult)) { lhs, rhs in
+    public static func reduce<V1, V2, E>(_ initialResult: V1, _ futures: [Future<V2, E>], _ combiningFunction: @escaping (V1, V2) -> V1) -> Future<V1, E> {
+        return futures.reduce(Future<V1, E>(value: initialResult)) { lhs, rhs in
             return Future.zip(lhs, rhs).map(combiningFunction)
         }
     }
 }
+
+// MARK: - Wait
+
+extension Future {
+
+    /// Waits for the future's result. The current thread blocks until the result
+    /// is received.
+    ///
+    /// - note: This methods waits for the completion on the private dispatch
+    /// queue so it's safe to call it from any thread. But avoid blocking the
+    /// main thread!
+    public func wait() -> Result {
+        let semaphore = DispatchSemaphore(value: 0)
+        on(scheduler: .queue(waitQueue), completion: { _ in semaphore.signal() })
+        semaphore.wait()
+        return result! // Must have result at this point
+    }
+}
+
+// MARK: - Result, Scheduler, Promise
+
+extension Future {
+
+    public enum Result {
+        case success(Value), failure(Error)
+
+        /// Returns the value in case of success, `nil` otherwise.
+        public var value: Value? {
+            guard case let .success(value) = self else { return nil }
+            return value
+        }
+
+        /// Returns the value in case of failure, `nil` otherwise.
+        public var error: Error? {
+            guard case let .failure(error) = self else { return nil }
+            return error
+        }
+    }
+
+    /// A promise to provide a result later.
+    public struct Promise {
+        /// The future associated with the promise.
+        public let future = Future()
+
+        /// Sends a value to the associated future.
+        public func succeed(value: Value) {
+            future.succeed(value)
+        }
+
+        /// Sends an error to the associated future.
+        public func fail(error: Error) {
+            future.fail(error)
+        }
+    }
+
+    public enum Scheduler {
+        /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
+        case main(immediate: Bool)
+        /// Runs asynchronously on the given queue.
+        case queue(DispatchQueue)
+        /// Immediately executes the given closure.
+        case immediate
+
+        func execute(_ closure: @escaping () -> Void) {
+            switch self {
+            case let .queue(queue): queue.async(execute: closure)
+            case let .main(immediate):
+                if immediate && Thread.isMainThread {
+                    closure()
+                } else {
+                    DispatchQueue.main.async(execute: closure)
+                }
+            case .immediate: closure()
+            }
+        }
+    }
+
+    private struct Handlers {
+        var success = [(Value) -> Void]()
+        var failure = [(Error) -> Void]()
+    }
+}
+
+// MARK: - Private
 
 // Using the same lock across instances is safe because Future doesn't invoke
 // any client code inside it.
