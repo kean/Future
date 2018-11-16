@@ -2,8 +2,6 @@
 //
 // Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
 
-import Foundation
-
 /// A future represents a result of a task which may be available now, or
 /// in the future, or never. Once the future receives the result, its state can
 /// never be changed, either a value or an error is broadcasted to all observers.

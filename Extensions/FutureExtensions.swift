@@ -2,7 +2,6 @@
 //
 // Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
 
-import Foundation
 import Pill
 
 // MARK: - First
