@@ -35,6 +35,9 @@
 		0C9F162E219F4FFA002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108211D4E81CE00F1F405 /* Pill.framework */; };
 		0C9F162F219F4FFE002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108451D4E82B900F1F405 /* Pill.framework */; };
 		0C9F1630219F5002002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CE052001D4E830700A12B45 /* Pill.framework */; };
+		0C9F163A219F51DA002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108371D4E824A00F1F405 /* Pill.framework */; };
+		0C9F1644219F5297002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
+		0C9F1645219F531B002EB416 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
 		0CAA5D0A1DB1458F001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CAA5D0B1DB14595001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CAA5D0C1DB1459A001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -71,6 +74,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0C9F15F0219F4D5A002EB416;
 			remoteInfo = "Pill Extensions";
+		};
+		0C9F1640219F51F9002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C9F15F0219F4D5A002EB416;
+			remoteInfo = "Pill Extensions iOS";
 		};
 		0CAA5D181DB14767001F6D96 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -133,6 +143,8 @@
 		0C9F1610219F4E5E002EB416 /* PillExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PillExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C9F161D219F4E8D002EB416 /* PillExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PillExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensions.swift; sourceTree = "<group>"; };
+		0C9F1635219F51D9002EB416 /* Pill Extensions iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Pill Extensions iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensionsTests.swift; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D091DB14588001F6D96 /* Pill.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pill.h; sourceTree = "<group>"; };
@@ -216,6 +228,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0C9F1632219F51D9002EB416 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F163A219F51DA002EB416 /* Pill.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0CAA5D0F1DB14766001F6D96 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -292,6 +312,7 @@
 				0C9F1603219F4DED002EB416 /* PillExtensions.framework */,
 				0C9F1610219F4E5E002EB416 /* PillExtensions.framework */,
 				0C9F161D219F4E8D002EB416 /* PillExtensions.framework */,
+				0C9F1635219F51D9002EB416 /* Pill Extensions iOS Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -346,6 +367,7 @@
 				0CAA5D1E1DB14780001F6D96 /* Info.plist */,
 				0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */,
 				0C9F15B721984D90002EB416 /* FutureTests.swift */,
+				0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */,
 				0C9F15BD219CC0F8002EB416 /* StressTests.swift */,
 				0CAA5D221DB14859001F6D96 /* Extensions.swift */,
 				0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */,
@@ -584,6 +606,24 @@
 			productReference = 0C9F161D219F4E8D002EB416 /* PillExtensions.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		0C9F1634219F51D9002EB416 /* Pill Extensions iOS Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F163D219F51DA002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions iOS Tests" */;
+			buildPhases = (
+				0C9F1631219F51D9002EB416 /* Sources */,
+				0C9F1632219F51D9002EB416 /* Frameworks */,
+				0C9F1633219F51D9002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0C9F1641219F51F9002EB416 /* PBXTargetDependency */,
+			);
+			name = "Pill Extensions iOS Tests";
+			productName = "Pill Extensions iOS Tests";
+			productReference = 0C9F1635219F51D9002EB416 /* Pill Extensions iOS Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		0CAA5D111DB14766001F6D96 /* Pill iOS Tests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0CAA5D1A1DB14767001F6D96 /* Build configuration list for PBXNativeTarget "Pill iOS Tests" */;
@@ -662,7 +702,7 @@
 		0C5108181D4E81CE00F1F405 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0920;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Alexander Grebenyuk";
 				TargetAttributes = {
@@ -711,6 +751,12 @@
 					};
 					0C9F161C219F4E8D002EB416 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+						ProvisioningStyle = Automatic;
+					};
+					0C9F1634219F51D9002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = NR8DLKJ7E6;
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
@@ -765,6 +811,7 @@
 				0C9F1602219F4DED002EB416 /* Pill Extensions macOS */,
 				0C9F160F219F4E5E002EB416 /* Pill Extensions tvOS */,
 				0C9F161C219F4E8D002EB416 /* Pill Extensions watchOS */,
+				0C9F1634219F51D9002EB416 /* Pill Extensions iOS Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -830,6 +877,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0C9F161B219F4E8D002EB416 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F1633219F51D9002EB416 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -941,6 +995,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0C9F1631219F51D9002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F1644219F5297002EB416 /* FutureExtensionsTests.swift in Sources */,
+				0C9F1645219F531B002EB416 /* Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0CAA5D0E1DB14766001F6D96 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -999,6 +1062,11 @@
 			isa = PBXTargetDependency;
 			target = 0C9F15F0219F4D5A002EB416 /* Pill Extensions iOS */;
 			targetProxy = 0C9F15F6219F4D5B002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F1641219F51F9002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C9F15F0219F4D5A002EB416 /* Pill Extensions iOS */;
+			targetProxy = 0C9F1640219F51F9002EB416 /* PBXContainerItemProxy */;
 		};
 		0CAA5D191DB14767001F6D96 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1633,6 +1701,57 @@
 			};
 			name = Release;
 		};
+		0C9F163E219F51DA002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NR8DLKJ7E6;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Pill-Extensions-iOS-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0C9F163F219F51DA002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NR8DLKJ7E6;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Pill-Extensions-iOS-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		0CAA5D1B1DB14767001F6D96 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1870,6 +1989,15 @@
 			buildConfigurations = (
 				0C9F1623219F4E8D002EB416 /* Debug */,
 				0C9F1624219F4E8D002EB416 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F163D219F51DA002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions iOS Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F163E219F51DA002EB416 /* Debug */,
+				0C9F163F219F51DA002EB416 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

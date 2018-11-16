@@ -19,7 +19,7 @@ extension Future {
     public static func first(_ futures: [Future]) -> Future {
         let promise = Future<Value, Error>.promise
         for future in futures {
-            future.on(success: promise.succeed, failure: promise.fail)
+            future.on(scheduler: .immediate, success: promise.succeed, failure: promise.fail)
         }
         return promise.future
     }
