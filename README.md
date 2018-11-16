@@ -101,7 +101,7 @@ Using `Promise`:
 
 ```swift
 func someAsyncOperation(args) -> Future<Value, Error> {
-    let promise = Promise<Value, Error>()
+    let promise = Future<Value, Error>.promise
     someAsyncOperationWithCallback(args) { value, error in
         // when finished...
         promise.succeed(result: value)

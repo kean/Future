@@ -40,7 +40,7 @@ class PromisePerformanceTests: XCTestCase {
     }
 
     func testFulfill() {
-        let items = (0..<100_000).map { _ in Promise<Int, Void>() }
+        let items = (0..<100_000).map { _ in Future<Int, Void>.promise }
 
         let expectation = self.expectation()
         var finished = 0
@@ -68,7 +68,7 @@ class PromisePerformanceTests: XCTestCase {
     func testAttachingCallbacksToResolvedFuture() {
         measure {
             for _ in Array(0..<5000) {
-                let promise = Promise<Int, Error>()
+                let promise = Future<Int, Error>.promise
                 let future = promise.future
 
                 promise.succeed(value: 1)

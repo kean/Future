@@ -28,7 +28,7 @@ private func stressDataRace<Value: Equatable>(expectation e1: XCTestExpectation,
     let queue = DispatchQueue(label: "stress.test", attributes: .concurrent)
 
     for _ in 0..<iterations {
-        let promise = Promise<Value, Error>()
+        let promise = Future<Value, Error>.promise
         let future = promise.future
 
         DispatchQueue.concurrentPerform(iterations: stressFactor) { n in

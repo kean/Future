@@ -37,6 +37,11 @@ public final class Future<Value, Error> {
         closure(self.succeed, self.fail) // retain self
     }
 
+    /// Create a new, pending promise.
+    public static var promise: Promise {
+        return Promise()
+    }
+
     init() {}
 
     /// Creates a future with a given value.
@@ -180,6 +185,24 @@ public final class Future<Value, Error> {
         }
     }
 
+    // MARK: Promise
+
+    /// A promise to provide a result later.
+    public struct Promise {
+        /// The future associated with the promise.
+        public let future = Future()
+
+        /// Sends a value to the associated future.
+        public func succeed(value: Value) {
+            future.succeed(value)
+        }
+
+        /// Sends an error to the associated future.
+        public func fail(error: Error) {
+            future.fail(error)
+        }
+    }
+
     // MARK: Scheduler
 
     public enum Scheduler {
@@ -312,24 +335,3 @@ extension Future {
 private let lock = NSLock()
 
 private let waitQueue = DispatchQueue(label:  "com.github.kean.pill.wait-queue", attributes: .concurrent)
-
-/// A promise to provide a result later.
-public struct Promise<Value, Error> {
-    /// The future associated with the promise.
-    public let future: Future<Value, Error>
-
-    /// Initializer the promise and creates a future associated with it.
-    public init() {
-        self.future = Future()
-    }
-
-    /// Sends a value to the associated future.
-    public func succeed(value: Value) {
-        future.succeed(value)
-    }
-
-    /// Sends an error to the associated future.
-    public func fail(error: Error) {
-        future.fail(error)
-    }
-}

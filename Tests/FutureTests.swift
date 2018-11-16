@@ -31,21 +31,21 @@ class FutureTests: XCTestCase {
     // MARK: Synchronous Resolution
 
     func testSynchronousSuccess() {
-        let promise = Promise<Int, MyError>()
+        let promise = Future<Int, MyError>.promise
         let future = promise.future
         promise.succeed(value: 1)
         XCTAssertEqual(future.value, 1)
     }
 
     func testSynchronousFail() {
-        let promise = Promise<Int, MyError>()
+        let promise = Future<Int, MyError>.promise
         let future = promise.future
         promise.fail(error: .e1)
         XCTAssertEqual(future.error, .e1)
     }
 
     func testSynchronousSuccessWithMap() {
-        let promise = Promise<Int, MyError>()
+        let promise = Future<Int, MyError>.promise
         let future = promise.future
         let result = future.map { $0 + 1}
         promise.succeed(value: 1)
@@ -53,7 +53,7 @@ class FutureTests: XCTestCase {
     }
 
     func testSynchronousSuccessWithFlatMap() {
-        let promise = Promise<Int, MyError>()
+        let promise = Future<Int, MyError>.promise
         let future = promise.future
         let result = future.flatMap { Future(value: $0 + 1) }
         promise.succeed(value: 1)
@@ -64,7 +64,7 @@ class FutureTests: XCTestCase {
 
     func testSynchronousInspectionPending() {
         // GIVEN a pending promise
-        let promise = Promise<Int, MyError>()
+        let promise = Future<Int, MyError>.promise
         let future = promise.future
 
         // EXPECT future to be pending
@@ -581,7 +581,7 @@ class ReduceTests: XCTestCase {
 
 class WaitTests: XCTestCase {
     func testWaitSuccess() {
-        let promise = Promise<Int, MyError>()
+        let promise = Future<Int, MyError>.promise
         let future = promise.future
 
         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10)) {
@@ -592,7 +592,7 @@ class WaitTests: XCTestCase {
     }
 
     func testWaitFailure() {
-        let promise = Promise<Int, MyError>()
+        let promise = Future<Int, MyError>.promise
         let future = promise.future
 
         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10)) {
@@ -603,11 +603,11 @@ class WaitTests: XCTestCase {
     }
 }
 
-private typealias P = Promise<Int, MyError>
 private typealias F = Future<Int, MyError>
+private typealias P = F.Promise
 
 private func setUpFutures() -> (promises: (P, P, P), futures: (F, F, F)) {
-    let promises = (P(), P(), P())
+    let promises = (F.promise, F.promise, F.promise)
     let futures = (promises.0.future, promises.1.future, promises.2.future)
     return (promises, futures)
 }
