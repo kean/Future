@@ -68,7 +68,6 @@ class FutureTests: XCTestCase {
         let future = promise.future
 
         // EXPECT future to be pending
-        XCTAssertTrue(future.isPending)
         XCTAssertNil(future.value)
         XCTAssertNil(future.error)
     }
@@ -78,7 +77,6 @@ class FutureTests: XCTestCase {
         let future = Future<Int, MyError>(value: 1)
 
         // EXPECT future to return value
-        XCTAssertFalse(future.isPending)
         XCTAssertEqual(future.value, 1)
         XCTAssertNil(future.error)
     }
@@ -88,7 +86,6 @@ class FutureTests: XCTestCase {
         let future = Future<Int, MyError>(error: .e1)
 
         // EXPECT future to return value
-        XCTAssertFalse(future.isPending)
         XCTAssertNil(future.value)
         XCTAssertEqual(future.error, .e1)
     }

@@ -10,34 +10,104 @@
 
 A streamlined `Future<Value, Error>` implementation.
 
-## Future
+### Future
 
 A future represents a result of computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. 
 
-Futures are easily composable. `Future<Value, Error>` provides a set of functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures. 
+Futures are easily composable. `Future<Value, Error>` provides a set of functions like `map`, `flatMap`, `zip`, `reduce` and more to compose them.
 
-## Quick Start
+## Getting Started
 
-To attach a callback to the `Future` use  `on(success:failure:completion:)` method:
+- [**Quick Start Guide**](#quick-start-guide)
+  * [Create Future](#create-future)
+  * [Attach Callbacks](#attach-callbacks)
+  * [Wait, Result](#wait--result)
+- [**Functional Composition**](#functional-composition)
+  * [Map, FlatMap](#map--flatmap)
+  * [MapError, FlatMapError](#maperror--flatmaperror)
+  * [Zip, Reduce](#zip)
+- [**Threading**](#threading)
+- [**Cancelation**](#cancelation)
+ 
+## Quick Start Guide
+
+### Create Future
+
+Using `Promise`:
 
 ```swift
-let user: Future<User, Error>
-
-user.on(success: { print("received entity: \($0)" },
-        failure: { print("failed with error: \($0)" })
-        
-// As an alternative observe a completion:
-user.on(completion: { print("completed with result: \($0)" })   
+func someAsyncOperation(args) -> Future<Value, Error> {
+    let promise = Future<Value, Error>.promise
+    someAsyncOperationWithCallback(args) { value, error in
+        // when finished...
+        promise.succeed(result: value)
+        // if error...
+        promise.fail(error: error)
+    }
+    return promise.future
+}
 ```
 
-By default the callbacks are run with `.main(immediate: true)` strategy. It runs immediately if on the main thread, otherwise asynchronously on the main thread. To change the scheduler pass one into the `on` method:
+Using a convenience init method:
+
+```swift
+let future = Future<Int, Error> { succeed, fail in
+    someAsyncOperationWithCallback { value, error in
+        // succeed or fail
+    }
+}
+```
+
+With a value or an error:
+
+```swift
+Future<Int, Error>(value: 1)
+Future<Int, Error>(error: Error.unknown)
+```
+
+### Attach Callbacks
+
+To attach callbacks to the `Future` use  `on` method:
+
+```swift
+let future: Future<Value, Error>
+future.on(success: { print("received value: \($0)" },
+          failure: { print("failed with error: \($0)" }),
+          completion: { print("completed with result: \($0)" })
+```
+
+The callbacks are optional - you don't have to attach all at the same time.  `on` returns `self` so that you can continue the chain.
+
+By default the callbacks are run on `.main(immediate: true)` scheduler. It runs immediately if on the main thread, otherwise asynchronously on the main thread. To change the scheduler pass one into the `on` method:
+
+> See [**Threading**](#threading) for a rationale and more info
 
 ```swift
 future.on(scheduler: .queue(.global()),
           success: { print("value: \($0)" })
 ```
 
-### Mapping Values
+### Wait, Result
+
+Use `wait` method to block the current thread and wait until the future receives a result:
+
+```swift
+let result = future.wait() // Mostly useful for testing and debugging
+```
+
+If the future already has a result you can read is synchronously:
+
+```swift
+class Future<Value, Error> {
+    var value: Value? { get }
+    var error: Error? { get }
+    var result: Result<Value, Error> { get }
+}
+```
+
+## Functional Composition
+
+### Map, FlatMap
 
 Use familiar `map` and `flatMap` function to transform the future's values and chain futures:
 
@@ -50,7 +120,7 @@ let avatar = user
     .flatMap(loadAvatar)
 ```
 
-### Mapping Errors
+### MapError, FlatMapError
 
 `Future` has typed errors. To convert from one error type to another use `mapError`:
 
@@ -95,60 +165,7 @@ Future.reduce(0, [future1, future2], +).on(success: { value in
 })
 ```
 
-### Creating Futures
-
-Using `Promise`:
-
-```swift
-func someAsyncOperation(args) -> Future<Value, Error> {
-    let promise = Future<Value, Error>.promise
-    someAsyncOperationWithCallback(args) { value, error in
-        // when finished...
-        promise.succeed(result: value)
-        // if error...
-        promise.fail(error: error)
-    }
-    return promise.future
-}
-```
-
-Using a convenience init method:
-
-```swift
-let future = Future<Int, Error> { succeed, fail in
-    someAsyncOperationWithCallback { value, error in
-        // succeed or fail
-    }
-}
-```
-
-With a value or an error:
-
-```swift
-Future<Int, Error>(value: 1)
-Future<Int, Error>(error: Error.unknown)
-```
-
-### Wait
-
-Use `wait` method to block the current thread and wait until the future receives a result:
-
-```swift
-let result = future.wait()
-```
-
-### Synchronous Inspection
-
-```swift
-class Future<Value, Error> {
-    var isPending: Bool { get }
-    var value: Value? { get }
-    var error: Error? { get }
-    var result: Result<Value, Error> { get }
-}
-```
-
-### Threading
+## Threading
 
 On iOS users expect UI renders to happen synchronously. To accomodate that, by default, the callbacks are run with `.main(immediate: true)` strategy. It runs immediately if on the main thread, otherwise asynchronously on the main thread. The design is similar to the reactive frameworks like RxSwift. It opens a whole new area for using futures which are traditionally asynchronous by design. 
 
@@ -165,21 +182,9 @@ public enum Scheduler {
 }
 ```
 
-### Cancelation
+## Cancelation
 
 Pill considers cancellation to be a concern orthogonal to `Future`. There are multiple cancellation approaches. There are arguments for failing futures with an error on cancelation, there is also an argument for never resolving futures when the associated work gets canceled. In order to implement cancelation you might want to consider  [`CancellationToken`](https://kean.github.io/post/cancellation-token) or other similar patterns.
-
-### Anti-Patterns
-
-Avoid nesting futures, as this is the issue that futures are designed to solve:
-
-```swift
-loadUser().on(success: { user in
-    loadAvatar(url: user.avatarUrl).on(success: { avatar in
-        print("avatar loaded")
-    }   
-}
-```
 
 ## Requirements
 

@@ -131,11 +131,6 @@ public final class Future<Value, Error> {
 
     // MARK: Synchronous Inspection
 
-    /// Returns true if the future is still pending.
-    public var isPending: Bool {
-        return result == nil
-    }
-
     /// Returns the value if the future has a value.
     public var value: Value? {
         return result?.value
