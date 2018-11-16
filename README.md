@@ -30,10 +30,11 @@ user.on(success: { print("received entity: \($0)" },
 user.on(completion: { print("completed with result: \($0)" })   
 ```
 
-By default, all of the callbacks are executed on the main queue (`DispatchQueue.main`). To change the queue pass one into `on` method:
+By default the callbacks are run with `.main(immediate: true)` strategy. It runs immediately if on the main thread, otherwise asynchronously on the main thread. To change the scheduler pass one into the `on` method:
 
 ```swift
-future.on(queue: .global(), success: { print("value: \($0)" })
+future.on(scheduler: .queue(.global()),
+          success: { print("value: \($0)" })
 ```
 
 ### Mapping Values
@@ -144,6 +145,23 @@ class Future<Value, Error> {
     var value: Value? { get }
     var error: Error? { get }
     var result: Result<Value, Error> { get }
+}
+```
+
+### Threading
+
+On iOS users expect UI renders to happen synchronously. To accomodate that, by default, the callbacks are run with `.main(immediate: true)` strategy. It runs immediately if on the main thread, otherwise asynchronously on the main thread. The design is similar to the reactive frameworks like RxSwift. It opens a whole new area for using futures which are traditionally asynchronous by design. 
+
+Overall there are three differnet schedulers available:
+
+```swift
+public enum Scheduler {
+    /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
+    case main(immediate: Bool)
+    /// Runs asynchronously on the given queue.
+    case queue(DispatchQueue)
+    /// Immediately executes the given closure.
+    case immediate
 }
 ```
 

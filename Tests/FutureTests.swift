@@ -8,56 +8,6 @@ import Pill
 
 class FutureTests: XCTestCase {
 
-    // MARK: - Observe On
-
-    func testObserveOnMainThreadByDefault() {
-        // GIVEN the default future
-        let future = Future<Int, MyError>(value: 1)
-
-        // EXPECT maps to be called on main queue
-        _ = future.map { _ -> Int in
-            XCTAssertTrue(Thread.isMainThread)
-            return 2
-        }
-
-        // EXPECT on(...) to be called on the main queue
-        let expectation = self.expectation()
-        future.on(
-            success: { _ in
-                XCTAssertTrue(Thread.isMainThread)
-            },
-            failure: { _ in
-                XCTAssertTrue(Thread.isMainThread)
-            },
-            completion: { _ in
-                XCTAssertTrue(Thread.isMainThread)
-                expectation.fulfill()
-            }
-        )
-        wait()
-    }
-
-    func testObserveOn() {
-        let future = Future<Int, MyError>(value: 1)
-
-        // EXPECT on(...) to be called on the global queue
-        let expectation = self.expectation()
-        future.on(
-            queue: .global(),
-            success: { _ in
-                XCTAssertFalse(Thread.isMainThread)
-            },
-            failure: { _ in
-                XCTAssertFalse(Thread.isMainThread)
-            },
-            completion: { _ in
-                XCTAssertFalse(Thread.isMainThread)
-                expectation.fulfill()
-            }
-        )
-        wait()
-    }
-
     // MARK: Synchronous Resolution
 
     func testSynchronousSuccess() {
@@ -129,6 +79,166 @@ class FutureTests: XCTestCase {
 
         // EXPECT future to return value
         XCTAssertEqual(future.result?.value, 1)
+    }
+}
+
+class SchedulersTest: XCTestCase {
+
+    // MARK: .main(immediate: true) (default)
+
+    func testByDefaultDispatchedSyncIfResolvedOnMainThread() {
+        // GIVEN the resolved future
+        let future = Future<Int, MyError>(value: 1)
+
+        var isSuccessCalled = false
+        var isCompletedCalled = false
+        // WHEN `on` called on the main thread
+        // EXPECT callbacks to be called synchronously
+        future.on(success: { _ in isSuccessCalled = true },
+                  completion: { _ in isCompletedCalled = true })
+        XCTAssertTrue(isSuccessCalled)
+        XCTAssertTrue(isCompletedCalled)
+    }
+
+    func testByDefaultDispatchAsyncIfResovledOnBackgroundThread() {
+        // GIVEN the resolved future
+        let future = Future<Int, MyError>(value: 1)
+
+        let expectation = self.expectation()
+        expectation.expectedFulfillmentCount = 2
+
+        DispatchQueue.global().async {
+            var isSuccessCalled = false
+            var isCompletedCalled = false
+            // WHEN `on` called on the background thread
+            // EXPECT callbacks to be called asynchronously on the main queue
+            future.on(
+                success: { _ in
+                    isSuccessCalled = true
+                    XCTAssertTrue(Thread.isMainThread)
+                    expectation.fulfill()
+                },
+                completion: { _ in
+                    isCompletedCalled = true
+                    XCTAssertTrue(Thread.isMainThread)
+                    expectation.fulfill()
+                }
+            )
+            XCTAssertFalse(isSuccessCalled)
+            XCTAssertFalse(isCompletedCalled)
+        }
+
+        wait()
+    }
+
+    // MARK: .immediate
+
+    func testImmediateCalledImmediatelyOnTheMainThread() {
+        // GIVEN the resolved future
+        let future = Future<Int, MyError>(value: 1)
+
+        var isSuccessCalled = false
+        var isCompletedCalled = false
+        // WHEN `on` called on the main thread
+        // EXPECT callbacks to be called synchronously
+        future.on(scheduler: .immediate,
+                  success: { _ in isSuccessCalled = true },
+                  completion: { _ in isCompletedCalled = true }
+        )
+        XCTAssertTrue(isSuccessCalled)
+        XCTAssertTrue(isCompletedCalled)
+    }
+
+    func testImmediateCalledImmediatelyOnTheBackgroundThread() {
+        // GIVEN the resolved future
+        let future = Future<Int, MyError>(value: 1)
+
+        let expectation = self.expectation()
+        expectation.expectedFulfillmentCount = 2
+
+        DispatchQueue.global().async {
+            var isSuccessCalled = false
+            var isCompletedCalled = false
+            // WHEN `on` called on the background thread
+            // EXPECT callbacks to be called synchronously
+            future.on(
+                scheduler: .immediate,
+                success: { _ in
+                    isSuccessCalled = true
+                    XCTAssertFalse(Thread.isMainThread)
+                    expectation.fulfill()
+                },
+                completion: { _ in
+                    isCompletedCalled = true
+                    XCTAssertFalse(Thread.isMainThread)
+                    expectation.fulfill()
+                }
+            )
+            XCTAssertTrue(isSuccessCalled)
+            XCTAssertTrue(isCompletedCalled)
+        }
+
+        wait()
+    }
+
+    // MARK: .queue
+
+    func testQueue() {
+        // GIVEN the resolved future
+        let future = Future<Int, MyError>(value: 1)
+
+        let expectation = self.expectation()
+        expectation.expectedFulfillmentCount = 2
+
+        var isSuccessCalled = false
+        var isCompletedCalled = false
+        // WHEN `on` called on the background thread
+        // EXPECT callbacks to be called synchronously
+        future.on(
+            scheduler: .queue(.global()),
+            success: { _ in
+                isSuccessCalled = true
+                XCTAssertFalse(Thread.isMainThread)
+                expectation.fulfill()
+            },
+            completion: { _ in
+                isCompletedCalled = true
+                XCTAssertFalse(Thread.isMainThread)
+                expectation.fulfill()
+            }
+        )
+        XCTAssertFalse(isSuccessCalled)
+        XCTAssertFalse(isCompletedCalled)
+
+        wait()
+    }
+
+    // MARK: Misc
+
+    func testObserveOnMainThreadByDefault() {
+        let future = Future<Int, MyError>(value: 1)
+
+        // EXPECT maps to be called on main queue
+        _ = future.map { _ -> Int in
+            XCTAssertTrue(Thread.isMainThread)
+            return 2
+        }
+
+        // EXPECT on(...) to be called on the main queue
+        let expectation = self.expectation()
+        future.on(
+            success: { _ in
+                XCTAssertTrue(Thread.isMainThread)
+            },
+            failure: { _ in
+                XCTAssertTrue(Thread.isMainThread)
+            },
+            completion: { _ in
+                XCTAssertTrue(Thread.isMainThread)
+                expectation.fulfill()
+            }
+        )
+        wait()
     }
 }
 
