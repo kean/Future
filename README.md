@@ -10,7 +10,7 @@
 
 A streamlined `Future<Value, Error>` implementation.
 
-### Future
+## Future
 
 A future represents a result of computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. 
 

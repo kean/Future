@@ -25,6 +25,16 @@
 		0C9F15BE219CC0F8002EB416 /* StressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F15BD219CC0F8002EB416 /* StressTests.swift */; };
 		0C9F15BF219CC0F8002EB416 /* StressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F15BD219CC0F8002EB416 /* StressTests.swift */; };
 		0C9F15C0219CC0F8002EB416 /* StressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F15BD219CC0F8002EB416 /* StressTests.swift */; };
+		0C9F15F8219F4D5B002EB416 /* PillExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F15F1219F4D5A002EB416 /* PillExtensions.framework */; };
+		0C9F15F9219F4D5B002EB416 /* PillExtensions.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F15F1219F4D5A002EB416 /* PillExtensions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0C9F1628219F4FDF002EB416 /* FutureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */; };
+		0C9F1629219F4FDF002EB416 /* FutureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */; };
+		0C9F162A219F4FDF002EB416 /* FutureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */; };
+		0C9F162B219F4FDF002EB416 /* FutureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */; };
+		0C9F162D219F4FF5002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108371D4E824A00F1F405 /* Pill.framework */; };
+		0C9F162E219F4FFA002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108211D4E81CE00F1F405 /* Pill.framework */; };
+		0C9F162F219F4FFE002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108451D4E82B900F1F405 /* Pill.framework */; };
+		0C9F1630219F5002002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CE052001D4E830700A12B45 /* Pill.framework */; };
 		0CAA5D0A1DB1458F001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CAA5D0B1DB14595001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CAA5D0C1DB1459A001F6D96 /* Pill.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAA5D091DB14588001F6D96 /* Pill.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -55,6 +65,13 @@
 			remoteGlobalIDString = 0C03FF2E1FEEAB8D00111928;
 			remoteInfo = "Pill Host";
 		};
+		0C9F15F6219F4D5B002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C9F15F0219F4D5A002EB416;
+			remoteInfo = "Pill Extensions";
+		};
 		0CAA5D181DB14767001F6D96 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
@@ -78,6 +95,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		0C9F15FD219F4D5B002EB416 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0C9F15F9219F4D5B002EB416 /* PillExtensions.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0C03FF2F1FEEAB8D00111928 /* Pill Host.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pill Host.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C03FF311FEEAB8E00111928 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -97,6 +128,11 @@
 		0C7E0EB91DBA0F1900BA75EC /* Pill.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pill.podspec; sourceTree = "<group>"; };
 		0C9F15B721984D90002EB416 /* FutureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureTests.swift; sourceTree = "<group>"; };
 		0C9F15BD219CC0F8002EB416 /* StressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressTests.swift; sourceTree = "<group>"; };
+		0C9F15F1219F4D5A002EB416 /* PillExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PillExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F1603219F4DED002EB416 /* PillExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PillExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F1610219F4E5E002EB416 /* PillExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PillExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F161D219F4E8D002EB416 /* PillExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PillExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensions.swift; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D091DB14588001F6D96 /* Pill.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pill.h; sourceTree = "<group>"; };
@@ -115,6 +151,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C9F15F8219F4D5B002EB416 /* PillExtensions.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +181,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F15EE219F4D5A002EB416 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F162D219F4FF5002EB416 /* Pill.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F1600219F4DED002EB416 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F162E219F4FFA002EB416 /* Pill.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F160D219F4E5E002EB416 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F162F219F4FFE002EB416 /* Pill.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F161A219F4E8D002EB416 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F1630219F5002002EB416 /* Pill.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,10 +267,12 @@
 			isa = PBXGroup;
 			children = (
 				0C51082C1D4E820000F1F405 /* Sources */,
+				0C9F1626219F4FD1002EB416 /* Extensions */,
 				0C51082F1D4E820D00F1F405 /* Supporting Files */,
 				0CAA5D1D1DB14780001F6D96 /* Tests */,
 				0C5108221D4E81CE00F1F405 /* Products */,
 				0CAA5D061DB14524001F6D96 /* Metadata */,
+				0C9F162C219F4FF5002EB416 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -217,6 +288,10 @@
 				0CAA5D391DB1495E001F6D96 /* Pill macOS Tests.xctest */,
 				0C03FF2F1FEEAB8D00111928 /* Pill Host.app */,
 				0C03FF451FEEABA500111928 /* Pill iOS Performance Tests.xctest */,
+				0C9F15F1219F4D5A002EB416 /* PillExtensions.framework */,
+				0C9F1603219F4DED002EB416 /* PillExtensions.framework */,
+				0C9F1610219F4E5E002EB416 /* PillExtensions.framework */,
+				0C9F161D219F4E8D002EB416 /* PillExtensions.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -237,6 +312,21 @@
 			);
 			path = "Supporting Files";
 			sourceTree = SOURCE_ROOT;
+		};
+		0C9F1626219F4FD1002EB416 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		0C9F162C219F4FF5002EB416 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
 		};
 		0CAA5D061DB14524001F6D96 /* Metadata */ = {
 			isa = PBXGroup;
@@ -291,6 +381,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0C9F15EC219F4D5A002EB416 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F15FE219F4DED002EB416 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F160B219F4E5E002EB416 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F1618219F4E8D002EB416 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0CE051FD1D4E830700A12B45 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -309,10 +427,12 @@
 				0C03FF2B1FEEAB8D00111928 /* Sources */,
 				0C03FF2C1FEEAB8D00111928 /* Frameworks */,
 				0C03FF2D1FEEAB8D00111928 /* Resources */,
+				0C9F15FD219F4D5B002EB416 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0C9F15F7219F4D5B002EB416 /* PBXTargetDependency */,
 			);
 			name = "Pill Host";
 			productName = "Pill Host";
@@ -390,6 +510,78 @@
 			name = "Pill tvOS";
 			productName = "Promise tvOS";
 			productReference = 0C5108451D4E82B900F1F405 /* Pill.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0C9F15F0219F4D5A002EB416 /* Pill Extensions iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F15FC219F4D5B002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions iOS" */;
+			buildPhases = (
+				0C9F15EC219F4D5A002EB416 /* Headers */,
+				0C9F15ED219F4D5A002EB416 /* Sources */,
+				0C9F15EE219F4D5A002EB416 /* Frameworks */,
+				0C9F15EF219F4D5A002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pill Extensions iOS";
+			productName = "Pill Extensions";
+			productReference = 0C9F15F1219F4D5A002EB416 /* PillExtensions.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0C9F1602219F4DED002EB416 /* Pill Extensions macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F1608219F4DEE002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions macOS" */;
+			buildPhases = (
+				0C9F15FE219F4DED002EB416 /* Headers */,
+				0C9F15FF219F4DED002EB416 /* Sources */,
+				0C9F1600219F4DED002EB416 /* Frameworks */,
+				0C9F1601219F4DED002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pill Extensions macOS";
+			productName = "Pill Extensions macOS";
+			productReference = 0C9F1603219F4DED002EB416 /* PillExtensions.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0C9F160F219F4E5E002EB416 /* Pill Extensions tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F1615219F4E5E002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions tvOS" */;
+			buildPhases = (
+				0C9F160B219F4E5E002EB416 /* Headers */,
+				0C9F160C219F4E5E002EB416 /* Sources */,
+				0C9F160D219F4E5E002EB416 /* Frameworks */,
+				0C9F160E219F4E5E002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pill Extensions tvOS";
+			productName = "Pill Extensions tvOS";
+			productReference = 0C9F1610219F4E5E002EB416 /* PillExtensions.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0C9F161C219F4E8D002EB416 /* Pill Extensions watchOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F1622219F4E8D002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions watchOS" */;
+			buildPhases = (
+				0C9F1618219F4E8D002EB416 /* Headers */,
+				0C9F1619219F4E8D002EB416 /* Sources */,
+				0C9F161A219F4E8D002EB416 /* Frameworks */,
+				0C9F161B219F4E8D002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pill Extensions watchOS";
+			productName = "Pill Extensions watchOS";
+			productReference = 0C9F161D219F4E8D002EB416 /* PillExtensions.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		0CAA5D111DB14766001F6D96 /* Pill iOS Tests */ = {
@@ -504,6 +696,24 @@
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
+					0C9F15F0219F4D5A002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+					};
+					0C9F1602219F4DED002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+					};
+					0C9F160F219F4E5E002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+						ProvisioningStyle = Automatic;
+					};
+					0C9F161C219F4E8D002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+						ProvisioningStyle = Automatic;
+					};
 					0CAA5D111DB14766001F6D96 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = NR8DLKJ7E6;
@@ -551,6 +761,10 @@
 				0CAA5D381DB1495E001F6D96 /* Pill macOS Tests */,
 				0C03FF2E1FEEAB8D00111928 /* Pill Host */,
 				0C03FF441FEEABA500111928 /* Pill iOS Performance Tests */,
+				0C9F15F0219F4D5A002EB416 /* Pill Extensions iOS */,
+				0C9F1602219F4DED002EB416 /* Pill Extensions macOS */,
+				0C9F160F219F4E5E002EB416 /* Pill Extensions tvOS */,
+				0C9F161C219F4E8D002EB416 /* Pill Extensions watchOS */,
 			);
 		};
 /* End PBXProject section */
@@ -588,6 +802,34 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0C5108431D4E82B900F1F405 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F15EF219F4D5A002EB416 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F1601219F4DED002EB416 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F160E219F4E5E002EB416 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F161B219F4E8D002EB416 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -667,6 +909,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0C9F15ED219F4D5A002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F1628219F4FDF002EB416 /* FutureExtensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F15FF219F4DED002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F1629219F4FDF002EB416 /* FutureExtensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F160C219F4E5E002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F162A219F4FDF002EB416 /* FutureExtensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F1619219F4E8D002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F162B219F4FDF002EB416 /* FutureExtensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0CAA5D0E1DB14766001F6D96 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -721,6 +995,11 @@
 			target = 0C03FF2E1FEEAB8D00111928 /* Pill Host */;
 			targetProxy = 0C03FF531FEEAD1900111928 /* PBXContainerItemProxy */;
 		};
+		0C9F15F7219F4D5B002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C9F15F0219F4D5A002EB416 /* Pill Extensions iOS */;
+			targetProxy = 0C9F15F6219F4D5B002EB416 /* PBXContainerItemProxy */;
+		};
 		0CAA5D191DB14767001F6D96 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0C5108361D4E824A00F1F405 /* Pill iOS */;
@@ -761,6 +1040,7 @@
 		0C03FF3E1FEEAB8E00111928 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -782,6 +1062,7 @@
 		0C03FF3F1FEEAB8E00111928 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1012,8 +1293,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1037,8 +1316,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1102,6 +1379,257 @@
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0C9F15FA219F4D5B002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.PillExtensions;
+				PRODUCT_NAME = PillExtensions;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0C9F15FB219F4D5B002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.PillExtensions;
+				PRODUCT_NAME = PillExtensions;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0C9F1609219F4DEE002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.PillExtensions;
+				PRODUCT_NAME = PillExtensions;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		0C9F160A219F4DEE002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.PillExtensions;
+				PRODUCT_NAME = PillExtensions;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+		0C9F1616219F4E5E002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.PillExtensions;
+				PRODUCT_NAME = PillExtensions;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		0C9F1617219F4E5E002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.PillExtensions;
+				PRODUCT_NAME = PillExtensions;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0C9F1623219F4E8D002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.PillExtensions;
+				PRODUCT_NAME = PillExtensions;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		0C9F1624219F4E8D002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.PillExtensions;
+				PRODUCT_NAME = PillExtensions;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
@@ -1306,6 +1834,42 @@
 			buildConfigurations = (
 				0C51084B1D4E82B900F1F405 /* Debug */,
 				0C51084C1D4E82B900F1F405 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F15FC219F4D5B002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F15FA219F4D5B002EB416 /* Debug */,
+				0C9F15FB219F4D5B002EB416 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F1608219F4DEE002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F1609219F4DEE002EB416 /* Debug */,
+				0C9F160A219F4DEE002EB416 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F1615219F4E5E002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F1616219F4E5E002EB416 /* Debug */,
+				0C9F1617219F4E5E002EB416 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F1622219F4E8D002EB416 /* Build configuration list for PBXNativeTarget "Pill Extensions watchOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F1623219F4E8D002EB416 /* Debug */,
+				0C9F1624219F4E8D002EB416 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
