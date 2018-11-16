@@ -82,6 +82,34 @@
 			remoteGlobalIDString = 0C9F15F0219F4D5A002EB416;
 			remoteInfo = "Pill Extensions iOS";
 		};
+		0C9F1647219F59BD002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C5108361D4E824A00F1F405;
+			remoteInfo = "Pill iOS";
+		};
+		0C9F1649219F59C3002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C5108201D4E81CE00F1F405;
+			remoteInfo = "Pill macOS";
+		};
+		0C9F164B219F59C9002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C5108441D4E82B900F1F405;
+			remoteInfo = "Pill tvOS";
+		};
+		0C9F164D219F59CE002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0CE051FF1D4E830700A12B45;
+			remoteInfo = "Pill watchOS";
+		};
 		0CAA5D181DB14767001F6D96 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
@@ -546,6 +574,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0C9F1648219F59BD002EB416 /* PBXTargetDependency */,
 			);
 			name = "Pill Extensions iOS";
 			productName = "Pill Extensions";
@@ -564,6 +593,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0C9F164A219F59C3002EB416 /* PBXTargetDependency */,
 			);
 			name = "Pill Extensions macOS";
 			productName = "Pill Extensions macOS";
@@ -582,6 +612,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0C9F164C219F59C9002EB416 /* PBXTargetDependency */,
 			);
 			name = "Pill Extensions tvOS";
 			productName = "Pill Extensions tvOS";
@@ -600,6 +631,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0C9F164E219F59CE002EB416 /* PBXTargetDependency */,
 			);
 			name = "Pill Extensions watchOS";
 			productName = "Pill Extensions watchOS";
@@ -1067,6 +1099,26 @@
 			isa = PBXTargetDependency;
 			target = 0C9F15F0219F4D5A002EB416 /* Pill Extensions iOS */;
 			targetProxy = 0C9F1640219F51F9002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F1648219F59BD002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C5108361D4E824A00F1F405 /* Pill iOS */;
+			targetProxy = 0C9F1647219F59BD002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F164A219F59C3002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C5108201D4E81CE00F1F405 /* Pill macOS */;
+			targetProxy = 0C9F1649219F59C3002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F164C219F59C9002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C5108441D4E82B900F1F405 /* Pill tvOS */;
+			targetProxy = 0C9F164B219F59C9002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F164E219F59CE002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0CE051FF1D4E830700A12B45 /* Pill watchOS */;
+			targetProxy = 0C9F164D219F59CE002EB416 /* PBXContainerItemProxy */;
 		};
 		0CAA5D191DB14767001F6D96 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
