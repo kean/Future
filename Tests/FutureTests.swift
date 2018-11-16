@@ -200,19 +200,22 @@ class SchedulersTest: XCTestCase {
 
     // MARK: .queue
 
-    func testQueue() {
+    func testQueueScheduler() {
         // GIVEN the resolved future
         let future = Future<Int, MyError>(value: 1)
 
         let expectation = self.expectation()
         expectation.expectedFulfillmentCount = 2
 
+        let queue = DispatchQueue(label: "com.github.pill.test")
+        queue.suspend()
+
         var isSuccessCalled = false
         var isCompletedCalled = false
         // WHEN `on` called on the background thread
         // EXPECT callbacks to be called synchronously
         future.on(
-            scheduler: .queue(.global()),
+            scheduler: .queue(queue),
             success: { _ in
                 isSuccessCalled = true
                 XCTAssertFalse(Thread.isMainThread)
@@ -226,6 +229,8 @@ class SchedulersTest: XCTestCase {
         )
         XCTAssertFalse(isSuccessCalled)
         XCTAssertFalse(isCompletedCalled)
+
+        queue.resume()
 
         wait()
     }
