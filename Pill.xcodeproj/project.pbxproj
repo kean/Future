@@ -31,10 +31,6 @@
 		0C9F1629219F4FDF002EB416 /* FutureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */; };
 		0C9F162A219F4FDF002EB416 /* FutureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */; };
 		0C9F162B219F4FDF002EB416 /* FutureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */; };
-		0C9F162D219F4FF5002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108371D4E824A00F1F405 /* Pill.framework */; };
-		0C9F162E219F4FFA002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108211D4E81CE00F1F405 /* Pill.framework */; };
-		0C9F162F219F4FFE002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108451D4E82B900F1F405 /* Pill.framework */; };
-		0C9F1630219F5002002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CE052001D4E830700A12B45 /* Pill.framework */; };
 		0C9F163A219F51DA002EB416 /* Pill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108371D4E824A00F1F405 /* Pill.framework */; };
 		0C9F1644219F5297002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
 		0C9F1645219F531B002EB416 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
@@ -228,7 +224,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F162D219F4FF5002EB416 /* Pill.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,7 +231,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F162E219F4FFA002EB416 /* Pill.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +238,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F162F219F4FFE002EB416 /* Pill.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +245,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F1630219F5002002EB416 /* Pill.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,7 +727,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Alexander Grebenyuk";
 				TargetAttributes = {
 					0C03FF2E1FEEAB8D00111928 = {
@@ -1628,7 +1620,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -1662,7 +1654,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -1695,7 +1687,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -1729,7 +1721,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";

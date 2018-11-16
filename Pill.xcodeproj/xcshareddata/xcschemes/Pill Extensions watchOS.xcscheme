@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0CE051FF1D4E830700A12B45"
-               BuildableName = "Pill.framework"
-               BlueprintName = "Pill watchOS"
+               BlueprintIdentifier = "0C9F161C219F4E8D002EB416"
+               BuildableName = "PillExtensions.framework"
+               BlueprintName = "Pill Extensions watchOS"
                ReferencedContainer = "container:Pill.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0CE051FF1D4E830700A12B45"
-            BuildableName = "Pill.framework"
-            BlueprintName = "Pill watchOS"
+            BlueprintIdentifier = "0C9F161C219F4E8D002EB416"
+            BuildableName = "PillExtensions.framework"
+            BlueprintName = "Pill Extensions watchOS"
             ReferencedContainer = "container:Pill.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0CE051FF1D4E830700A12B45"
-            BuildableName = "Pill.framework"
-            BlueprintName = "Pill watchOS"
+            BlueprintIdentifier = "0C9F161C219F4E8D002EB416"
+            BuildableName = "PillExtensions.framework"
+            BlueprintName = "Pill Extensions watchOS"
             ReferencedContainer = "container:Pill.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
