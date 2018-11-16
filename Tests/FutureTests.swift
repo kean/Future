@@ -8,6 +8,26 @@ import Pill
 
 class FutureTests: XCTestCase {
 
+    // MARK: On Chain
+
+    func testOnChaining() {
+        let future = Future<Int, MyError>(value: 1)
+
+        let expectation = self.expectation()
+        expectation.expectedFulfillmentCount = 2
+        future
+            .on(success: {
+                XCTAssertEqual($0, 1)
+                expectation.fulfill()
+            })
+            .on(success: {
+                XCTAssertEqual($0, 1)
+                expectation.fulfill()
+            })
+
+        wait()
+    }
+
     // MARK: Synchronous Resolution
 
     func testSynchronousSuccess() {

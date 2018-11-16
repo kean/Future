@@ -86,9 +86,12 @@ public final class Future<Value, Error> {
     ///   - success: Gets called when the future has a value.
     ///   - failure: Gets called when the future has an error.
     ///   - completion: Gets called when the future has any result.
-    public func on(scheduler: Scheduler = .main(immediate: true), success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) {
+    /// - returns: Returns self so that you can continue the chain.
+    @discardableResult
+    public func on(scheduler: Scheduler = .main(immediate: true), success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
         observe(success: { value in scheduler.execute { success?(value); completion?(.success(value)) } },
                 failure: { error in scheduler.execute { failure?(error); completion?(.failure(error)) } })
+        return self
     }
 
     private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
