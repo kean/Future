@@ -124,6 +124,95 @@ public final class Future<Value, Error> {
         observe(success: future.succeed , failure: failure)
     }
 
+    // MARK: Synchronous Inspection
+
+    /// Returns true if the future is still pending.
+    public var isPending: Bool {
+        return result == nil
+    }
+
+    /// Returns the value if the future has a value.
+    public var value: Value? {
+        return result?.value
+    }
+
+    /// Returns the error if the future has an error.
+    public var error: Error? {
+        return result?.error
+    }
+
+    /// Returns the result if the future completed.
+    public var result: Result? {
+        lock.lock(); defer { lock.unlock() }
+        return memoizedResult
+    }
+
+    // MARK: Wait
+
+    /// Waits for the future's result. The current thread blocks until the result
+    /// is received.
+    ///
+    /// - note: This methods waits for the completion on the private dispatch
+    /// queue so it's safe to call it from any thread. But avoid blocking the
+    /// main thread!
+    public func wait() -> Result {
+        let semaphore = DispatchSemaphore(value: 0)
+        on(scheduler: .queue(waitQueue), completion: { _ in semaphore.signal() })
+        semaphore.wait()
+        return result! // Must have result at this point
+    }
+
+    // MARK: Result
+
+    public enum Result {
+        case success(Value), failure(Error)
+
+        /// Returns the value in case of success, `nil` otherwise.
+        public var value: Value? {
+            guard case let .success(value) = self else { return nil }
+            return value
+        }
+
+        /// Returns the value in case of failure, `nil` otherwise.
+        public var error: Error? {
+            guard case let .failure(error) = self else { return nil }
+            return error
+        }
+    }
+
+    // MARK: Scheduler
+
+    public enum Scheduler {
+        /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
+        case main(immediate: Bool)
+        /// Runs asynchronously on the given queue.
+        case queue(DispatchQueue)
+        /// Immediately executes the given closure.
+        case immediate
+
+        func execute(_ closure: @escaping () -> Void) {
+            switch self {
+            case let .queue(queue): queue.async(execute: closure)
+            case let .main(immediate):
+                if immediate && Thread.isMainThread {
+                    closure()
+                } else {
+                    DispatchQueue.main.async(execute: closure)
+                }
+            case .immediate: closure()
+            }
+        }
+    }
+
+    // MARK: Private
+
+    private struct Handlers {
+        var success = [(Value) -> Void]()
+        var failure = [(Error) -> Void]()
+    }
+}
+
+extension Future {
     // MARK: Map
 
     /// Returns a future with the result of mapping the given closure over the
@@ -215,93 +304,6 @@ public final class Future<Value, Error> {
         return futures.reduce(Future(value: initialResult)) { lhs, rhs in
             return Future.zip(lhs, rhs).map(combiningFunction)
         }
-    }
-
-    // MARK: Synchronous Inspection
-
-    /// Returns true if the future is still pending.
-    public var isPending: Bool {
-        return result == nil
-    }
-
-    /// Returns the value if the future has a value.
-    public var value: Value? {
-        return result?.value
-    }
-
-    /// Returns the error if the future has an error.
-    public var error: Error? {
-        return result?.error
-    }
-
-    /// Returns the result if the future completed.
-    public var result: Result? {
-        lock.lock(); defer { lock.unlock() }
-        return memoizedResult
-    }
-
-    // MARK: Wait
-
-    /// Waits for the future's result. The current thread blocks until the result
-    /// is received.
-    ///
-    /// - note: This methods waits for the completion on the private dispatch
-    /// queue so it's safe to call it from any thread. But avoid blocking the
-    /// main thread!
-    public func wait() -> Result {
-        let semaphore = DispatchSemaphore(value: 0)
-        on(scheduler: .queue(waitQueue), completion: { _ in semaphore.signal() })
-        semaphore.wait()
-        return result! // Must have result at this point
-    }
-
-    // MARK: Result
-
-    public enum Result {
-        case success(Value), failure(Error)
-
-        /// Returns the value in case of success, `nil` otherwise.
-        public var value: Value? {
-            guard case let .success(value) = self else { return nil }
-            return value
-        }
-
-        /// Returns the value in case of failure, `nil` otherwise.
-        public var error: Error? {
-            guard case let .failure(error) = self else { return nil }
-            return error
-        }
-    }
-
-    // MARK: Scheduler
-
-    public enum Scheduler {
-        /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
-        case main(immediate: Bool)
-        /// Runs asynchronously on the given queue.
-        case queue(DispatchQueue)
-        /// Immediately executes the given closure.
-        case immediate
-
-        func execute(_ closure: @escaping () -> Void) {
-            switch self {
-            case let .queue(queue): queue.async(execute: closure)
-            case let .main(immediate):
-                if immediate && Thread.isMainThread {
-                    closure()
-                } else {
-                    DispatchQueue.main.async(execute: closure)
-                }
-            case .immediate: closure()
-            }
-        }
-    }
-
-    // MARK: Private
-
-    private struct Handlers {
-        var success = [(Value) -> Void]()
-        var failure = [(Error) -> Void]()
     }
 }
 
