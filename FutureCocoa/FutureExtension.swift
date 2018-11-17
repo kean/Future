@@ -49,3 +49,8 @@ extension FutureCompatible {
         }
     }
 }
+
+import class Foundation.NSObject
+
+/// Extend NSObject with `fx` proxy.
+extension NSObject: FutureCompatible { }
