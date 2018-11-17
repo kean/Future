@@ -41,14 +41,18 @@
 		0C9F168721A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
 		0C9F168821A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
 		0C9F168921A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
-		0C9F16AB21A09427002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */; };
-		0C9F16AC21A09427002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16AA21A09427002EB416 /* FutureExtension.swift */; };
-		0C9F16D421A09475002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16AA21A09427002EB416 /* FutureExtension.swift */; };
-		0C9F16D521A09475002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */; };
-		0C9F16D621A09475002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16AA21A09427002EB416 /* FutureExtension.swift */; };
-		0C9F16D721A09475002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */; };
-		0C9F16D821A09475002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16AA21A09427002EB416 /* FutureExtension.swift */; };
-		0C9F16D921A09475002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */; };
+		0C9F16F921A09BE3002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F621A09BE3002EB416 /* URLSession+FutureX.swift */; };
+		0C9F16FA21A09BE3002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F621A09BE3002EB416 /* URLSession+FutureX.swift */; };
+		0C9F16FB21A09BE3002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F621A09BE3002EB416 /* URLSession+FutureX.swift */; };
+		0C9F16FC21A09BE3002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F621A09BE3002EB416 /* URLSession+FutureX.swift */; };
+		0C9F16FD21A09BE3002EB416 /* NSObject+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F721A09BE3002EB416 /* NSObject+FutureX.swift */; };
+		0C9F16FE21A09BE3002EB416 /* NSObject+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F721A09BE3002EB416 /* NSObject+FutureX.swift */; };
+		0C9F16FF21A09BE3002EB416 /* NSObject+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F721A09BE3002EB416 /* NSObject+FutureX.swift */; };
+		0C9F170021A09BE3002EB416 /* NSObject+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F721A09BE3002EB416 /* NSObject+FutureX.swift */; };
+		0C9F170121A09BE3002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F821A09BE3002EB416 /* FutureExtension.swift */; };
+		0C9F170221A09BE3002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F821A09BE3002EB416 /* FutureExtension.swift */; };
+		0C9F170321A09BE3002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F821A09BE3002EB416 /* FutureExtension.swift */; };
+		0C9F170421A09BE3002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16F821A09BE3002EB416 /* FutureExtension.swift */; };
 		0CAA5D171DB14767001F6D96 /* Future.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108371D4E824A00F1F405 /* Future.framework */; };
 		0CAA5D211DB14780001F6D96 /* A+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */; };
 		0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
@@ -172,11 +176,13 @@
 		0C9F167721A03A6A002EB416 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
 		0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationTokenTests.swift; sourceTree = "<group>"; };
 		0C9F16A821A0573D002EB416 /* FutureCocoa.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = FutureCocoa.podspec; sourceTree = "<group>"; };
-		0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "URLSession+FutureX.swift"; path = "Sources/URLSession+FutureX.swift"; sourceTree = "<group>"; };
-		0C9F16AA21A09427002EB416 /* FutureExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FutureExtension.swift; path = Sources/FutureExtension.swift; sourceTree = "<group>"; };
 		0C9F16B221A09455002EB416 /* FutureCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C9F16BF21A09461002EB416 /* FutureCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C9F16CC21A0946C002EB416 /* FutureCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F16F621A09BE3002EB416 /* URLSession+FutureX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+FutureX.swift"; sourceTree = "<group>"; };
+		0C9F16F721A09BE3002EB416 /* NSObject+FutureX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+FutureX.swift"; sourceTree = "<group>"; };
+		0C9F16F821A09BE3002EB416 /* FutureExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureExtension.swift; sourceTree = "<group>"; };
+		0C9F170521A09BF5002EB416 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D121DB14766001F6D96 /* Future iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Future iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -363,10 +369,28 @@
 		0C9F166521A038E8002EB416 /* FutureCocoa */ = {
 			isa = PBXGroup;
 			children = (
-				0C9F16AA21A09427002EB416 /* FutureExtension.swift */,
-				0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */,
+				0C9F170521A09BF5002EB416 /* README.md */,
+				0C9F16F421A09BE3002EB416 /* Sources */,
 			);
 			path = FutureCocoa;
+			sourceTree = "<group>";
+		};
+		0C9F16F421A09BE3002EB416 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				0C9F16F821A09BE3002EB416 /* FutureExtension.swift */,
+				0C9F16F521A09BE3002EB416 /* Foundation */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		0C9F16F521A09BE3002EB416 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				0C9F16F621A09BE3002EB416 /* URLSession+FutureX.swift */,
+				0C9F16F721A09BE3002EB416 /* NSObject+FutureX.swift */,
+			);
+			path = Foundation;
 			sourceTree = "<group>";
 		};
 		0CAA5D061DB14524001F6D96 /* Metadata */ = {
@@ -959,8 +983,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F16AC21A09427002EB416 /* FutureExtension.swift in Sources */,
-				0C9F16AB21A09427002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F16F921A09BE3002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F16FD21A09BE3002EB416 /* NSObject+FutureX.swift in Sources */,
+				0C9F170121A09BE3002EB416 /* FutureExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -968,8 +993,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F16D521A09475002EB416 /* URLSession+FutureX.swift in Sources */,
-				0C9F16D421A09475002EB416 /* FutureExtension.swift in Sources */,
+				0C9F16FA21A09BE3002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F16FE21A09BE3002EB416 /* NSObject+FutureX.swift in Sources */,
+				0C9F170221A09BE3002EB416 /* FutureExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -977,8 +1003,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F16D721A09475002EB416 /* URLSession+FutureX.swift in Sources */,
-				0C9F16D621A09475002EB416 /* FutureExtension.swift in Sources */,
+				0C9F16FB21A09BE3002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F16FF21A09BE3002EB416 /* NSObject+FutureX.swift in Sources */,
+				0C9F170321A09BE3002EB416 /* FutureExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -986,8 +1013,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F16D921A09475002EB416 /* URLSession+FutureX.swift in Sources */,
-				0C9F16D821A09475002EB416 /* FutureExtension.swift in Sources */,
+				0C9F16FC21A09BE3002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F170021A09BE3002EB416 /* NSObject+FutureX.swift in Sources */,
+				0C9F170421A09BE3002EB416 /* FutureExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
