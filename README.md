@@ -3,13 +3,15 @@
 <img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
 <img src="https://img.shields.io/badge/supports-CocoaPods%2C%20Carthage%2C%20SwiftPM-green.svg">
-<a href="https://travis-ci.org/kean/FutureX"><img src="https://img.shields.io/travis/kean/FutureX/master.svg"></a>
+<a href="https://travis-ci.org/kean/FutureX"><img src="https://travis-ci.org/kean/FutureX.svg?branch=master"></a>
 <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
 </p>
 
-A future represents a result of computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. 
+<hr/>
 
-Futures are easily composable. `Future<Value, Error>` provides a set of functions like `map`, `flatMap`, `zip`, `reduce` and more to compose them.
+A future represents a result of a computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. This might seem like a small distinction but it opens a whole world of possibilities. 
+
+FutureX provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others. FutureX also provides a set of extensions to `Cocoa` APIs which allow you to start using futures in no time.
 
 ## Getting Started
 
@@ -20,9 +22,14 @@ Futures are easily composable. `Future<Value, Error>` provides a set of function
 - [**Functional Composition**](#functional-composition)
   * [Map, FlatMap](#map-flatmap)
   * [MapError, FlatMapError](#maperror-flatmaperror)
-  * [Zip, Reduce](#zip)
+  * [Zip, Reduce](#zip-reduce)
+- [**Additions**](#additions)
+  * [First, ForEach](#first-foreach)
+  * [After, Retry](#after-retry)
+  * [Materialize](#materialize)
 - [**Threading**](#threading)
-- [**Cancelation**](#cancelation)
+- [**Cancellation**](#cancellation)
+- [**FutureCocoa**](#futurecocoa)
  
 ## Quick Start Guide
 
@@ -126,7 +133,7 @@ request.mapError(MyError.init(urlError:))
 
 Use `flatMapError` to "recover" from an error.
 
-### Zip
+### Zip, Reduce
 
 Use  `zip`  to combine the result of up to three futures in a single future:
 
@@ -147,8 +154,6 @@ Future.zip([future1, future2]).on(success: { values in
 })
 ```
 
-### Reduce
-
 Use `reduce` to combine the results of multiple futures:
 
 ```swift
@@ -157,6 +162,60 @@ let future2 = Future<Int, Error>(value: 2)
 
 Future.reduce(0, [future1, future2], +).on(success: { value in
     print(value) // prints "3"
+})
+```
+
+## Additions
+
+In addition to the primary interface there is also a set of extensions to `Future` which include multiple convenience functions. Not all of them are mentioned here, look into `FutureExtensions.swift` to find more!
+
+### First, ForEach
+
+First waits for the first future to resolve:
+
+```swift
+let requests: [Future<Value, Error>]
+Future.first(requests).on(success: { print("got response!") })
+```
+
+ForEach performs futures sequentially:
+
+```swift
+// `startWork` is a function that returns a future` 
+Future.forEach([startWork, startOtherWork]) { future in
+    // In the callback you can subscribe to each future when work is started
+    future.on(success: { print("some work completed") })
+}
+```
+
+### After, Retry
+
+After returns a future which succeeds after a given time interval.
+
+```swift
+Future.after(seconds: 2).on(success: { print("2 seconds have passed") })
+```
+
+Retry performs the given number of attempts to finish the work successfully.
+
+```swift
+Future.retry(attempts: 3, delay: .seconds(3)) {
+    startSomeWork()
+}
+```
+
+Retry is very flexible, it allows you to specify multiple delay strategies including exponential backoff, to inspect the error before retrying and more.
+
+### Materialize
+
+This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Value, Error>.Result, Never>` - a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out `materialize` composes really well with other functions like `zip`, `reduce`, `first`, etc. All of these functions fail as soon as one of the given futures fail, but with `materialize` you can change the behavior of these functions so that they would wait until all futures are resolved, not matter successfully or with an error.
+
+> Notice that we use native `Never` type to represent a situation when error can never be produced.
+
+```swift
+Future.zip(futures.map { $0.materialize() }).on(success: { results in
+    // All futures are resolved and we get the list of all of the results -
+    // either values or errors.
 })
 ```
 
@@ -177,9 +236,25 @@ public enum Scheduler {
 }
 ```
 
-## Cancelation
+## Cancellation
 
-FutureX considers cancellation to be a concern orthogonal to `Future`. There are multiple cancellation approaches. There are arguments for failing futures with an error on cancelation, there is also an argument for never resolving futures when the associated work gets canceled. In order to implement cancelation you might want to consider  [`CancellationToken`](https://kean.github.io/post/cancellation-token) or other similar patterns.
+The framework wouldn't be complete without cancellation. FutureX considers cancellation to be a concern orthogonal to `Future`. It implements a [`CancellationToken`](https://kean.github.io/post/cancellation-token) pattern for cooperative cancellation of asynchronous operations:
+
+```swift
+let cts = CancellationTokenSource()
+getUser(token: cts.token).flatMap { user in
+    getAvatar(user.avatarUrl, token: cts.token)
+}
+
+// At some point in the future:
+cts.cancel()
+
+// Both asynchronous operations are cancelled.
+```
+
+## FutureCocoa
+
+FutureCocoa is a framework which provides a set of future extensions to classes in native Apple frameworks. It's in very early stages now, it only ships for iOS and contains a limited number of extensions. Stay tuned.
 
 ## Requirements
 
