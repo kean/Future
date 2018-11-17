@@ -40,6 +40,9 @@
 		0C9F167921A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
 		0C9F167A21A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
 		0C9F167B21A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
+		0C9F168721A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
+		0C9F168821A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
+		0C9F168921A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
 		0CAA5D171DB14767001F6D96 /* Future.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108371D4E824A00F1F405 /* Future.framework */; };
 		0CAA5D211DB14780001F6D96 /* A+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */; };
 		0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
@@ -142,6 +145,7 @@
 		0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+FutureX.swift"; sourceTree = "<group>"; };
 		0C9F167521A039C8002EB416 /* FutureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtension.swift; sourceTree = "<group>"; };
 		0C9F167721A03A6A002EB416 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
+		0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationTokenTests.swift; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D121DB14766001F6D96 /* Future iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Future iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -329,6 +333,7 @@
 				0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */,
 				0C9F15B721984D90002EB416 /* FutureTests.swift */,
 				0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */,
+				0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */,
 				0C9F15BD219CC0F8002EB416 /* StressTests.swift */,
 				0CAA5D221DB14859001F6D96 /* Extensions.swift */,
 				0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */,
@@ -800,6 +805,7 @@
 				0C9F15B921984DAF002EB416 /* FutureTests.swift in Sources */,
 				0C9F165821A0290B002EB416 /* FutureExtensionsTests.swift in Sources */,
 				0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */,
+				0C9F168721A044F7002EB416 /* CancellationTokenTests.swift in Sources */,
 				0C9F15BE219CC0F8002EB416 /* StressTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -812,6 +818,7 @@
 				0C9F15BA21984DB0002EB416 /* FutureTests.swift in Sources */,
 				0C9F165921A0290B002EB416 /* FutureExtensionsTests.swift in Sources */,
 				0CAA5D341DB14912001F6D96 /* Extensions.swift in Sources */,
+				0C9F168821A044F7002EB416 /* CancellationTokenTests.swift in Sources */,
 				0C9F15BF219CC0F8002EB416 /* StressTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -824,6 +831,7 @@
 				0C9F15BB21984DB1002EB416 /* FutureTests.swift in Sources */,
 				0C9F165A21A0290C002EB416 /* FutureExtensionsTests.swift in Sources */,
 				0CAA5D451DB1496B001F6D96 /* Extensions.swift in Sources */,
+				0C9F168921A044F7002EB416 /* CancellationTokenTests.swift in Sources */,
 				0C9F15C0219CC0F8002EB416 /* StressTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -24,7 +24,7 @@ public final class CancellationTokenSource {
     private var observers: ContiguousArray<() -> Void>? = []
 
     /// Initializes the `CancellationTokenSource` instance.
-    init() {}
+    public init() {}
 
     fileprivate func register(_ closure: @escaping () -> Void) {
         if !tryRegister(closure) {
