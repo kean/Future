@@ -1,4 +1,4 @@
-<p align="left"><img src="https://user-images.githubusercontent.com/1567433/48660485-c05fd280-ea62-11e8-9d5b-0ac6207373e1.png" height="80"/>
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/48661279-fa83a100-ea6f-11e8-8b4e-f93b7a337607.png" height="90"/>
 <p align="left">
 <img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
@@ -6,10 +6,6 @@
 <a href="https://travis-ci.org/kean/FutureX"><img src="https://img.shields.io/travis/kean/FutureX/master.svg"></a>
 <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
 </p>
-
-A streamlined Future implementation with functional interface.
-
-## Future
 
 A future represents a result of computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. 
 
