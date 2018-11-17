@@ -32,8 +32,8 @@
 		0C9F165821A0290B002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
 		0C9F165921A0290B002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
 		0C9F165A21A0290C002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
-		0C9F166B21A038E8002EB416 /* FutureCocoa_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */; };
-		0C9F166C21A038E8002EB416 /* FutureCocoa_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0C9F166B21A038E8002EB416 /* FutureCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F166421A038E8002EB416 /* FutureCocoa.framework */; };
+		0C9F166C21A038E8002EB416 /* FutureCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F166421A038E8002EB416 /* FutureCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0C9F167221A0394C002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */; };
 		0C9F167621A039C8002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167521A039C8002EB416 /* FutureExtension.swift */; };
 		0C9F167821A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
@@ -111,7 +111,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0C9F166C21A038E8002EB416 /* FutureCocoa_iOS.framework in Embed Frameworks */,
+				0C9F166C21A038E8002EB416 /* FutureCocoa.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,7 +139,7 @@
 		0C9F15BD219CC0F8002EB416 /* StressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressTests.swift; sourceTree = "<group>"; };
 		0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensions.swift; sourceTree = "<group>"; };
 		0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensionsTests.swift; sourceTree = "<group>"; };
-		0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F166421A038E8002EB416 /* FutureCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+FutureX.swift"; sourceTree = "<group>"; };
 		0C9F167521A039C8002EB416 /* FutureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtension.swift; sourceTree = "<group>"; };
 		0C9F167721A03A6A002EB416 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
@@ -160,7 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F166B21A038E8002EB416 /* FutureCocoa_iOS.framework in Frameworks */,
+				0C9F166B21A038E8002EB416 /* FutureCocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +272,7 @@
 				0CAA5D391DB1495E001F6D96 /* Future macOS Tests.xctest */,
 				0C03FF2F1FEEAB8D00111928 /* Future Host.app */,
 				0C03FF451FEEABA500111928 /* Future iOS Performance Tests.xctest */,
-				0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */,
+				0C9F166421A038E8002EB416 /* FutureCocoa.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -487,7 +487,7 @@
 			);
 			name = "FutureCocoa iOS";
 			productName = FutureCocoa;
-			productReference = 0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */;
+			productReference = 0C9F166421A038E8002EB416 /* FutureCocoa.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		0CAA5D111DB14766001F6D96 /* Future iOS Tests */ = {
@@ -1257,7 +1257,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.FutureCocoa;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = FutureCocoa;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1286,7 +1286,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.FutureCocoa;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = FutureCocoa;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
