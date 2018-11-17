@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0C9F166321A038E8002EB416"
-               BuildableName = "FutureCocoa_iOS.framework"
+               BuildableName = "FutureCocoa.framework"
                BlueprintName = "FutureCocoa iOS"
                ReferencedContainer = "container:FutureX.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0C9F166321A038E8002EB416"
-            BuildableName = "FutureCocoa_iOS.framework"
+            BuildableName = "FutureCocoa.framework"
             BlueprintName = "FutureCocoa iOS"
             ReferencedContainer = "container:FutureX.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0C9F166321A038E8002EB416"
-            BuildableName = "FutureCocoa_iOS.framework"
+            BuildableName = "FutureCocoa.framework"
             BlueprintName = "FutureCocoa iOS"
             ReferencedContainer = "container:FutureX.xcodeproj">
          </BuildableReference>

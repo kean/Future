@@ -40,6 +40,7 @@ extension FutureExtension where Base: URLSession {
             }
         }
         token.register(task.cancel)
+        task.resume()
         return promise.future
     }
 }
