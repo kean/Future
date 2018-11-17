@@ -89,11 +89,11 @@ class AfterTests: XCTestCase {
         wait()
     }
 
-    func testAfterCompletesOnMainQueueByDefault() {
+    func testAfterCompletesOnGlobalQueueByDefault() {
         let expectation = self.expectation()
         // WHEN no passing a custom queue
         Future.after(seconds: 0.001).on(scheduler: .immediate, success: {
-            XCTAssertTrue(Thread.isMainThread)
+            XCTAssertFalse(Thread.isMainThread)
             expectation.fulfill()
         })
         wait()
@@ -112,5 +112,78 @@ class AfterTests: XCTestCase {
     func testAfterAndWait() {
         let after = Future.after(seconds: 0.001, on: .global())
         XCTAssertNotNil(after.wait())
+    }
+}
+
+class RetryTests: XCTestCase {
+
+    func testDefaultRetry() {
+        let retrier = RetryingFuture.failing()
+
+        let future = Future.retry(attempts: 2, delay: .seconds(0.00001), retrier.work)
+
+        let expecation = self.expectation()
+        future.on(
+            success: { _ in XCTFail() },
+            failure: { error in
+                XCTAssertEqual(error, .e1)
+                expecation.fulfill()
+            }
+        )
+
+        wait()
+
+        // EXPECT to perform to attempts
+        XCTAssertEqual(retrier.attemptsCount, 2)
+    }
+
+    // Test that `Future` never dispatches to the main queue internally.
+    func testWait() {
+        let retrier = RetryingFuture.failing()
+
+        let future = Future.retry(attempts: 2, delay: .seconds(0.00001), retrier.work)
+
+        XCTAssertEqual(future.wait().error, .e1)
+    }
+
+    class RetryingFuture {
+        var attemptsCount = 0
+
+        typealias Work = () -> Future<Int, MyError>
+        enum Attempts {
+            case infinite(Work)
+            case predefined([Work])
+        }
+        let attempts: Attempts
+
+        init(attempts: Attempts) {
+            self.attempts = attempts
+        }
+
+        func work() -> Future<Int, MyError> {
+            attemptsCount += 1
+            switch attempts {
+            case let .infinite(work):
+                return work()
+            case let .predefined(attempts):
+                if attempts.count < attemptsCount {
+                    XCTFail()
+                    return Future<Int, MyError>.promise.future
+                }
+                return attempts[attemptsCount-1]()
+            }
+        }
+
+        // Factory Methods
+
+        static func infinite(_ work: @escaping Work) -> RetryingFuture {
+            return RetryingFuture(attempts: .infinite(work))
+        }
+
+        static func failing() -> RetryingFuture {
+            return RetryingFuture.infinite {
+                Future<Int, MyError>(error: .e1)
+            }
+        }
     }
 }
