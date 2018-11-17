@@ -101,6 +101,28 @@ extension Future {
     }
 }
 
+// MARK: - ForEach
+
+// MARK: - For Each
+
+extension Future {
+    /// Performs futures sequentially. If one of the future fail, the resulting
+    /// future also fails.
+    ///
+    /// - returns: A future which completes when all of the given futures complete.
+    @discardableResult
+    public static func forEach(_ futures: [() -> Future], _ subscribe: @escaping (Future) -> Void) -> Future<Void, Error> {
+        let initial = Future<Void, Error>(value: ())
+        return futures.reduce(initial) { result, next in
+            return result.flatMap {
+                let future = next()
+                subscribe(future)
+                return future.asVoid()
+            }
+        }
+    }
+}
+
 // MARK: - Materialize
 
 extension Future {
@@ -122,6 +144,13 @@ extension Future where Error == Never {
     /// ones that can.
     public func castError<NewError>() -> Future<Value, NewError> {
         return mapError { _ in fatalError("Future<Value, Never> can't produce an error") }
+    }
+}
+
+extension Future {
+    /// Casts the future to `Future<Void, Error>`.
+    public func asVoid() -> Future<Void, Error> {
+        return map { _ in () }
     }
 }
 

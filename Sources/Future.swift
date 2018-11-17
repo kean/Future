@@ -115,6 +115,8 @@ public final class Future<Value, Error> {
     }
 
     /// Resolves the given future with the result of the current future.
+    /// `cascade` is just a slight convenience and a performance optimization,
+    /// the users have an analog of `cascade`: `on(scheduler: .immediate)`
     private func cascade(_ future: Future) {
         observe(success: future.succeed, failure: future.fail)
     }
@@ -329,6 +331,8 @@ extension Future {
         var failure = [(Error) -> Void]()
     }
 }
+
+extension Future.Result: Equatable where Value: Equatable, Error: Equatable { }
 
 // MARK: - Private
 

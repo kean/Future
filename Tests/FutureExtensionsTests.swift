@@ -188,6 +188,40 @@ class RetryTests: XCTestCase {
     }
 }
 
+class ForEachTests: XCTestCase {
+    func testForEach() {
+        let futures: [() -> Future<Int, MyError>] = [
+            { Future<Int, MyError>(value: 1) },
+            { Future<Int, MyError>(value: 2) }
+        ]
+
+        var expected = [1, 2]
+        let result = Future.forEach(futures) { future in
+            XCTAssertEqual(future.value, expected.first)
+            expected.removeFirst()
+        }
+
+        XCTAssertNotNil(result.value)
+    }
+
+    func testForEachSecondFails() {
+        func testForEach() {
+            let futures: [() -> Future<Int, MyError>] = [
+                { Future<Int, MyError>(value: 1) },
+                { Future<Int, MyError>(error: .e1) }
+            ]
+
+            var expected: [Future<Int, MyError>.Result] = [.success(1), .failure(.e1)]
+            let result = Future.forEach(futures) { future in
+                XCTAssertEqual(future.result, expected.first)
+                expected.removeFirst()
+            }
+
+            XCTAssertEqual(result.error, .e1)
+        }
+    }
+}
+
 class MaterializeTests: XCTestCase {
     func testSuccess() {
         let future = Future<Int, MyError>(value: 1)
