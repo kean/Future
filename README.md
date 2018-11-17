@@ -1,4 +1,4 @@
-<p align="left"><img src="https://user-images.githubusercontent.com/1567433/48661775-f065a080-ea77-11e8-8669-399e72cf3f0c.png" height="60"/>
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/48664312-0b96d700-ea9d-11e8-9bd7-716879fa8dbf.png" height="60"/>
 <p align="left">A streamlined <code>Future&lt;Value, Error&gt;</code> implementation with functional interface</p>
 <p align="left">
 <img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
@@ -10,9 +10,9 @@
 
 <hr/>
 
-A future represents a result of a computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. This might seem like a small distinction but it opens a whole world of possibilities. 
+A future represents a result of a computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. This might seem like a small difference but it opens a whole world of possibilities. 
 
-FutureX provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others. FutureX also provides a set of extensions to `Cocoa` APIs which allow you to start using futures in no time.
+`Future` framework provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others. `FutureCocoa` framework provides a set of extensions for Apple native frameworks with which you start using futures in no time.
 
 ## Getting Started
 
@@ -182,7 +182,7 @@ Future.first(requests).on(success: { print("got response!") })
 ForEach performs futures sequentially:
 
 ```swift
-// `startWork` is a function that returns a future` 
+// `startWork` is a function that returns a future
 Future.forEach([startWork, startOtherWork]) { future in
     // In the callback you can subscribe to each future when work is started
     future.on(success: { print("some work completed") })
@@ -209,7 +209,7 @@ Retry is very flexible, it allows you to specify multiple delay strategies inclu
 
 ### Materialize
 
-This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Value, Error>.Result, Never>` - a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out `materialize` composes really well with other functions like `zip`, `reduce`, `first`, etc. All of these functions fail as soon as one of the given futures fail, but with `materialize` you can change the behavior of these functions so that they would wait until all futures are resolved, not matter successfully or with an error.
+This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Value, Error>.Result, Never>` - a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out `materialize` composes really well with other functions like `zip`, `reduce`, `first`, etc. All of these functions fail as soon as one of the given futures fail, but with `materialize` you can change the behavior of these functions so that they would wait until all futures are resolved, no matter successfully or with an error.
 
 > Notice that we use native `Never` type to represent a situation when error can never be produced.
 
@@ -253,9 +253,9 @@ cts.cancel()
 // Both asynchronous operations are cancelled.
 ```
 
-## FutureCocoa
+## [FutureCocoa](https://github.com/kean/FutureX/tree/master/FutureCocoa)
 
-FutureCocoa is a framework which provides a set of future extensions to classes in native Apple frameworks. It's in very early stages now, it only ships for iOS and contains a limited number of extensions. Stay tuned.
+FutureCocoa is a framework which provides a set of future extensions for Apple native frameworks. Go to [FutureCocoa](https://github.com/kean/FutureX/tree/master/FutureCocoa) to learn more about which extensions are currently available.
 
 ## Requirements
 
