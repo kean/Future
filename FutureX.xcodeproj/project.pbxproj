@@ -146,6 +146,7 @@
 		0C9F167521A039C8002EB416 /* FutureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtension.swift; sourceTree = "<group>"; };
 		0C9F167721A03A6A002EB416 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
 		0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationTokenTests.swift; sourceTree = "<group>"; };
+		0C9F16A821A0573D002EB416 /* FutureCocoa.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = FutureCocoa.podspec; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D121DB14766001F6D96 /* Future iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Future iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -318,6 +319,7 @@
 			isa = PBXGroup;
 			children = (
 				0C7E0EB91DBA0F1900BA75EC /* FutureX.podspec */,
+				0C9F16A821A0573D002EB416 /* FutureCocoa.podspec */,
 				0CAA5D071DB14531001F6D96 /* Package.swift */,
 				0CAA5D081DB14531001F6D96 /* README.md */,
 				0C7E0EB81DBA0E3E00BA75EC /* CHANGELOG.md */,
