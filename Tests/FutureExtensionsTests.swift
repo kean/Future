@@ -187,3 +187,23 @@ class RetryTests: XCTestCase {
         }
     }
 }
+
+class IgnoreError: XCTestCase {
+    func testIgnoreError() {
+        let promise = Future<Int, MyError>.promise
+        let future = promise.future
+
+        let ignored = future.ignoreError()
+
+        // EXPECT none of the callbacks to be called
+        ignored.on(scheduler: .immediate,
+                   success: { _ in XCTFail() },
+                   failure: { _ in XCTFail() },
+                   completion: { _ in XCTFail() })
+
+        promise.fail(error: .e1)
+
+        XCTAssertEqual(future.error, .e1)
+        XCTAssertNil(ignored.result)
+    }
+}

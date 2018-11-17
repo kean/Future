@@ -112,3 +112,13 @@ extension Future where Error == Never {
         return mapError { _ in fatalError("Future<Value, Never> can't produce an error") }
     }
 }
+
+// MARK: - Ignore Error
+
+extension Future {
+    /// Returns a future which never resolves in case the underlying future
+    /// fails with an error.
+    public func ignoreError() -> Future<Value, Never> {
+        return flatMapError { _ in Future<Value, Never>.promise.future }
+    }
+}
