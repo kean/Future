@@ -5,6 +5,7 @@
 // MARK: - First
 
 extension Future {
+
     /// Waits for the first future to resolve. If the first future to resolve
     /// fails, the returned future also fails.
     public static func first(_ futures: Future...) -> Future {
@@ -25,6 +26,7 @@ extension Future {
 // MARK: - After
 
 extension Future where Value == Void, Error == Never {
+
     /// Returns a future which succeeds after a given time interval.
     ///
     /// - parameters:
@@ -53,6 +55,7 @@ extension Future where Value == Void, Error == Never {
 // MARK: - Retry
 
 extension Future {
+
     public enum Delay {
         case seconds(TimeInterval)
         case exponential(initial: TimeInterval, multiplier: Double, maxDelay: TimeInterval)
@@ -102,6 +105,7 @@ extension Future {
 // MARK: - ForEach
 
 extension Future {
+
     /// Performs futures sequentially. If one of the future fail, the resulting
     /// future also fails.
     ///
@@ -122,6 +126,7 @@ extension Future {
 // MARK: - Materialize
 
 extension Future {
+
     /// Returns a future that always succeeds with the `Result` which contains
     /// either a success or a failure of the underlying future.
     public func materialize() -> Future<Result, Never> {
@@ -134,6 +139,7 @@ extension Future {
 // MARK: - Cast
 
 extension Future where Error == Never {
+
     /// Safely casts a `Future<Value, Never>` - which can't produce an
     /// error - to `Future<Value, NewError>` which can. The returned future never
     /// actually produces an error but it makes it easier to compose it with the
@@ -153,6 +159,7 @@ extension Future {
 // MARK: - Ignore Error
 
 extension Future {
+
     /// Returns a future which never resolves in case the underlying future
     /// fails with an error.
     public func ignoreError() -> Future<Value, Never> {
