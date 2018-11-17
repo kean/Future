@@ -101,6 +101,18 @@ extension Future {
     }
 }
 
+// MARK: - Materialize
+
+extension Future {
+    /// Returns a future that always succeeds with the `Result` which contains
+    /// either a success or a failure of the underlying future.
+    public func materialize() -> Future<Result, Never> {
+        let promise = Future<Result, Never>.promise
+        on(scheduler: .immediate, completion: promise.succeed)
+        return promise.future
+    }
+}
+
 // MARK: - Cast
 
 extension Future where Error == Never {

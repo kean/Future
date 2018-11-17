@@ -188,6 +188,18 @@ class RetryTests: XCTestCase {
     }
 }
 
+class MaterializeTests: XCTestCase {
+    func testSuccess() {
+        let future = Future<Int, MyError>(value: 1)
+        XCTAssertEqual(future.materialize().value?.value, 1)
+    }
+
+    func testFailure() {
+        let future = Future<Int, MyError>(error: .e1)
+        XCTAssertEqual(future.materialize().value?.error, .e1)
+    }
+}
+
 class IgnoreError: XCTestCase {
     func testIgnoreError() {
         let promise = Future<Int, MyError>.promise
