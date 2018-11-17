@@ -1,5 +1,4 @@
-<p align="left"><img src="https://cloud.githubusercontent.com/assets/1567433/19490843/61cd2460-9579-11e6-9269-6cdebdf2a1cb.png" height="100"/>
-
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/48660485-c05fd280-ea62-11e8-9d5b-0ac6207373e1.png" height="80"/>
 <p align="left">
 <img src="https://img.shields.io/cocoapods/v/Pill.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
@@ -8,7 +7,7 @@
 <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
 </p>
 
-A streamlined `Future<Value, Error>` implementation.
+A streamlined Future implementation with functional interface.
 
 ## Future
 
