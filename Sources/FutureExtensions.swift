@@ -138,6 +138,22 @@ extension Future {
     }
 }
 
+// MARK: - MapThrowing
+
+extension Future where Error == Swift.Error {
+    /// Returns a future with the result of mapping the given closure over the
+    /// current future's value. If the `transform` closure throws, the resulting
+    /// future also throws.
+    public func mapThrowing<NewValue>(_ transform: @escaping (Value) throws -> NewValue) -> Future<NewValue, Error> {
+        let promise = Future<NewValue, Error>.promise
+        on(scheduler: .immediate, success: { value in
+            do { promise.succeed(value: try transform(value)) }
+            catch { promise.fail(error: error) }
+        }, failure: promise.fail)
+        return promise.future
+    }
+}
+
 // MARK: - Cast
 
 extension Future where Error == Never {

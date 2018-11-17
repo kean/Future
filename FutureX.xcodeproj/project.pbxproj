@@ -32,6 +32,15 @@
 		0C9F165821A0290B002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
 		0C9F165921A0290B002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
 		0C9F165A21A0290C002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
+		0C9F166B21A038E8002EB416 /* FutureCocoa_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */; };
+		0C9F166C21A038E8002EB416 /* FutureCocoa_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0C9F167221A0394C002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */; };
+		0C9F167621A039C8002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167521A039C8002EB416 /* FutureExtension.swift */; };
+		0C9F167821A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
+		0C9F167921A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
+		0C9F167A21A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
+		0C9F167B21A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
+		0C9F167C21A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
 		0CAA5D171DB14767001F6D96 /* FutureX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108371D4E824A00F1F405 /* FutureX.framework */; };
 		0CAA5D211DB14780001F6D96 /* A+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */; };
 		0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
@@ -57,6 +66,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0C03FF2E1FEEAB8D00111928;
 			remoteInfo = "Pill Host";
+		};
+		0C9F166921A038E8002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C9F166321A038E8002EB416;
+			remoteInfo = FutureCocoa;
+		};
+		0C9F167321A03981002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C5108361D4E824A00F1F405;
+			remoteInfo = "FutureX iOS";
 		};
 		0CAA5D181DB14767001F6D96 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -88,6 +111,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				0C9F166C21A038E8002EB416 /* FutureCocoa_iOS.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -115,6 +139,10 @@
 		0C9F15BD219CC0F8002EB416 /* StressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressTests.swift; sourceTree = "<group>"; };
 		0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensions.swift; sourceTree = "<group>"; };
 		0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensionsTests.swift; sourceTree = "<group>"; };
+		0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+FutureX.swift"; sourceTree = "<group>"; };
+		0C9F167521A039C8002EB416 /* FutureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtension.swift; sourceTree = "<group>"; };
+		0C9F167721A03A6A002EB416 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D121DB14766001F6D96 /* FutureX iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FutureX iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C9F166B21A038E8002EB416 /* FutureCocoa_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +187,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0C5108411D4E82B900F1F405 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F166121A038E8002EB416 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -215,6 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				0C51082C1D4E820000F1F405 /* Sources */,
+				0C9F166521A038E8002EB416 /* FutureCocoa */,
 				0C51082F1D4E820D00F1F405 /* Supporting Files */,
 				0CAA5D1D1DB14780001F6D96 /* Tests */,
 				0C5108221D4E81CE00F1F405 /* Products */,
@@ -235,6 +272,7 @@
 				0CAA5D391DB1495E001F6D96 /* FutureX macOS Tests.xctest */,
 				0C03FF2F1FEEAB8D00111928 /* FutureX Host.app */,
 				0C03FF451FEEABA500111928 /* FutureX iOS Performance Tests.xctest */,
+				0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -244,6 +282,7 @@
 			children = (
 				0C20715A1D4E83A700EA5BEF /* Future.swift */,
 				0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */,
+				0C9F167721A03A6A002EB416 /* CancellationToken.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -261,6 +300,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0C9F166521A038E8002EB416 /* FutureCocoa */ = {
+			isa = PBXGroup;
+			children = (
+				0C9F167521A039C8002EB416 /* FutureExtension.swift */,
+				0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */,
+			);
+			path = FutureCocoa;
 			sourceTree = "<group>";
 		};
 		0CAA5D061DB14524001F6D96 /* Metadata */ = {
@@ -314,6 +362,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0C9F165F21A038E8002EB416 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0CE051FD1D4E830700A12B45 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -336,6 +391,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0C9F166A21A038E8002EB416 /* PBXTargetDependency */,
 			);
 			name = "FutureX Host";
 			productName = "Pill Host";
@@ -413,6 +469,25 @@
 			name = "FutureX tvOS";
 			productName = "Promise tvOS";
 			productReference = 0C5108451D4E82B900F1F405 /* FutureX.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0C9F166321A038E8002EB416 /* FutureCocoa iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F166F21A038E8002EB416 /* Build configuration list for PBXNativeTarget "FutureCocoa iOS" */;
+			buildPhases = (
+				0C9F165F21A038E8002EB416 /* Headers */,
+				0C9F166021A038E8002EB416 /* Sources */,
+				0C9F166121A038E8002EB416 /* Frameworks */,
+				0C9F166221A038E8002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0C9F167421A03981002EB416 /* PBXTargetDependency */,
+			);
+			name = "FutureCocoa iOS";
+			productName = FutureCocoa;
+			productReference = 0C9F166421A038E8002EB416 /* FutureCocoa_iOS.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		0CAA5D111DB14766001F6D96 /* FutureX iOS Tests */ = {
@@ -527,6 +602,11 @@
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
+					0C9F166321A038E8002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+						ProvisioningStyle = Automatic;
+					};
 					0CAA5D111DB14766001F6D96 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = NR8DLKJ7E6;
@@ -574,6 +654,7 @@
 				0CAA5D381DB1495E001F6D96 /* FutureX macOS Tests */,
 				0C03FF2E1FEEAB8D00111928 /* FutureX Host */,
 				0C03FF441FEEABA500111928 /* FutureX iOS Performance Tests */,
+				0C9F166321A038E8002EB416 /* FutureCocoa iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -611,6 +692,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0C5108431D4E82B900F1F405 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F166221A038E8002EB416 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -672,6 +760,7 @@
 			files = (
 				0C9F165521A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715C1D4E83A700EA5BEF /* Future.swift in Sources */,
+				0C9F167921A03A6A002EB416 /* CancellationToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -681,6 +770,7 @@
 			files = (
 				0C9F165721A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715B1D4E83A700EA5BEF /* Future.swift in Sources */,
+				0C9F167821A03A6A002EB416 /* CancellationToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,6 +780,17 @@
 			files = (
 				0C9F165421A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715D1D4E83A700EA5BEF /* Future.swift in Sources */,
+				0C9F167A21A03A6A002EB416 /* CancellationToken.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F166021A038E8002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F167621A039C8002EB416 /* FutureExtension.swift in Sources */,
+				0C9F167221A0394C002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F167C21A03A6A002EB416 /* CancellationToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,6 +836,7 @@
 			files = (
 				0C9F165621A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715E1D4E83A700EA5BEF /* Future.swift in Sources */,
+				0C9F167B21A03A6A002EB416 /* CancellationToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -750,6 +852,16 @@
 			isa = PBXTargetDependency;
 			target = 0C03FF2E1FEEAB8D00111928 /* FutureX Host */;
 			targetProxy = 0C03FF531FEEAD1900111928 /* PBXContainerItemProxy */;
+		};
+		0C9F166A21A038E8002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C9F166321A038E8002EB416 /* FutureCocoa iOS */;
+			targetProxy = 0C9F166921A038E8002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F167421A03981002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C5108361D4E824A00F1F405 /* FutureX iOS */;
+			targetProxy = 0C9F167321A03981002EB416 /* PBXContainerItemProxy */;
 		};
 		0CAA5D191DB14767001F6D96 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -791,6 +903,7 @@
 		0C03FF3E1FEEAB8E00111928 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -811,6 +924,7 @@
 		0C03FF3F1FEEAB8E00111928 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1121,6 +1235,65 @@
 			};
 			name = Release;
 		};
+		0C9F166D21A038E8002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.FutureCocoa;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0C9F166E21A038E8002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.FutureCocoa;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		0CAA5D1B1DB14767001F6D96 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1314,6 +1487,15 @@
 			buildConfigurations = (
 				0C51084B1D4E82B900F1F405 /* Debug */,
 				0C51084C1D4E82B900F1F405 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F166F21A038E8002EB416 /* Build configuration list for PBXNativeTarget "FutureCocoa iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F166D21A038E8002EB416 /* Debug */,
+				0C9F166E21A038E8002EB416 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

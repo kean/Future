@@ -188,6 +188,18 @@ class RetryTests: XCTestCase {
     }
 }
 
+class MapThrowing: XCTestCase {
+    func testMapThrowing() {
+        let future = Future<Int, Swift.Error>(value: 1)
+
+        let result = future.mapThrowing { _ in
+            throw URLError(.unknown)
+        }
+
+        XCTAssertEqual(result.error as? URLError, URLError(.unknown))
+    }
+}
+
 class ForEachTests: XCTestCase {
     func testForEach() {
         let futures: [() -> Future<Int, MyError>] = [
