@@ -10,9 +10,9 @@
 
 <hr/>
 
-A future represents a result of a computation which may be available now, or in the future, or never. Essentially, a future is an object to which you attach callbacks, instead of passing callbacks into a function that performs a computation. This might seem like a small difference but it opens a whole world of possibilities. 
+A future represents a result of a computation which may be available now, or in the future, or never. `FutureX` provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others.
 
-`Future` framework provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others. `FutureCocoa` framework provides a set of extensions for Apple native frameworks with which you start using futures in no time.
+To use futures you need to wrap the tasks first. Fortunately, we already done a lot of of the work and built extensions for many popular frameworks including some native ones. These extensions are available at [FutureX Community](https://github.com/FutureXCommunity).
 
 ## Getting Started
 
@@ -30,7 +30,6 @@ A future represents a result of a computation which may be available now, or in 
   * [Materialize](#materialize)
 - [**Threading**](#threading)
 - [**Cancellation**](#cancellation)
-- [**FutureCocoa**](#futurecocoa)
  
 ## Quick Start Guide
 
@@ -252,10 +251,6 @@ cts.cancel()
 
 // Both asynchronous operations are cancelled.
 ```
-
-## [FutureCocoa](https://github.com/kean/FutureX/tree/master/FutureCocoa)
-
-FutureCocoa is a framework which provides a set of future extensions for Apple native frameworks. Go to [FutureCocoa](https://github.com/kean/FutureX/tree/master/FutureCocoa) to learn more about which extensions are currently available.
 
 ## Requirements
 
