@@ -34,8 +34,6 @@
 		0C9F165A21A0290C002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
 		0C9F166B21A038E8002EB416 /* FutureCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F166421A038E8002EB416 /* FutureCocoa.framework */; };
 		0C9F166C21A038E8002EB416 /* FutureCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9F166421A038E8002EB416 /* FutureCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0C9F167221A0394C002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */; };
-		0C9F167621A039C8002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167521A039C8002EB416 /* FutureExtension.swift */; };
 		0C9F167821A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
 		0C9F167921A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
 		0C9F167A21A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
@@ -43,6 +41,14 @@
 		0C9F168721A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
 		0C9F168821A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
 		0C9F168921A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
+		0C9F16AB21A09427002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */; };
+		0C9F16AC21A09427002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16AA21A09427002EB416 /* FutureExtension.swift */; };
+		0C9F16D421A09475002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16AA21A09427002EB416 /* FutureExtension.swift */; };
+		0C9F16D521A09475002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */; };
+		0C9F16D621A09475002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16AA21A09427002EB416 /* FutureExtension.swift */; };
+		0C9F16D721A09475002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */; };
+		0C9F16D821A09475002EB416 /* FutureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16AA21A09427002EB416 /* FutureExtension.swift */; };
+		0C9F16D921A09475002EB416 /* URLSession+FutureX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */; };
 		0CAA5D171DB14767001F6D96 /* Future.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108371D4E824A00F1F405 /* Future.framework */; };
 		0CAA5D211DB14780001F6D96 /* A+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */; };
 		0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
@@ -76,12 +82,33 @@
 			remoteGlobalIDString = 0C9F166321A038E8002EB416;
 			remoteInfo = FutureCocoa;
 		};
-		0C9F167321A03981002EB416 /* PBXContainerItemProxy */ = {
+		0C9F16DA21A094CC002EB416 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0C5108361D4E824A00F1F405;
-			remoteInfo = "FutureX iOS";
+			remoteInfo = "Future iOS";
+		};
+		0C9F16DC21A094D1002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C5108201D4E81CE00F1F405;
+			remoteInfo = "Future macOS";
+		};
+		0C9F16DE21A094D5002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C5108441D4E82B900F1F405;
+			remoteInfo = "Future tvOS";
+		};
+		0C9F16E021A094DA002EB416 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C5108181D4E81CE00F1F405 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0CE051FF1D4E830700A12B45;
+			remoteInfo = "Future watchOS";
 		};
 		0CAA5D181DB14767001F6D96 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -142,11 +169,14 @@
 		0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensions.swift; sourceTree = "<group>"; };
 		0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensionsTests.swift; sourceTree = "<group>"; };
 		0C9F166421A038E8002EB416 /* FutureCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+FutureX.swift"; sourceTree = "<group>"; };
-		0C9F167521A039C8002EB416 /* FutureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtension.swift; sourceTree = "<group>"; };
 		0C9F167721A03A6A002EB416 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
 		0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationTokenTests.swift; sourceTree = "<group>"; };
 		0C9F16A821A0573D002EB416 /* FutureCocoa.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = FutureCocoa.podspec; sourceTree = "<group>"; };
+		0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "URLSession+FutureX.swift"; path = "Sources/URLSession+FutureX.swift"; sourceTree = "<group>"; };
+		0C9F16AA21A09427002EB416 /* FutureExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FutureExtension.swift; path = Sources/FutureExtension.swift; sourceTree = "<group>"; };
+		0C9F16B221A09455002EB416 /* FutureCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F16BF21A09461002EB416 /* FutureCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C9F16CC21A0946C002EB416 /* FutureCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FutureCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D121DB14766001F6D96 /* Future iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Future iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -198,6 +228,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0C9F166121A038E8002EB416 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16AF21A09455002EB416 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16BC21A09461002EB416 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16C921A0946C002EB416 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -277,6 +328,9 @@
 				0C03FF2F1FEEAB8D00111928 /* Future Host.app */,
 				0C03FF451FEEABA500111928 /* Future iOS Performance Tests.xctest */,
 				0C9F166421A038E8002EB416 /* FutureCocoa.framework */,
+				0C9F16B221A09455002EB416 /* FutureCocoa.framework */,
+				0C9F16BF21A09461002EB416 /* FutureCocoa.framework */,
+				0C9F16CC21A0946C002EB416 /* FutureCocoa.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -309,8 +363,8 @@
 		0C9F166521A038E8002EB416 /* FutureCocoa */ = {
 			isa = PBXGroup;
 			children = (
-				0C9F167521A039C8002EB416 /* FutureExtension.swift */,
-				0C9F167021A0394C002EB416 /* URLSession+FutureX.swift */,
+				0C9F16AA21A09427002EB416 /* FutureExtension.swift */,
+				0C9F16A921A09427002EB416 /* URLSession+FutureX.swift */,
 			);
 			path = FutureCocoa;
 			sourceTree = "<group>";
@@ -369,6 +423,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0C9F165F21A038E8002EB416 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16AD21A09455002EB416 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16BA21A09461002EB416 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16C721A0946C002EB416 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -489,11 +564,68 @@
 			buildRules = (
 			);
 			dependencies = (
-				0C9F167421A03981002EB416 /* PBXTargetDependency */,
+				0C9F16DB21A094CC002EB416 /* PBXTargetDependency */,
 			);
 			name = "FutureCocoa iOS";
 			productName = FutureCocoa;
 			productReference = 0C9F166421A038E8002EB416 /* FutureCocoa.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0C9F16B121A09455002EB416 /* FutureCocoa macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F16B721A09455002EB416 /* Build configuration list for PBXNativeTarget "FutureCocoa macOS" */;
+			buildPhases = (
+				0C9F16AD21A09455002EB416 /* Headers */,
+				0C9F16AE21A09455002EB416 /* Sources */,
+				0C9F16AF21A09455002EB416 /* Frameworks */,
+				0C9F16B021A09455002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0C9F16DD21A094D1002EB416 /* PBXTargetDependency */,
+			);
+			name = "FutureCocoa macOS";
+			productName = "FutureCocoa macOS";
+			productReference = 0C9F16B221A09455002EB416 /* FutureCocoa.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0C9F16BE21A09461002EB416 /* FutureCocoa tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F16C421A09461002EB416 /* Build configuration list for PBXNativeTarget "FutureCocoa tvOS" */;
+			buildPhases = (
+				0C9F16BA21A09461002EB416 /* Headers */,
+				0C9F16BB21A09461002EB416 /* Sources */,
+				0C9F16BC21A09461002EB416 /* Frameworks */,
+				0C9F16BD21A09461002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0C9F16DF21A094D5002EB416 /* PBXTargetDependency */,
+			);
+			name = "FutureCocoa tvOS";
+			productName = "FutureCocoa tvOS";
+			productReference = 0C9F16BF21A09461002EB416 /* FutureCocoa.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0C9F16CB21A0946C002EB416 /* FutureCocoa watchOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C9F16D121A0946C002EB416 /* Build configuration list for PBXNativeTarget "FutureCocoa watchOS" */;
+			buildPhases = (
+				0C9F16C721A0946C002EB416 /* Headers */,
+				0C9F16C821A0946C002EB416 /* Sources */,
+				0C9F16C921A0946C002EB416 /* Frameworks */,
+				0C9F16CA21A0946C002EB416 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0C9F16E121A094DA002EB416 /* PBXTargetDependency */,
+			);
+			name = "FutureCocoa watchOS";
+			productName = "FutureCocoa watchOS";
+			productReference = 0C9F16CC21A0946C002EB416 /* FutureCocoa.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		0CAA5D111DB14766001F6D96 /* Future iOS Tests */ = {
@@ -613,6 +745,15 @@
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
+					0C9F16B121A09455002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					0C9F16BE21A09461002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					0C9F16CB21A0946C002EB416 = {
+						CreatedOnToolsVersion = 10.1;
+					};
 					0CAA5D111DB14766001F6D96 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = NR8DLKJ7E6;
@@ -661,6 +802,9 @@
 				0C03FF2E1FEEAB8D00111928 /* Future Host */,
 				0C03FF441FEEABA500111928 /* Future iOS Performance Tests */,
 				0C9F166321A038E8002EB416 /* FutureCocoa iOS */,
+				0C9F16B121A09455002EB416 /* FutureCocoa macOS */,
+				0C9F16BE21A09461002EB416 /* FutureCocoa tvOS */,
+				0C9F16CB21A0946C002EB416 /* FutureCocoa watchOS */,
 			);
 		};
 /* End PBXProject section */
@@ -705,6 +849,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0C9F166221A038E8002EB416 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16B021A09455002EB416 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16BD21A09461002EB416 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16CA21A0946C002EB416 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -794,8 +959,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9F167621A039C8002EB416 /* FutureExtension.swift in Sources */,
-				0C9F167221A0394C002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F16AC21A09427002EB416 /* FutureExtension.swift in Sources */,
+				0C9F16AB21A09427002EB416 /* URLSession+FutureX.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16AE21A09455002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F16D521A09475002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F16D421A09475002EB416 /* FutureExtension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16BB21A09461002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F16D721A09475002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F16D621A09475002EB416 /* FutureExtension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C9F16C821A0946C002EB416 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C9F16D921A09475002EB416 /* URLSession+FutureX.swift in Sources */,
+				0C9F16D821A09475002EB416 /* FutureExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -866,10 +1058,25 @@
 			target = 0C9F166321A038E8002EB416 /* FutureCocoa iOS */;
 			targetProxy = 0C9F166921A038E8002EB416 /* PBXContainerItemProxy */;
 		};
-		0C9F167421A03981002EB416 /* PBXTargetDependency */ = {
+		0C9F16DB21A094CC002EB416 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0C5108361D4E824A00F1F405 /* Future iOS */;
-			targetProxy = 0C9F167321A03981002EB416 /* PBXContainerItemProxy */;
+			targetProxy = 0C9F16DA21A094CC002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F16DD21A094D1002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C5108201D4E81CE00F1F405 /* Future macOS */;
+			targetProxy = 0C9F16DC21A094D1002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F16DF21A094D5002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C5108441D4E82B900F1F405 /* Future tvOS */;
+			targetProxy = 0C9F16DE21A094D5002EB416 /* PBXContainerItemProxy */;
+		};
+		0C9F16E121A094DA002EB416 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0CE051FF1D4E830700A12B45 /* Future watchOS */;
+			targetProxy = 0C9F16E021A094DA002EB416 /* PBXContainerItemProxy */;
 		};
 		0CAA5D191DB14767001F6D96 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1126,7 +1333,6 @@
 				PRODUCT_NAME = Future;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 			};
 			name = Debug;
 		};
@@ -1149,7 +1355,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.FutureX;
 				PRODUCT_NAME = Future;
 				SKIP_INSTALL = YES;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 			};
 			name = Release;
 		};
@@ -1251,8 +1456,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1269,6 +1472,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1281,8 +1485,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1297,8 +1499,170 @@
 				PRODUCT_NAME = FutureCocoa;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0C9F16B821A09455002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.FutureCocoa-macOS";
+				PRODUCT_NAME = FutureCocoa;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0C9F16B921A09455002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.FutureCocoa-macOS";
+				PRODUCT_NAME = FutureCocoa;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		0C9F16C521A09461002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.FutureCocoa-tvOS";
+				PRODUCT_NAME = FutureCocoa;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		0C9F16C621A09461002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.FutureCocoa-tvOS";
+				PRODUCT_NAME = FutureCocoa;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0C9F16D221A0946C002EB416 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.FutureCocoa-watchOS";
+				PRODUCT_NAME = FutureCocoa;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		0C9F16D321A0946C002EB416 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.FutureCocoa-watchOS";
+				PRODUCT_NAME = FutureCocoa;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
@@ -1504,6 +1868,33 @@
 			buildConfigurations = (
 				0C9F166D21A038E8002EB416 /* Debug */,
 				0C9F166E21A038E8002EB416 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F16B721A09455002EB416 /* Build configuration list for PBXNativeTarget "FutureCocoa macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F16B821A09455002EB416 /* Debug */,
+				0C9F16B921A09455002EB416 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F16C421A09461002EB416 /* Build configuration list for PBXNativeTarget "FutureCocoa tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F16C521A09461002EB416 /* Debug */,
+				0C9F16C621A09461002EB416 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C9F16D121A0946C002EB416 /* Build configuration list for PBXNativeTarget "FutureCocoa watchOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C9F16D221A0946C002EB416 /* Debug */,
+				0C9F16D321A0946C002EB416 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
