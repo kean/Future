@@ -283,6 +283,22 @@ class MapErrorTest: XCTestCase {
 
         wait()
     }
+
+    // Test that `Future` never dispatches to the main queue internally.
+    func testWait() {
+        let promise = Future<Int, MyError>.promise
+
+        // WHEN recovering from error with a value
+        let mapped = promise.future.mapError { _ in
+            return "e1"
+        }
+
+        DispatchQueue.global().async {
+            promise.fail(error: .e1)
+        }
+
+        XCTAssertEqual(mapped.wait().error, "e1")
+    }
 }
 
 class FlatMapErrorTests: XCTestCase {
@@ -322,6 +338,22 @@ class FlatMapErrorTests: XCTestCase {
         })
 
         wait()
+    }
+
+    // Test that `Future` never dispatches to the main queue internally.
+    func testWait() {
+        let promise = Future<Int, MyError>.promise
+
+        // WHEN recovering from error with a value
+        let mapped = promise.future.flatMapError { _ in
+            return Future<Int, MyError>(value: 3)
+        }
+
+        DispatchQueue.global().async {
+            promise.fail(error: .e1)
+        }
+
+        XCTAssertEqual(mapped.wait().value, 3)
     }
 }
 
@@ -465,6 +497,21 @@ class Zip3Tests: XCTestCase {
 
         wait()
     }
+
+    // Test that `Future` never dispatches to the main queue internally.
+    func testWait() {
+        let (promises, futures) = setUpFutures()
+
+        let result = Future.zip(futures.0, futures.1, futures.2)
+
+        DispatchQueue.global().async {
+            promises.0.succeed(value: 1)
+            promises.1.succeed(value: 2)
+            promises.2.succeed(value: 3)
+        }
+
+        XCTAssertEqual(result.wait().value, (1, 2, 3))
+    }
 }
 
 class ZipIntoArrayTests: XCTestCase {
@@ -515,6 +562,20 @@ class ZipIntoArrayTests: XCTestCase {
         promises.2.fail(error: .e1)
 
         wait()
+    }
+
+    // Test that `Future` never dispatches to the main queue internally.
+    func testWait() {
+        let (promises, futures) = setUpFutures()
+
+        let result = Future.zip([futures.0, futures.1])
+
+        DispatchQueue.global().async {
+            promises.0.succeed(value: 1)
+            promises.1.succeed(value: 2)
+        }
+
+        XCTAssertEqual(result.wait().value, [1, 2])
     }
 }
 
@@ -578,6 +639,20 @@ class ReduceTests: XCTestCase {
         promises.1.fail(error: .e1)
 
         wait()
+    }
+
+    // Test that `Future` never dispatches to the main queue internally.
+    func testWait() {
+        let (promises, futures) = setUpFutures()
+
+        let result = Future.reduce(0, [futures.0, futures.1], +)
+
+        DispatchQueue.global().async {
+            promises.0.succeed(value: 1)
+            promises.1.succeed(value: 2)
+        }
+
+        XCTAssertEqual(result.wait().value, 3)
     }
 }
 
