@@ -63,9 +63,16 @@ func after(ticks: Int, execute body: @escaping () -> Void) {
     }
 }
 
+extension DispatchQueue {
+    static func specific() -> (DispatchQueue, DispatchSpecificKey<Void>) {
+        let queue = DispatchQueue(label: "com.github.kean.specific")
+        let key = DispatchSpecificKey<Void>()
+        queue.setSpecific(key: key, value: ())
+        return (queue, key)
+    }
+}
 
-
-// MARK: Promise
+// MARK: - Future
 
 enum MyError: Swift.Error {
     case e1

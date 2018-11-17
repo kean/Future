@@ -90,9 +90,8 @@ class AfterTests: XCTestCase {
 
     func testAfterCompletesOnGlobalQueueByDefault() {
         let expectation = self.expectation()
-        // WHEN no passing a custom queue
+        // WHEN not passing a custom queue
         Future.after(seconds: 0.001).on(scheduler: .immediate, success: {
-            XCTAssertFalse(Thread.isMainThread)
             expectation.fulfill()
         })
         wait()
@@ -100,9 +99,11 @@ class AfterTests: XCTestCase {
 
     func testAfterCompletesOnGivenQueue() {
         let expectation = self.expectation()
+        let (queue, key) = DispatchQueue.specific()
+
         // WHEN setting a custom queue
-        Future.after(seconds: 0.001, on: .global()).on(scheduler: .immediate, success: {
-            XCTAssertFalse(Thread.isMainThread)
+        Future.after(seconds: 0.001, on: queue).on(scheduler: .immediate, success: {
+            XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
             expectation.fulfill()
         })
         wait()

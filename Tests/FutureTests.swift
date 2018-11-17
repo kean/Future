@@ -173,7 +173,9 @@ class SchedulersTest: XCTestCase {
         let expectation = self.expectation()
         expectation.expectedFulfillmentCount = 2
 
-        DispatchQueue.global().async {
+        let (queue, key) = DispatchQueue.specific()
+
+        queue.async {
             var isSuccessCalled = false
             var isCompletedCalled = false
             // WHEN `on` called on the background thread
@@ -182,12 +184,12 @@ class SchedulersTest: XCTestCase {
                 scheduler: .immediate,
                 success: { _ in
                     isSuccessCalled = true
-                    XCTAssertFalse(Thread.isMainThread)
+                    XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                     expectation.fulfill()
                 },
                 completion: { _ in
                     isCompletedCalled = true
-                    XCTAssertFalse(Thread.isMainThread)
+                    XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                     expectation.fulfill()
                 }
             )
@@ -207,7 +209,7 @@ class SchedulersTest: XCTestCase {
         let expectation = self.expectation()
         expectation.expectedFulfillmentCount = 2
 
-        let queue = DispatchQueue(label: "com.github.pill.test")
+        let (queue, key) = DispatchQueue.specific()
         queue.suspend()
 
         var isSuccessCalled = false
@@ -218,12 +220,12 @@ class SchedulersTest: XCTestCase {
             scheduler: .queue(queue),
             success: { _ in
                 isSuccessCalled = true
-                XCTAssertFalse(Thread.isMainThread)
+                XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                 expectation.fulfill()
             },
             completion: { _ in
                 isCompletedCalled = true
-                XCTAssertFalse(Thread.isMainThread)
+                XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                 expectation.fulfill()
             }
         )
