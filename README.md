@@ -1,4 +1,5 @@
-<p align="left"><img src="https://user-images.githubusercontent.com/1567433/48661279-fa83a100-ea6f-11e8-8b4e-f93b7a337607.png" height="90"/>
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/48661775-f065a080-ea77-11e8-8669-399e72cf3f0c.png" height="60"/>
+<p align="left">A streamlined <code>Future&lt;Value, Error&gt;</code> implementation with functional interface</p>
 <p align="left">
 <img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
