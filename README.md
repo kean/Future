@@ -1,9 +1,9 @@
 <p align="left"><img src="https://user-images.githubusercontent.com/1567433/48660485-c05fd280-ea62-11e8-9d5b-0ac6207373e1.png" height="80"/>
 <p align="left">
-<img src="https://img.shields.io/cocoapods/v/Pill.svg?label=version">
+<img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
 <img src="https://img.shields.io/badge/supports-CocoaPods%2C%20Carthage%2C%20SwiftPM-green.svg">
-<a href="https://travis-ci.org/kean/Pill"><img src="https://img.shields.io/travis/kean/Pill/master.svg"></a>
+<a href="https://travis-ci.org/kean/FutureX"><img src="https://img.shields.io/travis/kean/FutureX/master.svg"></a>
 <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
 </p>
 
@@ -183,7 +183,7 @@ public enum Scheduler {
 
 ## Cancelation
 
-Pill considers cancellation to be a concern orthogonal to `Future`. There are multiple cancellation approaches. There are arguments for failing futures with an error on cancelation, there is also an argument for never resolving futures when the associated work gets canceled. In order to implement cancelation you might want to consider  [`CancellationToken`](https://kean.github.io/post/cancellation-token) or other similar patterns.
+FutureX considers cancellation to be a concern orthogonal to `Future`. There are multiple cancellation approaches. There are arguments for failing futures with an error on cancelation, there is also an argument for never resolving futures when the associated work gets canceled. In order to implement cancelation you might want to consider  [`CancellationToken`](https://kean.github.io/post/cancellation-token) or other similar patterns.
 
 ## Requirements
 
@@ -193,4 +193,4 @@ Pill considers cancellation to be a concern orthogonal to `Future`. There are mu
 
 ## License
 
-Pill is available under the MIT license. See the LICENSE file for more info.
+FutureX is available under the MIT license. See the LICENSE file for more info.

@@ -2,6 +2,8 @@
 //
 // Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
 
+import Foundation
+
 // MARK: - First
 
 extension Future {
@@ -185,4 +187,4 @@ extension Future {
     }
 }
 
-private let waitQueue = DispatchQueue(label:  "com.github.kean.pill.wait-queue", attributes: .concurrent)
+private let waitQueue = DispatchQueue(label:  "com.github.kean.futurex.wait-queue", attributes: .concurrent)

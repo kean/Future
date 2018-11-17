@@ -1,10 +1,6 @@
+// The MIT License (MIT)
 //
-//  AppDelegate.swift
-//  Pill Host
-//
-//  Created by Alexander Grebenyuk on 23/12/2017.
-//  Copyright © 2017 Alexander Grebenyuk. All rights reserved.
-//
+// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
 
 import UIKit
 
@@ -40,7 +36,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
-

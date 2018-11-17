@@ -4,7 +4,7 @@
 
 import XCTest
 import Foundation
-import Pill
+import FutureX
 
 class FirstTests: XCTestCase {
     func testOne() {

@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
 
 import XCTest
-import Pill
+import FutureX
 
 // Tests migrated from JS https://github.com/promises-aplus/promises-tests
 
@@ -531,7 +531,7 @@ class APlusTests: XCTestCase {
                 }
 
                 describe("multiple fulfillment handlers, one of which throws") {
-                    // Doesn't make sense in Pill, cause it doesn't allow throws (yet?)
+                    // Doesn't make sense in FutureX, cause it doesn't allow throws (yet?)
                 }
 
                 expect("results in multiple branching chains with their own fulfillment values", count: 3) { finish in
@@ -635,7 +635,7 @@ class APlusTests: XCTestCase {
                 }
 
                 describe("multiple rejection handlers, one of which throws") {
-                    // Doesn't make sense in Pill, cause it doesn't allow throws (yet?)
+                    // Doesn't make sense in FutureX, cause it doesn't allow throws (yet?)
                 }
 
 //                expect("`onRejected` handlers are called in the original order") { finish in
@@ -719,7 +719,7 @@ class APlusTests: XCTestCase {
             describe("2.3.1: If `promise` and `x` refer to the same object, reject `promise` with a `TypeError' as the reason.") {
                 // First of, this is really a fatal error which is a result of
                 // a programmatic error - it's not 'just an error'.
-                // Second of, Pill doesn't (yet) support this since it seems
+                // Second of, FutureX doesn't (yet) support this since it seems
                 // like an overkill at this point.
             }
         }
