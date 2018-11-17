@@ -127,6 +127,12 @@ class SchedulersTest: XCTestCase {
         DispatchQueue.global().async {
             var isSuccessCalled = false
             var isCompletedCalled = false
+
+            DispatchQueue.main.async {
+                XCTAssertFalse(isSuccessCalled)
+                XCTAssertFalse(isCompletedCalled)
+            }
+
             // WHEN `on` called on the background thread
             // EXPECT callbacks to be called asynchronously on the main queue
             future.on(
@@ -141,8 +147,6 @@ class SchedulersTest: XCTestCase {
                     expectation.fulfill()
                 }
             )
-            XCTAssertFalse(isSuccessCalled)
-            XCTAssertFalse(isCompletedCalled)
         }
 
         wait()
