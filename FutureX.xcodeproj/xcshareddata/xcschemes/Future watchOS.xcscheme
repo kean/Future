@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0C5108441D4E82B900F1F405"
+               BlueprintIdentifier = "0CE051FF1D4E830700A12B45"
                BuildableName = "FutureX.framework"
-               BlueprintName = "FutureX tvOS"
+               BlueprintName = "Future watchOS"
                ReferencedContainer = "container:FutureX.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,26 +28,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0CAA5D271DB14901001F6D96"
-               BuildableName = "FutureX tvOS Tests.xctest"
-               BlueprintName = "FutureX tvOS Tests"
-               ReferencedContainer = "container:FutureX.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0C5108441D4E82B900F1F405"
-            BuildableName = "FutureX.framework"
-            BlueprintName = "FutureX tvOS"
-            ReferencedContainer = "container:FutureX.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -64,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0C5108441D4E82B900F1F405"
+            BlueprintIdentifier = "0CE051FF1D4E830700A12B45"
             BuildableName = "FutureX.framework"
-            BlueprintName = "FutureX tvOS"
+            BlueprintName = "Future watchOS"
             ReferencedContainer = "container:FutureX.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -82,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0C5108441D4E82B900F1F405"
+            BlueprintIdentifier = "0CE051FF1D4E830700A12B45"
             BuildableName = "FutureX.framework"
-            BlueprintName = "FutureX tvOS"
+            BlueprintName = "Future watchOS"
             ReferencedContainer = "container:FutureX.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

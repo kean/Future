@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
 
 import XCTest
-import FutureX
+import Future
 
 // Tests migrated from JS https://github.com/promises-aplus/promises-tests
 

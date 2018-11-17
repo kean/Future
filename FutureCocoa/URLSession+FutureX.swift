@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
 
 import Foundation
-import FutureX
+import Future
 
 extension FutureExtension where Base: URLSession {
     /// Loads data and decodes an object from the response data.

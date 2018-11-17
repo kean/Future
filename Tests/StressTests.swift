@@ -4,7 +4,7 @@
 
 import XCTest
 import Foundation
-import FutureX
+import Future
 
 class StressTests: XCTestCase {
     func testThenDataRace() {
