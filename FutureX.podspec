@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'FutureX'
-    s.version          = '0.10.1'
+    s.version          = '0.11'
     s.summary          = 'A streamlined Future<Value, Error> implementation'
     s.homepage         = 'https://github.com/kean/FutureX'
     s.license          = 'MIT'

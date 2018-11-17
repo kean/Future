@@ -1,3 +1,11 @@
+## FutureX 0.11
+
+### FutureCocoa
+
+- Make FutureCocoa available on macOS, watchOS and tvOS
+- Add FutureCocoa README.md
+- Add NSObject.fx.deallocated
+
 ## FutureX 0.10
 
 FutureX is a completely new beast. It has a new name and it a new goal - to provide the best future implementation in Swift.
