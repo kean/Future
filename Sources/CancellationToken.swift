@@ -10,6 +10,7 @@ import Foundation
 ///
 /// All `CancellationTokenSource` methods are thread safe.
 public final class CancellationTokenSource {
+
     /// Returns `true` if cancellation has been requested.
     public var isCancelling: Bool {
         lock.lock(); defer { lock.unlock() }
@@ -69,6 +70,7 @@ private let lock = NSLock()
 ///
 /// All `CancellationToken` methods are thread safe.
 public struct CancellationToken {
+
     fileprivate let source: CancellationTokenSource? // no-op when `nil`
 
     /// Returns `true` if cancellation has been requested for this token.

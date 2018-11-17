@@ -5,9 +5,9 @@
 import Foundation
 import Future
 
-extension FutureExtension where Base: URLSession {
+extension FutureExtension where Base: NSObject {
     /// Returns a future which signal when object is deallocated.
-    var deallocated: Future<Void, Never> {
+    public var deallocated: Future<Void, Never> {
         let handler: DeinitHandler
         if let associatedHandler = objc_getAssociatedObject(base, &handle) as? DeinitHandler {
             handler = associatedHandler

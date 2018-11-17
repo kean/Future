@@ -141,6 +141,7 @@ extension Future {
 // MARK: - MapThrowing
 
 extension Future where Error == Swift.Error {
+
     /// Returns a future with the result of mapping the given closure over the
     /// current future's value. If the `transform` closure throws, the resulting
     /// future also throws.
@@ -168,6 +169,7 @@ extension Future where Error == Never {
 }
 
 extension Future {
+
     /// Casts the future to `Future<Void, Error>`.
     public func asVoid() -> Future<Void, Error> {
         return map { _ in () }
