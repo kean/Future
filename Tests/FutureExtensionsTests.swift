@@ -69,3 +69,48 @@ class FirstTests: XCTestCase {
         XCTAssertEqual(first.wait().error, .e1)
     }
 }
+
+class AfterTests: XCTestCase {
+    func testAfter() {
+        let expectation = self.expectation()
+        Future.after(seconds: 0.001).on(success: {
+            XCTAssertTrue(Thread.isMainThread)
+            expectation.fulfill()
+        })
+        wait()
+    }
+
+    func testAfterDispatchTime() {
+        let expectation = self.expectation()
+        Future.after(.milliseconds(10)).on(success: {
+            XCTAssertTrue(Thread.isMainThread)
+            expectation.fulfill()
+        })
+        wait()
+    }
+
+    func testAfterCompletesOnMainQueueByDefault() {
+        let expectation = self.expectation()
+        // WHEN no passing a custom queue
+        Future.after(seconds: 0.001).on(scheduler: .immediate, success: {
+            XCTAssertTrue(Thread.isMainThread)
+            expectation.fulfill()
+        })
+        wait()
+    }
+
+    func testAfterCompletesOnGivenQueue() {
+        let expectation = self.expectation()
+        // WHEN setting a custom queue
+        Future.after(seconds: 0.001, on: .global()).on(scheduler: .immediate, success: {
+            XCTAssertFalse(Thread.isMainThread)
+            expectation.fulfill()
+        })
+        wait()
+    }
+
+    func testAfterAndWait() {
+        let after = Future.after(seconds: 0.001, on: .global())
+        XCTAssertNotNil(after.wait())
+    }
+}
