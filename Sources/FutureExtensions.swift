@@ -2,8 +2,6 @@
 //
 // Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
 
-import Pill
-
 // MARK: - First
 
 extension Future {
@@ -103,8 +101,6 @@ extension Future {
 
 // MARK: - ForEach
 
-// MARK: - For Each
-
 extension Future {
     /// Performs futures sequentially. If one of the future fail, the resulting
     /// future also fails.
@@ -163,3 +159,23 @@ extension Future {
         return flatMapError { _ in Future<Value, Never>.promise.future }
     }
 }
+
+// MARK: - Wait
+
+extension Future {
+
+    /// Waits for the future's result. The current thread blocks until the result
+    /// is received.
+    ///
+    /// - note: This methods waits for the completion on the private dispatch
+    /// queue so it's safe to call it from any thread. But avoid blocking the
+    /// main thread!
+    public func wait() -> Result {
+        let semaphore = DispatchSemaphore(value: 0)
+        on(scheduler: .queue(waitQueue), completion: { _ in semaphore.signal() })
+        semaphore.wait()
+        return result! // Must have result at this point
+    }
+}
+
+private let waitQueue = DispatchQueue(label:  "com.github.kean.pill.wait-queue", attributes: .concurrent)

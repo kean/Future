@@ -5,7 +5,6 @@
 import XCTest
 import Foundation
 import Pill
-import PillExtensions
 
 class FirstTests: XCTestCase {
     func testOne() {

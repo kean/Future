@@ -510,7 +510,7 @@ class Zip3Tests: XCTestCase {
             promises.2.succeed(value: 3)
         }
 
-        XCTAssertEqual(result.wait().value, (1, 2, 3))
+        XCTAssertTrue(result.wait().value! == (1, 2, 3))
     }
 }
 
