@@ -965,7 +965,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FutureX Host.app/FutureX Host";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Future Host.app/Future Host";
 			};
 			name = Debug;
 		};
@@ -985,7 +985,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FutureX Host.app/FutureX Host";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Future Host.app/Future Host";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
