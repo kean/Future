@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'FutureCocoa'
-    s.version          = '0.10'
+    s.version          = '0.10.1'
     s.summary          = 'A streamlined Future<Value, Error> implementation'
     s.homepage         = 'https://github.com/kean/FutureX'
     s.license          = 'MIT'
@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
 
     s.source_files  = 'FutureCocoa/**/*'
 
-    s.dependency 'FutureX'
+    s.dependency 'FutureX', '~> 0.10.1'
 end
