@@ -17,11 +17,11 @@ extension Future {
     /// Waits for the first future to resolve. If the first future to resolve
     /// fails, the returned future also fails.
     public static func first(_ futures: [Future]) -> Future {
-        let promise = Future<Value, Error>.promise
+        let output = Future<Value, Error>()
         for future in futures {
-            future.on(scheduler: Scheduler.immediate, success: promise.succeed, failure: promise.fail)
+            future.observe(completion: output.resolve)
         }
-        return promise.future
+        return output
     }
 }
 
@@ -132,9 +132,9 @@ extension Future {
     /// Returns a future that always succeeds with the `Result` which contains
     /// either a success or a failure of the underlying future.
     public func materialize() -> Future<Result, Never> {
-        let promise = Future<Result, Never>.promise
-        on(scheduler: Scheduler.immediate, completion: promise.succeed)
-        return promise.future
+        let future = Future<Result, Never>()
+        observe(completion: future.succeed)
+        return future
     }
 }
 
@@ -146,10 +146,20 @@ extension Future where Error == Swift.Error {
     /// current future's value. If the `transform` closure throws, the resulting
     /// future also throws.
     public func tryMap<NewValue>(_ transform: @escaping (Value) throws -> NewValue) -> Future<NewValue, Error> {
-        return flatMap { value in
-            do { return Future<NewValue, Error>(value: try transform(value)) }
-            catch { return Future<NewValue, Error>(error: error) }
-        }
+        // This could be implemented in terms of `flatMap` by to avoid additional
+        // allocation and indirection we use `observe` directly.
+        //
+        //  return flatMap { value in
+        //      do { return Future<NewValue, Error>(value: try transform(value)) }
+        //      catch { return Future<NewValue, Error>(error: error) }
+        // }
+
+        let future = Future<NewValue, Error>()
+        observe(success: { value in
+            do { future.succeed(try transform(value)) }
+            catch { future.fail(error) }
+        }, failure: future.fail)
+        return future
     }
 }
 

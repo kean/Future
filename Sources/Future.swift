@@ -57,14 +57,14 @@ public final class Future<Value, Error> {
     // MARK: State Transitions
 
     func succeed(_ value: Value) {
-        resolve(with: .success(value))
+        resolve(.success(value))
     }
 
     func fail(_ error: Error) {
-        resolve(with: .failure(error))
+        resolve(.failure(error))
     }
 
-    private func resolve(with result: Result) {
+    func resolve(_ result: Result) {
         lock.lock()
         guard self.memoizedResult == nil else {
             lock.unlock(); return // Already resolved
@@ -79,15 +79,15 @@ public final class Future<Value, Error> {
 
     // MARK: Callbacks
 
-    /// The given closures execute asynchronously when the future has a result.
+    /// Attach callbacks to execute when the future has a result.
     ///
     /// - parameters:
     ///   - scheduler: A scheduler on which the callbacks are called. By default,
     ///     `Scheduler.main` which runs immediately if on the main thread,
     ///     otherwise asynchronously on the main thread.
-    ///   - success: Gets called when the future has a value.
-    ///   - failure: Gets called when the future has an error.
-    ///   - completion: Gets called when the future has any result.
+    ///   - success: Gets called when the future is resolved successfully.
+    ///   - failure: Gets called when the future is resolved with an error.
+    ///   - completion: Gets called when the future is resolved.
     /// - returns: Returns self so that you can continue the chain.
     @discardableResult
     public func on(scheduler: @escaping ScheduleWork = Scheduler.main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
@@ -103,7 +103,7 @@ public final class Future<Value, Error> {
         return self
     }
 
-    private func observe(completion: @escaping (Result) -> Void) {
+    func observe(completion: @escaping (Result) -> Void) {
         lock.lock()
         guard let result = self.memoizedResult else {
             // Create handlers lazily - in some cases they are no needed
@@ -114,6 +114,18 @@ public final class Future<Value, Error> {
         lock.unlock()
 
         completion(result)
+    }
+
+    // At convenience function which is used for implementing cascades of futures.
+    // It calls `observe(completion:)` directly for performance but technically,
+    // it could be implemented in terms of public `on(scheduler: Scheduler.immediate`.
+    func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
+        observe { result in
+            switch result {
+            case let .success(value): success(value)
+            case let .failure(error): failure(error)
+            }
+        }
     }
 
     // MARK: Synchronous Inspection
@@ -143,7 +155,7 @@ extension Future {
     /// current future's value.
     public func map<NewValue>(_ transform: @escaping (Value) -> NewValue) -> Future<NewValue, Error> {
         let future = Future<NewValue, Error>()
-        cascade(future, success: { future.succeed(transform($0)) })
+        observe(success: { future.succeed(transform($0)) }, failure: future.fail)
         return future
     }
 
@@ -163,7 +175,7 @@ extension Future {
     /// ```
     public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
         let future = Future<NewValue, Error>()
-        cascade(future, success: { transform($0).cascade(future) })
+        observe(success: { transform($0).observe(completion: future.resolve) }, failure: future.fail)
         return future
     }
 
@@ -171,7 +183,7 @@ extension Future {
     /// closure over the current future's error.
     public func mapError<NewError>(_ transform: @escaping (Error) -> NewError) -> Future<Value, NewError> {
         let future = Future<Value, NewError>()
-        cascade(future, failure: { future.fail(transform($0)) })
+        observe(success: future.succeed, failure: { future.fail(transform($0)) })
         return future
     }
 
@@ -183,20 +195,8 @@ extension Future {
     /// with a new future.
     public func flatMapError<NewError>(_ transform: @escaping (Error) -> Future<Value, NewError>) -> Future<Value, NewError> {
         let future = Future<Value, NewError>()
-        cascade(future, failure: { transform($0).cascade(future) })
+        observe(success: future.succeed, failure: { transform($0).observe(completion: future.resolve) })
         return future
-    }
-
-    private func cascade(_ future: Future) {
-        on(scheduler: Scheduler.immediate, completion: future.resolve)
-    }
-
-    private func cascade<NewValue>(_ future: Future<NewValue, Error>, success: @escaping (Value) -> Void) {
-        on(scheduler: Scheduler.immediate, success: success, failure: future.fail)
-    }
-
-    private func cascade<NewError>(_ future: Future<Value, NewError>, failure: @escaping (Error) -> Void) {
-        on(scheduler: Scheduler.immediate, success: future.succeed, failure: failure)
     }
 }
 
@@ -212,8 +212,8 @@ extension Future where Value == Any, Error == Any {
             guard let v1 = f1.value, let v2 = f2.value else { return }
             future.succeed((v1, v2))
         }
-        f1.cascade(future, success: success)
-        f2.cascade(future, success: success)
+        f1.observe(success: success, failure: future.fail)
+        f2.observe(success: success, failure: future.fail)
         return future
     }
 
