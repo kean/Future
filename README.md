@@ -12,8 +12,6 @@
 
 A future represents a result of a computation which may be available now, or in the future, or never. `FutureX` provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others.
 
-To use futures you need to wrap the tasks first. Fortunately, we already done a lot of of the work and built extensions for many popular frameworks including some native ones. These extensions are available at [FutureX Community](https://github.com/FutureXCommunity).
-
 ## Getting Started
 
 - [**Quick Start Guide**](#quick-start-guide)
