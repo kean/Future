@@ -78,14 +78,9 @@ future.on(success: { print("received value: \($0)" },
 
 Each callback is optional - you don't have to attach all at the same time. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. 
 
-By default the callbacks are run on `.main(immediate: true)` scheduler. It runs immediately if on the main thread, otherwise asynchronously on the main thread. To change the scheduler pass one into the `on` method:
+By default the callbacks are run on `.main` scheduler. It runs immediately if on the main thread, otherwise asynchronously on the main thread. 
 
-> See [**Threading**](#threading) for a rationale and more info
-
-```swift
-future.on(scheduler: .queue(.global()),
-          success: { print("value: \($0)" })
-```
+> See [**Threading**](#threading) for a rationale and more info.
 
 ### Wait, Result
 
@@ -191,7 +186,7 @@ Future.forEach([startWork, startOtherWork]) { future in
 Use `after` to produce a value after a given time interval.
 
 ```swift
-Future.after(seconds: 2).on(success: { print("2 seconds have passed") })
+Future.after(seconds: 2).on { _ in print("2 seconds have passed") })
 ```
 
 Use `retry` to perform the given number of attempts to finish the work successfully.
@@ -219,19 +214,30 @@ Future.zip(futures.map { $0.materialize() }).on(success: { results in
 
 ## Threading
 
-On iOS users expect UI renders to happen synchronously. To accommodate that, by default, the callbacks are run with `.main(immediate: true)` strategy. It runs immediately if on the main thread, otherwise asynchronously on the main thread. The design is similar to the reactive frameworks like RxSwift. It opens a whole new area for using futures which are traditionally asynchronous by design. 
+On iOS users expect UI renders to happen synchronously. To accommodate that, by default, the callbacks are run using `Scheduler.main`. It runs work immediately if on the main thread, otherwise asynchronously on the main thread. The design is similar to the reactive frameworks like RxSwift. It opens a whole new area for using futures which are traditionally asynchronous by design. 
 
 There are three schedulers available:
 
 ```swift
-public enum Scheduler {
+enum Scheduler {
     /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
-    case main(immediate: Bool)
-    /// Runs asynchronously on the given queue.
-    case queue(DispatchQueue)
+    static var main: ScheduleWork
+
     /// Immediately executes the given closure.
-    case immediate
+    static var immediate: ScheduleWork
+
+    /// Runs asynchronously on the given queue.
+    static func async(on queue: DispatchQueue, flags: DispatchWorkItemFlags = []) -> ScheduleWork
 }
+```
+
+`ScheduleWork` is just a function so you can easily provide a custom implementation.
+
+To change the scheduler pass one into the `on` method:
+
+```swift
+future.on(scheduler: Scheduler.async(on: queue),
+          success: { print("value: \($0)" })
 ```
 
 ## Cancellation

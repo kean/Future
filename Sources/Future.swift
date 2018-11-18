@@ -86,16 +86,16 @@ public final class Future<Value, Error> {
     ///
     /// - parameters:
     ///   - scheduler: A scheduler on which the callbacks are called. By default,
-    ///     `.main(immediate: true)` which runs immediately if on the main thread,
+    ///     `Scheduler.main` which runs immediately if on the main thread,
     ///     otherwise asynchronously on the main thread.
     ///   - success: Gets called when the future has a value.
     ///   - failure: Gets called when the future has an error.
     ///   - completion: Gets called when the future has any result.
     /// - returns: Returns self so that you can continue the chain.
     @discardableResult
-    public func on(scheduler: Scheduler = .main(immediate: true), success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
-        observe(success: { value in scheduler.execute { success?(value); completion?(.success(value)) } },
-                failure: { error in scheduler.execute { failure?(error); completion?(.failure(error)) } })
+    public func on(scheduler: @escaping ScheduleWork = Scheduler.main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
+        observe(success: { value in scheduler { success?(value); completion?(.success(value)) } },
+                failure: { error in scheduler { failure?(error); completion?(.failure(error)) } })
         return self
     }
 
@@ -288,28 +288,6 @@ extension Future {
         }
     }
 
-    public enum Scheduler {
-        /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
-        case main(immediate: Bool)
-        /// Runs asynchronously on the given queue.
-        case queue(DispatchQueue)
-        /// Immediately executes the given closure.
-        case immediate
-
-        func execute(_ closure: @escaping () -> Void) {
-            switch self {
-            case let .queue(queue): queue.async(execute: closure)
-            case let .main(immediate):
-                if immediate && Thread.isMainThread {
-                    closure()
-                } else {
-                    DispatchQueue.main.async(execute: closure)
-                }
-            case .immediate: closure()
-            }
-        }
-    }
-
     private struct Handlers {
         var success = [(Value) -> Void]()
         var failure = [(Error) -> Void]()
@@ -317,6 +295,29 @@ extension Future {
 }
 
 extension Future.Result: Equatable where Value: Equatable, Error: Equatable { }
+
+// MARK: - Scheduler
+
+public typealias ScheduleWork = (_ work: @escaping () -> Void) -> Void
+
+public enum Scheduler {
+    /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
+    public static let main: ScheduleWork = { work in
+        Thread.isMainThread ? work() : DispatchQueue.main.async(execute: work)
+    }
+
+    /// Immediately executes the given closure.
+    public static let immediate: ScheduleWork = { work in
+        work()
+    }
+
+    /// Runs asynchronously on the given queue.
+    public static func async(on queue: DispatchQueue, flags: DispatchWorkItemFlags = []) -> ScheduleWork {
+        return { work in
+            queue.async(flags: flags, execute: work)
+        }
+    }
+}
 
 // MARK: - Private
 

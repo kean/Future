@@ -91,7 +91,7 @@ class AfterTests: XCTestCase {
     func testAfterCompletesOnGlobalQueueByDefault() {
         let expectation = self.expectation()
         // WHEN not passing a custom queue
-        Future.after(seconds: 0.001).on(scheduler: .immediate, success: {
+        Future.after(seconds: 0.001).on(scheduler: Scheduler.immediate, success: {
             expectation.fulfill()
         })
         wait()
@@ -102,7 +102,7 @@ class AfterTests: XCTestCase {
         let (queue, key) = DispatchQueue.specific()
 
         // WHEN setting a custom queue
-        Future.after(seconds: 0.001, on: queue).on(scheduler: .immediate, success: {
+        Future.after(seconds: 0.001, on: queue).on(scheduler: Scheduler.immediate, success: {
             XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
             expectation.fulfill()
         })
@@ -254,7 +254,7 @@ class IgnoreError: XCTestCase {
         let ignored = future.ignoreError()
 
         // EXPECT none of the callbacks to be called
-        ignored.on(scheduler: .immediate,
+        ignored.on(scheduler: Scheduler.immediate,
                    success: { _ in XCTFail() },
                    failure: { _ in XCTFail() },
                    completion: { _ in XCTFail() })

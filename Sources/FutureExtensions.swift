@@ -19,7 +19,7 @@ extension Future {
     public static func first(_ futures: [Future]) -> Future {
         let promise = Future<Value, Error>.promise
         for future in futures {
-            future.on(scheduler: .immediate, success: promise.succeed, failure: promise.fail)
+            future.on(scheduler: Scheduler.immediate, success: promise.succeed, failure: promise.fail)
         }
         return promise.future
     }
@@ -133,7 +133,7 @@ extension Future {
     /// either a success or a failure of the underlying future.
     public func materialize() -> Future<Result, Never> {
         let promise = Future<Result, Never>.promise
-        on(scheduler: .immediate, completion: promise.succeed)
+        on(scheduler: Scheduler.immediate, completion: promise.succeed)
         return promise.future
     }
 }
@@ -147,7 +147,7 @@ extension Future where Error == Swift.Error {
     /// future also throws.
     public func mapThrowing<NewValue>(_ transform: @escaping (Value) throws -> NewValue) -> Future<NewValue, Error> {
         let promise = Future<NewValue, Error>.promise
-        on(scheduler: .immediate, success: { value in
+        on(scheduler: Scheduler.immediate, success: { value in
             do { promise.succeed(value: try transform(value)) }
             catch { promise.fail(error: error) }
         }, failure: promise.fail)
@@ -199,7 +199,7 @@ extension Future {
     /// main thread!
     public func wait() -> Result {
         let semaphore = DispatchSemaphore(value: 0)
-        on(scheduler: .queue(waitQueue), completion: { _ in semaphore.signal() })
+        on(scheduler: Scheduler.async(on: waitQueue), completion: { _ in semaphore.signal() })
         semaphore.wait()
         return result! // Must have result at this point
     }

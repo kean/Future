@@ -28,6 +28,17 @@ class FutureTests: XCTestCase {
         wait()
     }
 
+    /// Check that this compiles basically.
+    func testDefaultOn() {
+        let future = Future<Int, MyError>(value: 1)
+        let expectation = self.expectation()
+        future.on { result in
+            XCTAssertEqual(result.value, 1)
+            expectation.fulfill()
+        }
+        wait()
+    }
+
     // MARK: Synchronous Resolution
 
     func testSynchronousSuccess() {
@@ -162,7 +173,7 @@ class SchedulersTest: XCTestCase {
         var isCompletedCalled = false
         // WHEN `on` called on the main thread
         // EXPECT callbacks to be called synchronously
-        future.on(scheduler: .immediate,
+        future.on(scheduler: Scheduler.immediate,
                   success: { _ in isSuccessCalled = true },
                   completion: { _ in isCompletedCalled = true }
         )
@@ -185,7 +196,7 @@ class SchedulersTest: XCTestCase {
             // WHEN `on` called on the background thread
             // EXPECT callbacks to be called synchronously
             future.on(
-                scheduler: .immediate,
+                scheduler: Scheduler.immediate,
                 success: { _ in
                     isSuccessCalled = true
                     XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
@@ -221,7 +232,7 @@ class SchedulersTest: XCTestCase {
         // WHEN `on` called on the background thread
         // EXPECT callbacks to be called synchronously
         future.on(
-            scheduler: .queue(queue),
+            scheduler: Scheduler.async(on: queue),
             success: { _ in
                 isSuccessCalled = true
                 XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
