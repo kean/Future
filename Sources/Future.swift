@@ -280,11 +280,6 @@ extension Future {
             future.fail(error)
         }
     }
-
-    private struct Handlers {
-        var success = [(Value) -> Void]()
-        var failure = [(Error) -> Void]()
-    }
 }
 
 extension Future.Result: Equatable where Value: Equatable, Error: Equatable { }
