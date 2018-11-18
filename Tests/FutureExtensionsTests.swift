@@ -188,11 +188,11 @@ class RetryTests: XCTestCase {
     }
 }
 
-class MapThrowing: XCTestCase {
-    func testMapThrowing() {
+class TryMapTests: XCTestCase {
+    func testTryMap() {
         let future = Future<Int, Swift.Error>(value: 1)
 
-        let result = future.mapThrowing { _ in
+        let result = future.tryMap { _ in
             throw URLError(.unknown)
         }
 
