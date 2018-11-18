@@ -10,7 +10,7 @@
 
 <hr/>
 
-A future represents a result of a computation which may be available now, or in the future, or never. `FutureX` provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others.
+A future represents a result of a computation which may be available now, or in the future, or never.  `FutureX` provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others.
 
 ## Getting Started
 
@@ -76,7 +76,7 @@ future.on(success: { print("received value: \($0)" },
           completion: { print("completed with result: \($0)" })
 ```
 
-The callbacks are optional - you don't have to attach all at the same time.  `on` returns `self` so that you can continue the chain.
+Each callback is optional - you don't have to attach all at the same time. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. 
 
 By default the callbacks are run on `.main(immediate: true)` scheduler. It runs immediately if on the main thread, otherwise asynchronously on the main thread. To change the scheduler pass one into the `on` method:
 
@@ -95,7 +95,7 @@ Use `wait` method to block the current thread and wait until the future receives
 let result = future.wait() // Mostly useful for testing and debugging
 ```
 
-If the future already has a result you can read is synchronously:
+If the future already has a result you can read it synchronously:
 
 ```swift
 class Future<Value, Error> {
@@ -165,18 +165,18 @@ Future.reduce(0, [future1, future2], +).on(success: { value in
 
 ## Additions
 
-In addition to the primary interface there is also a set of extensions to `Future` which include multiple convenience functions. Not all of them are mentioned here, look into `FutureExtensions.swift` to find more!
+In addition to the primary interface, there is also a set of extensions to `Future` which includes multiple convenience functions. Not all of them are mentioned here, look into `FutureExtensions.swift` to find more!
 
 ### First, ForEach
 
-First waits for the first future to resolve:
+Use `first` to wait for a first future to succeed:
 
 ```swift
 let requests: [Future<Value, Error>]
 Future.first(requests).on(success: { print("got response!") })
 ```
 
-ForEach performs futures sequentially:
+Use `forEach` to perform the work in a sequence:
 
 ```swift
 // `startWork` is a function that returns a future
@@ -188,21 +188,21 @@ Future.forEach([startWork, startOtherWork]) { future in
 
 ### After, Retry
 
-After returns a future which succeeds after a given time interval.
+Use `after` to produce a value after a given time interval.
 
 ```swift
 Future.after(seconds: 2).on(success: { print("2 seconds have passed") })
 ```
 
-Retry performs the given number of attempts to finish the work successfully.
+Use `retry` to perform the given number of attempts to finish the work successfully.
 
 ```swift
-Future.retry(attempts: 3, delay: .seconds(3)) {
-    startSomeWork()
-}
+func startSomeWork() -> Future<Value, Error>
+
+Future.retry(attempts: 3, delay: .seconds(3), startSomeWork)
 ```
 
-Retry is very flexible, it allows you to specify multiple delay strategies including exponential backoff, to inspect the error before retrying and more.
+Retry is flexible. It allows you to specify multiple delay strategies including exponential backoff, to inspect the error before retrying and more.
 
 ### Materialize
 
@@ -219,9 +219,9 @@ Future.zip(futures.map { $0.materialize() }).on(success: { results in
 
 ## Threading
 
-On iOS users expect UI renders to happen synchronously. To accomodate that, by default, the callbacks are run with `.main(immediate: true)` strategy. It runs immediately if on the main thread, otherwise asynchronously on the main thread. The design is similar to the reactive frameworks like RxSwift. It opens a whole new area for using futures which are traditionally asynchronous by design. 
+On iOS users expect UI renders to happen synchronously. To accommodate that, by default, the callbacks are run with `.main(immediate: true)` strategy. It runs immediately if on the main thread, otherwise asynchronously on the main thread. The design is similar to the reactive frameworks like RxSwift. It opens a whole new area for using futures which are traditionally asynchronous by design. 
 
-Overall there are three differnet schedulers available:
+There are three schedulers available:
 
 ```swift
 public enum Scheduler {
