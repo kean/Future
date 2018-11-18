@@ -223,17 +223,13 @@ extension Future where Value == Any, Error == Any {
     /// Returns a future which succeedes when all the given futures succeed. If
     /// any of the futures fail, the returned future also fails with that error.
     public static func zip<V1, V2, V3, E>(_ f1: Future<V1, E>, _ f2: Future<V2, E>, _ f3: Future<V3, E>) -> Future<(V1, V2, V3), E> {
-        return Future.zip(f1, Future.zip(f2, f3)).map { value in
-            return (value.0, value.1.0, value.1.1)
-        }
+        return Future.zip(f1, Future.zip(f2, f3)).map { ($0.0, $0.1.0, $0.1.1) }
     }
 
     /// Returns a future which succeedes when all the given futures succeed. If
     /// any of the futures fail, the returned future also fails with that error.
     public static func zip<V, E>(_ futures: [Future<V, E>]) -> Future<[V], E> {
-        return Future.reduce([V](), futures) { result, value in
-            result + [value]
-        }
+        return Future.reduce([V](), futures) { $0 + [$1] }
     }
 }
 
@@ -252,7 +248,7 @@ extension Future where Value == Any, Error == Any {
     }
 }
 
-// MARK: - Result, Scheduler, Promise
+// MARK: - Result, Promise
 
 extension Future {
 
