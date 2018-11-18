@@ -24,7 +24,7 @@ import Foundation
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
 public final class Future<Value, Error> {
     private var memoizedResult: Result? // nil when pending
-    private var handlers: Handlers?
+    private var handlers: [(Result) -> Void]?
 
     // MARK: Create
 
@@ -74,10 +74,7 @@ public final class Future<Value, Error> {
         self.handlers = nil
         lock.unlock()
 
-        switch result {
-        case let .success(value): handlers?.success.forEach { $0(value) }
-        case let .failure(error): handlers?.failure.forEach { $0(error) }
-        }
+        handlers?.forEach { $0(result) }
     }
 
     // MARK: Callbacks
@@ -94,41 +91,29 @@ public final class Future<Value, Error> {
     /// - returns: Returns self so that you can continue the chain.
     @discardableResult
     public func on(scheduler: @escaping ScheduleWork = Scheduler.main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
-        observe(success: { value in scheduler { success?(value); completion?(.success(value)) } },
-                failure: { error in scheduler { failure?(error); completion?(.failure(error)) } })
+        observe { result in
+            scheduler {
+                switch result {
+                case let .success(value): success?(value)
+                case let .failure(error): failure?(error)
+                }
+                completion?(result)
+            }
+        }
         return self
     }
 
-    private func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
+    private func observe(completion: @escaping (Result) -> Void) {
         lock.lock()
         guard let result = self.memoizedResult else {
             // Create handlers lazily - in some cases they are no needed
-            handlers = handlers ?? Handlers()
-            handlers?.success.append(success)
-            handlers?.failure.append(failure)
+            handlers = handlers ?? []
+            handlers?.append(completion)
             lock.unlock(); return // Still pending, handlers attached
         }
         lock.unlock()
 
-        switch result {
-        case let .success(value): success(value)
-        case let .failure(error): failure(error)
-        }
-    }
-
-    /// Resolves the given future with the result of the current future.
-    /// `cascade` is just a slight convenience and a performance optimization,
-    /// the users have an analog of `cascade`: `on(scheduler: .immediate)`
-    private func cascade(_ future: Future) {
-        observe(success: future.succeed, failure: future.fail)
-    }
-
-    private func cascade<NewValue>(_ future: Future<NewValue, Error>, success: @escaping (Value) -> Void) {
-        observe(success: success, failure: future.fail)
-    }
-
-    private func cascade<NewError>(_ future: Future<Value, NewError>, failure: @escaping (Error) -> Void) {
-        observe(success: future.succeed , failure: failure)
+        completion(result)
     }
 
     // MARK: Synchronous Inspection
@@ -200,6 +185,18 @@ extension Future {
         let future = Future<Value, NewError>()
         cascade(future, failure: { transform($0).cascade(future) })
         return future
+    }
+
+    private func cascade(_ future: Future) {
+        on(scheduler: Scheduler.immediate, completion: future.resolve)
+    }
+
+    private func cascade<NewValue>(_ future: Future<NewValue, Error>, success: @escaping (Value) -> Void) {
+        on(scheduler: Scheduler.immediate, success: success, failure: future.fail)
+    }
+
+    private func cascade<NewError>(_ future: Future<Value, NewError>, failure: @escaping (Error) -> Void) {
+        on(scheduler: Scheduler.immediate, success: future.succeed, failure: failure)
     }
 }
 
