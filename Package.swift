@@ -1,9 +1,13 @@
-// The MIT License (MIT)
-//
-// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
+// swift-tools-version:4.2
 
 import PackageDescription
 
 let package = Package(
-    name: "FutureX"
+    name: "Future",
+    products: [
+        .library(name: "Future", targets: ["Future"])
+    ],
+    targets: [
+        .target(name: "Future", path: "Sources")
+    ]
 )

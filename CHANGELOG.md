@@ -1,6 +1,7 @@
 # FutureX 0.12
 
 - Remove `Scheduler` enum, it's a simple function now. See [**Threading**](https://github.com/kean/FutureX#threading) for more info.
+- Add Swift Package Manager support
 - Update README.md
 
 # FutureX 0.11
