@@ -86,6 +86,15 @@ public final class Future<Value, Error> {
 
     /// Attach callbacks to execute when the future has a result.
     ///
+    /// See `on(scheduler:success:failure:completion:)` for more info.
+    @discardableResult
+    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
+        // We don't use a default argument because this results in a more convenience code completion.
+        return self.on(scheduler:Scheduler.main, success: success, failure: failure, completion: completion)
+    }
+
+    /// Attach callbacks to execute when the future has a result.
+    ///
     /// - parameters:
     ///   - scheduler: A scheduler on which the callbacks are called. By default,
     ///     `Scheduler.main` which runs immediately if on the main thread,
@@ -95,7 +104,7 @@ public final class Future<Value, Error> {
     ///   - completion: Gets called when the future is resolved.
     /// - returns: Returns self so that you can continue the chain.
     @discardableResult
-    public func on(scheduler: @escaping ScheduleWork = Scheduler.main, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
+    public func on(scheduler: @escaping ScheduleWork, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
         observe { result in
             scheduler {
                 switch result {
