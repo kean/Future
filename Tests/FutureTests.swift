@@ -404,6 +404,19 @@ class FlatMapErrorTests: XCTestCase {
         wait()
     }
 
+    func testFlatMapErrorToNever() {
+        // GIVEN failed future
+        let future = Future<Int, MyError>(error: .e1)
+
+        // WHEN recovering from error and failing again
+        let mapped = future.flatMapError { _ in
+            return Future<Int, Never>(value: 1)
+        }
+
+        // EXPECT mapped to be of type Future<Int, Never>
+        XCTAssertEqual(mapped.value, 1)
+    }
+
     // Test that `Future` never dispatches to the main queue internally.
     func testWait() {
         let promise = Future<Int, MyError>.promise
