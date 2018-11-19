@@ -108,6 +108,16 @@ class FutureTests: XCTestCase {
         // EXPECT future to return value
         XCTAssertEqual(future.result?.value, 1)
     }
+
+    // MARK: Disambiguate Init
+
+    func testDisambiguateInit() {
+        // GIVEN future with no explicit error type
+        let future = Future(value: 1)
+
+        // EXPECT error type to be automatically inferred to be Never
+        XCTAssertEqual(future.value, 1)
+    }
 }
 
 class SchedulersTest: XCTestCase {
@@ -315,6 +325,43 @@ class MapErrorTest: XCTestCase {
         }
 
         XCTAssertEqual(mapped.wait().error, "e1")
+    }
+}
+
+class FlatMapVariantsTests: XCTestCase {
+    func testFlatMap() {
+        let future = Future<Int, MyError>(value: 1).flatMap {
+            Future<Int, MyError>(value: $0 + 1)
+        }
+        XCTAssertEqual(future.value, 2)
+    }
+
+    func testFlatMapFromNever() {
+        let future = Future<Int, Never>(value: 1).flatMap {
+            Future<Int, MyError>(value: $0 + 1)
+        }
+        XCTAssertEqual(future.value, 2)
+    }
+
+    func flatMapToNever() {
+        let future = Future<Int, MyError>(value: 1).flatMap {
+            Future<Int, Never>(value: $0 + 1)
+        }
+        XCTAssertEqual(future.value, 2)
+    }
+
+    func flatMapFromNeverToNever() {
+        let future = Future<Int, Never>(value: 1).flatMap {
+            Future<Int, Never>(value: $0 + 1)
+        }
+        XCTAssertEqual(future.value, 2)
+    }
+
+    func testFlatMapNeverToNeverImplicit() {
+        let future = Future(value: 1).flatMap {
+            Future(value: $0 + 1)
+        }
+        XCTAssertEqual(future.value, 2)
     }
 }
 

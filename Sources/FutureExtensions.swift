@@ -116,7 +116,7 @@ extension Future {
     public static func forEach(_ futures: [() -> Future], _ subscribe: @escaping (Future) -> Void) -> Future<Void, Error> {
         let initial = Future<Void, Error>(value: ())
         return futures.reduce(initial) { result, next in
-            return result.flatMap {
+            result.flatMap { _ -> Future<Void, Error> in
                 let future = next()
                 subscribe(future)
                 return future.asVoid()

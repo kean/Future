@@ -45,13 +45,18 @@ public final class Future<Value, Error> {
     init() {}
 
     /// Creates a future with a given value.
-    public init(value: Value) {
-        self.memoizedResult = .success(value)
+    public convenience init(value: Value) {
+        self.init(result: .success(value))
     }
 
     /// Creates a future with a given error.
-    public init(error: Error) {
-        self.memoizedResult = .failure(error)
+    public convenience init(error: Error) {
+        self.init(result: .failure(error))
+    }
+
+    /// Creates a future with a given result.
+    public init(result: Result) {
+        self.memoizedResult = result
     }
 
     // MARK: State Transitions
@@ -147,7 +152,21 @@ public final class Future<Value, Error> {
     }
 }
 
-// MARK: - Map, FlatMap, MapError, FlatMapError
+extension Future where Error == Never {
+    func observe(success: @escaping (Value) -> Void) {
+        observe(success: success, failure: { _ in fatalError("Can never happen") })
+    }
+}
+
+// MARK: - Disambiguate Init
+
+extension Future where Error == Never {
+    public convenience init(value: Value) {
+        self.init(result: .success(value))
+    }
+}
+
+// MARK: - Map, FlatMap
 
 extension Future {
 
@@ -179,6 +198,30 @@ extension Future {
         return future
     }
 
+    public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Never>) -> Future<NewValue, Error> {
+        let future = Future<NewValue, Error>()
+        observe(success: { transform($0).observe(success: future.succeed) }, failure: future.fail)
+        return future
+    }
+}
+
+extension Future where Error == Never {
+    public func flatMap<NewValue, NewError>(_ transform: @escaping (Value) -> Future<NewValue, NewError>) -> Future<NewValue, NewError> {
+        let future = Future<NewValue, NewError>()
+        observe(success: { transform($0).observe(completion: future.resolve) })
+        return future
+    }
+
+    public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
+        let future = Future<NewValue, Error>()
+        observe(success: { transform($0).observe(completion: future.resolve) })
+        return future
+    }
+}
+
+// MARK: - MapError, FlatMapError
+
+extension Future {
     /// Returns a future with the error which is the result of mapping the given
     /// closure over the current future's error.
     public func mapError<NewError>(_ transform: @escaping (Error) -> NewError) -> Future<Value, NewError> {
