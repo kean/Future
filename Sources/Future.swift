@@ -207,6 +207,9 @@ extension Future {
         return future
     }
 
+    // Allow:
+    // Future<T, E>.flatMap { Future<T, Never> }
+
     public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Never>) -> Future<NewValue, Error> {
         let future = Future<NewValue, Error>()
         observe(success: { transform($0).observe(success: future.succeed) }, failure: future.fail)
@@ -215,6 +218,10 @@ extension Future {
 }
 
 extension Future where Error == Never {
+    // Allow:
+    // Future<T, Never>.flatMap { Future<T, E> }
+    // Future<T, Never>.flatMap { Future<T, Never } // disambiguate
+
     public func flatMap<NewValue, NewError>(_ transform: @escaping (Value) -> Future<NewValue, NewError>) -> Future<NewValue, NewError> {
         let future = Future<NewValue, NewError>()
         observe(success: { transform($0).observe(completion: future.resolve) })
