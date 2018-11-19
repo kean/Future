@@ -322,6 +322,11 @@ extension Future {
         public func fail(error: Error) {
             future.fail(error)
         }
+
+        /// Sends a result to the associated future.
+        public func resolve(result: Result) {
+            future.resolve(result)
+        }
     }
 }
 

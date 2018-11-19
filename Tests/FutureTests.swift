@@ -118,6 +118,14 @@ class FutureTests: XCTestCase {
         // EXPECT error type to be automatically inferred to be Never
         XCTAssertEqual(future.value, 1)
     }
+
+    // MARK: Resolve Result
+
+    func testPromiseResolve() {
+        let promise = Future<Int, MyError>.promise
+        promise.resolve(result: .success(1))
+        XCTAssertEqual(promise.future.value, 1)
+    }
 }
 
 class SchedulersTest: XCTestCase {
