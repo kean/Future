@@ -187,6 +187,10 @@ extension Future {
         return future
     }
 
+    // Allow:
+    // Future<T, E>.flatMap { Future<U, E> }
+    // Future<T, E>.flatMap { Future<U, Never> }
+
     /// Returns a future which is eventually resolved with the result of the
     /// future returned by the `transform` closure. The `transform` closure is
     /// called when the current future receives a value.
@@ -207,10 +211,9 @@ extension Future {
         return future
     }
 
-    // Allow:
-    // Future<T, E>.flatMap { Future<T, Never> }
-
     public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Never>) -> Future<NewValue, Error> {
+        // Technically the same as `flatMap { transform($0).castError() }`, but
+        // we're doing it from scratch to avoid additional allocations from `castError`
         let future = Future<NewValue, Error>()
         observe(success: { transform($0).observe(success: future.succeed) }, failure: future.fail)
         return future
@@ -219,8 +222,8 @@ extension Future {
 
 extension Future where Error == Never {
     // Allow:
-    // Future<T, Never>.flatMap { Future<T, E> }
-    // Future<T, Never>.flatMap { Future<T, Never } // disambiguate
+    // Future<T, Never>.flatMap { Future<U, E> }
+    // Future<T, Never>.flatMap { Future<U, Never> } // disambiguate
 
     public func flatMap<NewValue, NewError>(_ transform: @escaping (Value) -> Future<NewValue, NewError>) -> Future<NewValue, NewError> {
         let future = Future<NewValue, NewError>()
@@ -228,9 +231,9 @@ extension Future where Error == Never {
         return future
     }
 
-    public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
-        let future = Future<NewValue, Error>()
-        observe(success: { transform($0).observe(completion: future.resolve) })
+    public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Never>) -> Future<NewValue, Never> {
+        let future = Future<NewValue, Never>()
+        observe(success: { transform($0).observe(success: future.succeed) })
         return future
     }
 }
