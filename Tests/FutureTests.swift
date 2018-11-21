@@ -191,9 +191,9 @@ class SchedulersTest: XCTestCase {
         var isCompletedCalled = false
         // WHEN `on` called on the main thread
         // EXPECT callbacks to be called synchronously
-        future.on(scheduler: Scheduler.immediate,
-                  success: { _ in isSuccessCalled = true },
-                  completion: { _ in isCompletedCalled = true }
+        future.observe(on: Scheduler.immediate)
+            .on(success: { _ in isSuccessCalled = true },
+                completion: { _ in isCompletedCalled = true }
         )
         XCTAssertTrue(isSuccessCalled)
         XCTAssertTrue(isCompletedCalled)
@@ -213,17 +213,16 @@ class SchedulersTest: XCTestCase {
             var isCompletedCalled = false
             // WHEN `on` called on the background thread
             // EXPECT callbacks to be called synchronously
-            future.on(
-                scheduler: Scheduler.immediate,
-                success: { _ in
+            future.observe(on: Scheduler.immediate)
+                .on(success: { _ in
                     isSuccessCalled = true
                     XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                     expectation.fulfill()
                 },
-                completion: { _ in
-                    isCompletedCalled = true
-                    XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
-                    expectation.fulfill()
+                    completion: { _ in
+                        isCompletedCalled = true
+                        XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
+                        expectation.fulfill()
                 }
             )
             XCTAssertTrue(isSuccessCalled)
@@ -249,17 +248,16 @@ class SchedulersTest: XCTestCase {
         var isCompletedCalled = false
         // WHEN `on` called on the background thread
         // EXPECT callbacks to be called synchronously
-        future.on(
-            scheduler: Scheduler.async(on: queue),
-            success: { _ in
+        future.observe(on: queue)
+            .on(success: { _ in
                 isSuccessCalled = true
                 XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                 expectation.fulfill()
             },
-            completion: { _ in
-                isCompletedCalled = true
-                XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
-                expectation.fulfill()
+                completion: { _ in
+                    isCompletedCalled = true
+                    XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
+                    expectation.fulfill()
             }
         )
         XCTAssertFalse(isSuccessCalled)
@@ -738,6 +736,57 @@ class ReduceTests: XCTestCase {
         }
 
         XCTAssertEqual(result.wait().value, 3)
+    }
+}
+
+class ObserveOnTests: XCTestCase {
+    func testObserveOn() {
+        let (queue, key) = DispatchQueue.specific()
+
+        let future = Future(value: 1)
+        let observedOn = future.observe(on: Scheduler.async(on: queue))
+
+        let expectation = self.expectation()
+        expectation.expectedFulfillmentCount = 2
+
+        // EXPECT original future to be observed on `Scheduler.main`
+        future.on(success: { _ in
+            XCTAssertTrue(Thread.isMainThread)
+            expectation.fulfill()
+        })
+
+        // EXPECT new future (`future.observe(on))` to be observed on selected queue
+        observedOn.on(success: { _ in
+            XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
+            expectation.fulfill()
+        })
+
+        wait()
+    }
+
+    func testObserveOnMap() {
+        let (queue, _) = DispatchQueue.specific()
+
+        let future = Future(value: 1).observe(on: queue)
+
+        let expectation = self.expectation()
+        expectation.expectedFulfillmentCount = 2
+
+        let result = future.map { _ -> Int in
+            // EXPECT map to still be called on the queue on which the
+            XCTAssertTrue(Thread.isMainThread)
+            expectation.fulfill()
+            return 2
+        }
+
+        result.on(success: { value in
+            // EXPECT success to be called on main queue
+            XCTAssertTrue(Thread.isMainThread)
+            XCTAssertEqual(value, 2)
+            expectation.fulfill()
+        })
+
+        wait()
     }
 }
 

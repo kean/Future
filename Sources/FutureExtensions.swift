@@ -19,7 +19,7 @@ extension Future {
     public static func first(_ futures: [Future]) -> Future {
         let promise = Future<Value, Error>.Promise()
         for future in futures {
-            future.observe(completion: promise.resolve)
+            future.cascade(completion: promise.resolve)
         }
         return promise.future
     }
@@ -133,7 +133,7 @@ extension Future {
     /// either a success or a failure of the underlying future.
     public func materialize() -> Future<Result, Never> {
         let promise = Future<Result, Never>.Promise()
-        observe(completion: promise.succeed)
+        cascade(completion: promise.succeed)
         return promise.future
     }
 }
@@ -155,7 +155,7 @@ extension Future where Error == Swift.Error {
         // }
 
         let promise = Future<NewValue, Error>.Promise()
-        observe(success: { value in
+        cascade(success: { value in
             do { promise.succeed(value: try transform(value)) }
             catch { promise.fail(error: error) }
         }, failure: promise.fail)
@@ -196,7 +196,9 @@ extension Future {
     /// main thread!
     public func wait() -> Result {
         let semaphore = DispatchSemaphore(value: 0)
-        on(scheduler: Scheduler.async(on: waitQueue), completion: { _ in semaphore.signal() })
+        observe(on: waitQueue).on(completion: { _
+            in semaphore.signal()
+        })
         semaphore.wait()
         return result! // Must have result at this point
     }

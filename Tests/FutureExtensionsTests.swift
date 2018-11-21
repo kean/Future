@@ -88,27 +88,6 @@ class AfterTests: XCTestCase {
         wait()
     }
 
-    func testAfterCompletesOnGlobalQueueByDefault() {
-        let expectation = self.expectation()
-        // WHEN not passing a custom queue
-        Future.after(seconds: 0.001).on(scheduler: Scheduler.immediate, success: {
-            expectation.fulfill()
-        })
-        wait()
-    }
-
-    func testAfterCompletesOnGivenQueue() {
-        let expectation = self.expectation()
-        let (queue, key) = DispatchQueue.specific()
-
-        // WHEN setting a custom queue
-        Future.after(seconds: 0.001, on: queue).on(scheduler: Scheduler.immediate, success: {
-            XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
-            expectation.fulfill()
-        })
-        wait()
-    }
-
     func testAfterAndWait() {
         let after = Future.after(seconds: 0.001, on: .global())
         XCTAssertNotNil(after.wait())

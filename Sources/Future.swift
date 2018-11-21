@@ -34,6 +34,7 @@ public struct Future<Value, Error> {
     }
 
     private let resolver: Resolver
+    private let scheduler: ScheduleWork
 
     // MARK: Create
 
@@ -44,12 +45,13 @@ public struct Future<Value, Error> {
     /// or `fail` when it completes.
     public init(_ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
         let promise = Promise()
-        self.resolver = .promise(promise)
+        self.init(resolver: .promise(promise))
         closure(promise.succeed, promise.fail) // retain self
     }
 
-    private init(resolver: Resolver = .promise(Promise())) {
+    private init(resolver: Resolver = .promise(Promise()), scheduler: @escaping ScheduleWork = Scheduler.main) {
         self.resolver = resolver
+        self.scheduler = scheduler
     }
 
     /// Creates a future with a given value.
@@ -64,33 +66,37 @@ public struct Future<Value, Error> {
 
     /// Creates a future with a given result.
     public init(result: Result) {
-        self.resolver = .result(result)
+        self.init(resolver: .result(result))
     }
 
     // MARK: Callbacks
 
-    /// Attach callbacks to execute when the future has a result.
-    ///
-    /// See `on(scheduler:success:failure:completion:)` for more info.
-    @discardableResult
-    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
-        // We don't use a default argument because this results in a more convenience code completion.
-        return self.on(scheduler: Scheduler.main, success: success, failure: failure, completion: completion)
+    /// Returns a new future which dispatches the callbacks on the given scheduler.
+    /// This includes both `on` method and the composition functions like `map`.
+    public func observe(on queue: DispatchQueue) -> Future {
+        return Future(resolver: resolver, scheduler: Scheduler.async(on: queue))
+    }
+
+    /// Returns a new future which dispatches the callbacks on the given scheduler.
+    /// This includes both `on` method and the composition functions like `map`.
+    public func observe(on scheduler: @escaping ScheduleWork) -> Future {
+        return Future(resolver: resolver, scheduler: scheduler)
     }
 
     /// Attach callbacks to execute when the future has a result.
     ///
+    /// By default, the callbacks are run on `Scheduler.main` which runs immediately
+    /// if on the main thread, otherwise asynchronously on the main thread.
+    ///
     /// - parameters:
-    ///   - scheduler: A scheduler on which the callbacks are called. By default,
-    ///     `Scheduler.main` which runs immediately if on the main thread,
-    ///     otherwise asynchronously on the main thread.
     ///   - success: Gets called when the future is resolved successfully.
     ///   - failure: Gets called when the future is resolved with an error.
     ///   - completion: Gets called when the future is resolved.
     /// - returns: Returns self so that you can continue the chain.
     @discardableResult
-    public func on(scheduler: @escaping ScheduleWork, success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
-        observe { result in
+    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
+        let scheduler = self.scheduler
+        cascade { result in
             scheduler {
                 switch result {
                 case let .success(value): success?(value)
@@ -102,7 +108,7 @@ public struct Future<Value, Error> {
         return self
     }
 
-    func observe(completion: @escaping (Result) -> Void) {
+    func cascade(completion: @escaping (Result) -> Void) {
         switch resolver {
         case let .promise(promise):
             promise.observe(completion: completion)
@@ -114,8 +120,8 @@ public struct Future<Value, Error> {
     // At convenience method which is used for implementing cascades of futures.
     // It calls `observe(completion:)` directly for performance but technically,
     // it could be implemented in terms of public `on(scheduler: Scheduler.immediate`.
-    func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
-        observe { result in
+    func cascade(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
+        cascade { result in
             switch result {
             case let .success(value): success(value)
             case let .failure(error): failure(error)
@@ -147,8 +153,8 @@ public struct Future<Value, Error> {
 }
 
 extension Future where Error == Never {
-    func observe(success: @escaping (Value) -> Void) {
-        observe(success: success, failure: { _ in fatalError("Future<Value, Never> can't produce an error") })
+    func cascade(success: @escaping (Value) -> Void) {
+        cascade(success: success, failure: { _ in fatalError("Future<Value, Never> can't produce an error") })
     }
 }
 
@@ -170,7 +176,7 @@ extension Future {
         // Technically the same as `flatMap { Future<NewValue, Error>(value: transform($0) }`
         // but this implementation is optimized for performance.
         let promise = Future<NewValue, Error>.Promise()
-        observe(success: { promise.succeed(value: transform($0)) }, failure: promise.fail)
+        cascade(success: { promise.succeed(value: transform($0)) }, failure: promise.fail)
         return promise.future
     }
 
@@ -194,7 +200,7 @@ extension Future {
     /// ```
     public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
         let promise = Future<NewValue, Error>.Promise()
-        observe(success: { transform($0).observe(completion: promise.resolve) }, failure: promise.fail)
+        cascade(success: { transform($0).cascade(completion: promise.resolve) }, failure: promise.fail)
         return promise.future
     }
 
@@ -202,7 +208,7 @@ extension Future {
         // Technically the same as `flatMap { transform($0).castError() }`, but
         // we're doing it from scratch to avoid additional allocations from `castError`
         let promise = Future<NewValue, Error>.Promise()
-        observe(success: { transform($0).observe(success: promise.succeed) }, failure: promise.fail)
+        cascade(success: { transform($0).cascade(success: promise.succeed) }, failure: promise.fail)
         return promise.future
     }
 }
@@ -214,13 +220,13 @@ extension Future where Error == Never {
 
     public func flatMap<NewValue, NewError>(_ transform: @escaping (Value) -> Future<NewValue, NewError>) -> Future<NewValue, NewError> {
         let promise = Future<NewValue, NewError>.Promise()
-        observe(success: { transform($0).observe(completion: promise.resolve) })
+        cascade(success: { transform($0).cascade(completion: promise.resolve) })
         return promise.future
     }
 
     public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Never>) -> Future<NewValue, Never> {
         let promise = Future<NewValue, Never>.Promise()
-        observe(success: { transform($0).observe(success: promise.succeed) })
+        cascade(success: { transform($0).cascade(success: promise.succeed) })
         return promise.future
     }
 }
@@ -232,7 +238,7 @@ extension Future {
     /// closure over the current future's error.
     public func mapError<NewError>(_ transform: @escaping (Error) -> NewError) -> Future<Value, NewError> {
         let promise = Future<Value, NewError>.Promise()
-        observe(success: promise.succeed, failure: { promise.fail(error: transform($0)) })
+        cascade(success: promise.succeed, failure: { promise.fail(error: transform($0)) })
         return promise.future
     }
 
@@ -244,7 +250,7 @@ extension Future {
     /// with a new future.
     public func flatMapError<NewError>(_ transform: @escaping (Error) -> Future<Value, NewError>) -> Future<Value, NewError> {
         let promise = Future<Value, NewError>.Promise()
-        observe(success: promise.succeed, failure: { transform($0).observe(completion: promise.resolve) })
+        cascade(success: promise.succeed, failure: { transform($0).cascade(completion: promise.resolve) })
         return promise.future
     }
 }
@@ -261,8 +267,8 @@ extension Future where Value == Any, Error == Any {
             guard let v1 = f1.value, let v2 = f2.value else { return }
             promise.succeed(value: (v1, v2))
         }
-        f1.observe(success: success, failure: promise.fail)
-        f2.observe(success: success, failure: promise.fail)
+        f1.cascade(success: success, failure: promise.fail)
+        f2.cascade(success: success, failure: promise.fail)
         return promise.future
     }
 
