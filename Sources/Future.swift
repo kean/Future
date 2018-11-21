@@ -324,6 +324,7 @@ extension Future {
     public final class Promise {
         private var memoizedResult: Result? // nil when pending
         private var handlers: [(Result) -> Void]?
+        private let lock = NSLock()
 
         /// Creates a new pending promise.
         public init() {}
@@ -405,9 +406,3 @@ public enum Scheduler {
         }
     }
 }
-
-// MARK: - Private
-
-// Using the same lock across instances is safe because Future doesn't invoke
-// any client code inside it.
-private let lock = NSLock()
