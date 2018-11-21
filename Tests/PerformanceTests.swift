@@ -39,25 +39,15 @@ class PromisePerformanceTests: XCTestCase {
     // MARK: - Attach Callbacks
 
     func testOnValue() {
-        let futures = (0..<50_000).map { _ in Future<Int, Void>(value: 1) }
-
-        let expectation = self.expectation()
-        var finished = 0
+        let futures = (0..<50_000).map { _ in Future(value: 1) }
 
         measure {
             for future in futures {
                 future.on(success: { _ in
-                    finished += 1
-                    if finished == futures.count {
-                        expectation.fulfill()
-                    }
-
                     return // do nothing
                 })
             }
         }
-
-        wait() // wait so that next test aren't affected
     }
 
     func testFulfill() {
@@ -88,7 +78,7 @@ class PromisePerformanceTests: XCTestCase {
 
     func testAttachingCallbacksToResolvedFuture() {
         measure {
-            for _ in Array(0..<5000) {
+            for _ in 0..<5000 {
                 let promise = Promise<Int, Error>()
                 let future = promise.future
 
@@ -99,13 +89,31 @@ class PromisePerformanceTests: XCTestCase {
         }
     }
 
+    // MARK: - Fulfilling From Multiple Threads
+
+    func testResolveFromMultipleThreads() {
+        let promises = Array(0..<10).map { _ in
+            Array(0..<10000).map { _ in
+                Promise<Int, Never>()
+            }
+        }
+
+        measure {
+            DispatchQueue.concurrentPerform(iterations: 10) { iteration in
+                for promise in promises[iteration] {
+                    promise.succeed(value: 1)
+                }
+            }
+        }
+    }
+
     // MARK: - How Long the Whole Chain Takes
 
     func testChain() {
         measure {
             var remaining = 5000
             let expecation = self.expectation()
-            for _ in Array(0..<5000) {
+            for _ in 0..<5000 {
                 let future = Future<Int, Void>(value: 1)
                     .map { $0 + 1 }
                     .flatMap { Future<Int, Void>(value: $0 + 1) }
@@ -126,7 +134,7 @@ class PromisePerformanceTests: XCTestCase {
         measure {
             var remaining = 5000
             let expecation = self.expectation()
-            for _ in Array(0..<5000) {
+            for _ in 0..<5000 {
                 let future = Future.zip([
                     Future<Int, Void>(value: 1),
                     Future<Int, Void>(value: 2),
