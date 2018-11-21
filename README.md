@@ -36,12 +36,12 @@ A future represents a result of a computation which may be available now, or in 
 Using `Promise`:
 
 ```swift
-func someAsyncOperation(args) -> Future<Value, Error> {
+func someAsyncOperation() -> Future<Value, Error> {
     let promise = Promise<Value, Error>()
-    someAsyncOperationWithCallback(args) { value, error in
-        // when finished...
+    someAsyncOperationWithCallback { value, error in
+        // If success
         promise.succeed(result: value)
-        // if error...
+        // If error
         promise.fail(error: error)
     }
     return promise.future
@@ -53,7 +53,7 @@ Using a convenience init method:
 ```swift
 let future = Future<Int, Error> { succeed, fail in
     someAsyncOperationWithCallback { value, error in
-        // succeed or fail
+        // Succeed or fail
     }
 }
 ```
@@ -61,7 +61,7 @@ let future = Future<Int, Error> { succeed, fail in
 With a value or an error:
 
 ```swift
-Future(value: 1) // Autmatically inferred to be Future<Int, Never>
+Future(value: 1) // Automatically inferred to be Future<Int, Never>
 Future<Int, MyError>(value: 1)
 Future<Int, MyError>(error: .unknown)
 ```
