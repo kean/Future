@@ -1,3 +1,26 @@
+# FutureX 0.13
+
+This release is about performance and quality of life improvements.
+
+## Ergonomic Improvements
+
+- Supercharged `flatMap`. Add options which allow combinations of `Future<T, E>.flatMap { Future<T, Never> }` and `Future<T, Never>.flatMap { Future<T, E> }`
+- Instead of a convoluted  `on(scheduler:success:failure:completion:)` method to change a scheduler you now call a separate `observe(on scheduler:)` or `observe(on queue)` (new!) method before attaching callbacks. The `observe(on:)` methods are almost instanteneous thanks to the fact that `Future` is a `struct` now.
+- Creating promises is now simpler: `Promise<Int, Error>()` instead of `Future<Int, Error>.Promise`.
+- `Future(value: 1)` now compiles and automatically infers type to be `Future<Int, Never>`
+- Rename `attemptMap` to `tryMap`, implement `tryMap` in terms of `flatMap`
+- Remove `ignoreError`, `materialize` is a better alternative.
+- Attaching two callbacks via the same `on` would result in these callbacks called on the same run of run loop on the selected queue/scheduler.
+- Add convenience `Future.init(result:)`, `Promise.resolve(result:)`
+- Implement `CancellationTokenSource` using `Future`, simpler implementation
+
+## Performance Improvements
+
+- `Future` is a struct now. `Future(value:)` and `Future(error:)` are now 2.5x times faster.
+- Optimize the way internal Promise handlers are managed -It's one array instead of two now. Attach callbacks 30% faster, resolve 30% faster.
+- Slightly increase the performance of all composition functions (by using `observe` directly)
+- Resolving promises concurrently from multiple threads is now up to 5x times faster
+
 # FutureX 0.12
 
 - Remove `Scheduler` enum, it's a simple function now. See [**Threading**](https://github.com/kean/FutureX#threading) for more info.

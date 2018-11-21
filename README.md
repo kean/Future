@@ -61,8 +61,9 @@ let future = Future<Int, Error> { succeed, fail in
 With a value or an error:
 
 ```swift
-Future<Int, Error>(value: 1)
-Future<Int, Error>(error: Error.unknown)
+Future(value: 1) // Autmatically inferred to be Future<Int, Never>
+Future<Int, MyError>(value: 1)
+Future<Int, MyError>(error: .unknown)
 ```
 
 ### Attach Callbacks
@@ -108,7 +109,7 @@ Use familiar `map` and `flatMap` function to transform the future's values and c
 
 ```swift
 let user: Future<User, Error>
-func loadAvatar(url: URL) -> Future<UIImage, Error> {}
+func loadAvatar(url: URL) -> Future<UIImage, Error>
 
 let avatar = user
     .map { $0.avatarURL }
@@ -150,8 +151,8 @@ Future.zip([future1, future2]).on(success: { values in
 Use `reduce` to combine the results of multiple futures:
 
 ```swift
-let future1 = Future<Int, Error>(value: 1)
-let future2 = Future<Int, Error>(value: 2)
+let future1 = Future(value: 1)
+let future2 = Future(value: 2)
 
 Future.reduce(0, [future1, future2], +).on(success: { value in
     print(value) // prints "3"
@@ -233,11 +234,13 @@ enum Scheduler {
 
 `ScheduleWork` is just a function so you can easily provide a custom implementation.
 
-To change the scheduler pass one into the `on` method:
+To change the scheduler on which callbacks are called use `observe(on:)`:
 
 ```swift
-future.on(scheduler: Scheduler.async(on: queue),
-          success: { print("value: \($0)" })
+// There are two variants, one with `DispatchQueue`, one with `Scheduler`.
+// Here's the one with `DispatchQueue`:
+future.observe(on: .global())
+    on(success: { print("value: \($0)" })
 ```
 
 ## Cancellation
