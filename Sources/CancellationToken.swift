@@ -9,12 +9,13 @@ import Foundation
 /// Manages cancellation tokens and signals them when cancellation is requested.
 ///
 /// All `CancellationTokenSource` methods are thread safe.
-public final class CancellationTokenSource {
+public struct CancellationTokenSource {
+
+    private let promise = Promise<Void, Never>()
 
     /// Returns `true` if cancellation has been requested.
     public var isCancelling: Bool {
-        lock.lock(); defer { lock.unlock() }
-        return observers == nil
+        return promise.future.value != nil
     }
 
     /// Creates a new token associated with the source.
@@ -22,42 +23,18 @@ public final class CancellationTokenSource {
         return CancellationToken(source: self)
     }
 
-    private var observers: ContiguousArray<() -> Void>? = []
-
     /// Initializes the `CancellationTokenSource` instance.
     public init() {}
 
     fileprivate func register(_ closure: @escaping () -> Void) {
-        if !tryRegister(closure) {
-            closure()
-        }
-    }
-
-    private func tryRegister(_ closure: @escaping () -> Void) -> Bool {
-        lock.lock(); defer { lock.unlock() }
-        observers?.append(closure)
-        return observers != nil
+        promise.future.on(success: closure)
     }
 
     /// Communicates a request for cancellation to the managed tokens.
     public func cancel() {
-        if let observers = tryCancel() {
-            observers.forEach { $0() }
-        }
-    }
-
-    private func tryCancel() -> ContiguousArray<() -> Void>? {
-        lock.lock(); defer { lock.unlock() }
-        let observers = self.observers
-        self.observers = nil // transition to `isCancelling` state
-        return observers
+        promise.succeed(value: ())
     }
 }
-
-// We use the same lock across different tokens because the design of CTS
-// prevents potential issues. For example, closures registered with a token
-// are never executed inside a lock.
-private let lock = NSLock()
 
 /// Enables cooperative cancellation of operations.
 ///
