@@ -42,21 +42,21 @@ class FutureTests: XCTestCase {
     // MARK: Synchronous Resolution
 
     func testSynchronousSuccess() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
         let future = promise.future
         promise.succeed(value: 1)
         XCTAssertEqual(future.value, 1)
     }
 
     func testSynchronousFail() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
         let future = promise.future
         promise.fail(error: .e1)
         XCTAssertEqual(future.error, .e1)
     }
 
     func testSynchronousSuccessWithMap() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
         let future = promise.future
         let result = future.map { $0 + 1}
         promise.succeed(value: 1)
@@ -64,7 +64,7 @@ class FutureTests: XCTestCase {
     }
 
     func testSynchronousSuccessWithFlatMap() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
         let future = promise.future
         let result = future.flatMap { Future(value: $0 + 1) }
         promise.succeed(value: 1)
@@ -75,7 +75,7 @@ class FutureTests: XCTestCase {
 
     func testSynchronousInspectionPending() {
         // GIVEN a pending promise
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
         let future = promise.future
 
         // EXPECT future to be pending
@@ -122,7 +122,7 @@ class FutureTests: XCTestCase {
     // MARK: Resolve Result
 
     func testPromiseResolve() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
         promise.resolve(result: .success(1))
         XCTAssertEqual(promise.future.value, 1)
     }
@@ -321,7 +321,7 @@ class MapErrorTest: XCTestCase {
 
     // Test that `Future` never dispatches to the main queue internally.
     func testWait() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
 
         // WHEN recovering from error with a value
         let mapped = promise.future.mapError { _ in
@@ -427,7 +427,7 @@ class FlatMapErrorTests: XCTestCase {
 
     // Test that `Future` never dispatches to the main queue internally.
     func testWait() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
 
         // WHEN recovering from error with a value
         let mapped = promise.future.flatMapError { _ in
@@ -743,7 +743,7 @@ class ReduceTests: XCTestCase {
 
 class WaitTests: XCTestCase {
     func testWaitSuccess() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
         let future = promise.future
 
         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10)) {
@@ -754,7 +754,7 @@ class WaitTests: XCTestCase {
     }
 
     func testWaitFailure() {
-        let promise = Future<Int, MyError>.promise
+        let promise = Promise<Int, MyError>()
         let future = promise.future
 
         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10)) {
@@ -769,7 +769,7 @@ private typealias F = Future<Int, MyError>
 private typealias P = F.Promise
 
 private func setUpFutures() -> (promises: (P, P, P), futures: (F, F, F)) {
-    let promises = (F.promise, F.promise, F.promise)
+    let promises = (F.Promise(), F.Promise(), F.Promise())
     let futures = (promises.0.future, promises.1.future, promises.2.future)
     return (promises, futures)
 }

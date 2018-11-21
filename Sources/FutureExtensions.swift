@@ -17,11 +17,11 @@ extension Future {
     /// Waits for the first future to resolve. If the first future to resolve
     /// fails, the returned future also fails.
     public static func first(_ futures: [Future]) -> Future {
-        let output = Future<Value, Error>()
+        let promise = Future<Value, Error>.Promise()
         for future in futures {
-            future.observe(completion: output.resolve)
+            future.observe(completion: promise.resolve)
         }
-        return output
+        return promise.future
     }
 }
 
@@ -48,7 +48,7 @@ extension Future where Value == Void, Error == Never {
     }
 
     private static func after(deadline: DispatchTime, on queue: DispatchQueue = .global()) -> Future<Void, Never> {
-        let promise = Future.promise
+        let promise = Promise()
         queue.asyncAfter(deadline: deadline, execute: promise.succeed) // Never produces an error
         return promise.future
     }
@@ -132,9 +132,9 @@ extension Future {
     /// Returns a future that always succeeds with the `Result` which contains
     /// either a success or a failure of the underlying future.
     public func materialize() -> Future<Result, Never> {
-        let future = Future<Result, Never>()
-        observe(completion: future.succeed)
-        return future
+        let promise = Future<Result, Never>.Promise()
+        observe(completion: promise.succeed)
+        return promise.future
     }
 }
 
@@ -154,12 +154,12 @@ extension Future where Error == Swift.Error {
         //      catch { return Future<NewValue, Error>(error: error) }
         // }
 
-        let future = Future<NewValue, Error>()
+        let promise = Future<NewValue, Error>.Promise()
         observe(success: { value in
-            do { future.succeed(try transform(value)) }
-            catch { future.fail(error) }
-        }, failure: future.fail)
-        return future
+            do { promise.succeed(value: try transform(value)) }
+            catch { promise.fail(error: error) }
+        }, failure: promise.fail)
+        return promise.future
     }
 }
 
@@ -181,17 +181,6 @@ extension Future {
     /// Casts the future to `Future<Void, Error>`.
     public func asVoid() -> Future<Void, Error> {
         return map { _ in () }
-    }
-}
-
-// MARK: - Ignore Error
-
-extension Future {
-
-    /// Returns a future which never resolves in case the underlying future
-    /// fails with an error.
-    public func ignoreError() -> Future<Value, Never> {
-        return flatMapError { _ in Future<Value, Never>.promise.future }
     }
 }
 

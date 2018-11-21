@@ -37,7 +37,7 @@ Using `Promise`:
 
 ```swift
 func someAsyncOperation(args) -> Future<Value, Error> {
-    let promise = Future<Value, Error>.promise
+    let promise = Promise<Value, Error>()
     someAsyncOperationWithCallback(args) { value, error in
         // when finished...
         promise.succeed(result: value)

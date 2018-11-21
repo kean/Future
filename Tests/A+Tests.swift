@@ -142,7 +142,7 @@ class APlusTests: XCTestCase {
 
             describe("2.2.2.2: it must not be called before `promise` is fulfilled") {
                 expect("fulfilled after a delay") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var called = false
@@ -160,7 +160,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("never fulfilled") { finish in
-                    let future = Future<Int, MyError>.promise
+                    let future = Promise<Int, MyError>()
 
                     future.future.on(success: { _ in
                         XCTFail()
@@ -188,7 +188,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to fulfill a pending promise more than once, immediately") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -208,7 +208,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to fulfill a pending promise more than once, delayed") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -230,7 +230,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to fulfill a pending promise more than once, immediately then delayed") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -253,7 +253,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when multiple `then` calls are made, spaced apart in time") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -289,7 +289,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when `then` is interleaved with fulfillment") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -334,7 +334,7 @@ class APlusTests: XCTestCase {
             describe("2.2.3.2: it must not be called before `promise` is rejected") {
 
                 expect("rejected after a delay") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var called = false
@@ -352,7 +352,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("never rejected") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     future.on(failure: { _ in
@@ -382,7 +382,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to reject a pending promise more than once, immediately") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -402,7 +402,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to reject a pending promise more than once, delayed") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -424,7 +424,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("trying to reject a pending promise more than once, immediately then delayed") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -446,7 +446,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when multiple `then` calls are made, spaced apart in time") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0
@@ -479,7 +479,7 @@ class APlusTests: XCTestCase {
                 }
 
                 expect("when `then` is interleaved with rejection") { finish in
-                    let promise = Future<Int, MyError>.promise
+                    let promise = Promise<Int, MyError>()
                     let future = promise.future
 
                     var timesCalled = 0

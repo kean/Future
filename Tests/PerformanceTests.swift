@@ -7,7 +7,10 @@ import Foundation
 import Future
 
 class PromisePerformanceTests: XCTestCase {
-    func testCreation() {
+
+    // MARK: - Init
+
+    func testInit() {
         measure {
             for _ in 0..<100_000 {
                 let _ = Future<Int, Void> { (_,_) in
@@ -16,6 +19,24 @@ class PromisePerformanceTests: XCTestCase {
             }
         }
     }
+
+    func testInitWithValue() {
+        measure {
+            for _ in 0..<100_000 {
+                let _ = Future(value: 1)
+            }
+        }
+    }
+
+    func testInitWithError() {
+        measure {
+            for _ in 0..<100_000 {
+                let _ = Future<Int, MyError>(error: .e1)
+            }
+        }
+    }
+
+    // MARK: - Attach Callbacks
 
     func testOnValue() {
         let futures = (0..<50_000).map { _ in Future<Int, Void>(value: 1) }
@@ -40,7 +61,7 @@ class PromisePerformanceTests: XCTestCase {
     }
 
     func testFulfill() {
-        let items = (0..<100_000).map { _ in Future<Int, Void>.promise }
+        let items = (0..<100_000).map { _ in Promise<Int, Void>() }
 
         let expectation = self.expectation()
         var finished = 0
@@ -68,7 +89,7 @@ class PromisePerformanceTests: XCTestCase {
     func testAttachingCallbacksToResolvedFuture() {
         measure {
             for _ in Array(0..<5000) {
-                let promise = Future<Int, Error>.promise
+                let promise = Promise<Int, Error>()
                 let future = promise.future
 
                 promise.succeed(value: 1)
@@ -124,3 +145,16 @@ class PromisePerformanceTests: XCTestCase {
     }
 }
 
+class FutureOperatorsPerformanceTests: XCTestCase {
+    func testMap() {
+        let futures = Array(0..<10000).map { _ in
+            Future(value: 1)
+        }
+
+        measure {
+            for future in futures {
+                let _ = future.map { $0 + 1}
+            }
+        }
+    }
+}

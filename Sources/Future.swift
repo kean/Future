@@ -22,9 +22,18 @@ import Foundation
 ///
 /// Futures are easily composable. `Future<Value, Error>` provides a set of
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
-public final class Future<Value, Error> {
-    private var memoizedResult: Result? // nil when pending
-    private var handlers: [(Result) -> Void]?
+public struct Future<Value, Error> {
+    private enum Resolver {
+        // A future is resolved by a promise. Promise is a class, it has locks,
+        // array of handlers, etc.
+        case promise(Promise)
+
+        // A future is already resolved with a result. There are no locks, no
+        // classes - no allocations needed when creating a future like that.
+        case result(Result)
+    }
+
+    private let resolver: Resolver
 
     // MARK: Create
 
@@ -34,52 +43,28 @@ public final class Future<Value, Error> {
     /// thread. You should start an asynchronous task and call either `succeed`
     /// or `fail` when it completes.
     public init(_ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
-        closure(self.succeed, self.fail) // retain self
+        let promise = Promise()
+        self.resolver = .promise(promise)
+        closure(promise.succeed, promise.fail) // retain self
     }
 
-    /// Create a new, pending promise.
-    public static var promise: Promise {
-        return Promise()
+    private init(resolver: Resolver = .promise(Promise())) {
+        self.resolver = resolver
     }
-
-    init() {}
 
     /// Creates a future with a given value.
-    public convenience init(value: Value) {
+    public init(value: Value) {
         self.init(result: .success(value))
     }
 
     /// Creates a future with a given error.
-    public convenience init(error: Error) {
+    public init(error: Error) {
         self.init(result: .failure(error))
     }
 
     /// Creates a future with a given result.
     public init(result: Result) {
-        self.memoizedResult = result
-    }
-
-    // MARK: State Transitions
-
-    func succeed(_ value: Value) {
-        resolve(.success(value))
-    }
-
-    func fail(_ error: Error) {
-        resolve(.failure(error))
-    }
-
-    func resolve(_ result: Result) {
-        lock.lock()
-        guard self.memoizedResult == nil else {
-            lock.unlock(); return // Already resolved
-        }
-        self.memoizedResult = result
-        let handlers = self.handlers
-        self.handlers = nil
-        lock.unlock()
-
-        handlers?.forEach { $0(result) }
+        self.resolver = .result(result)
     }
 
     // MARK: Callbacks
@@ -90,7 +75,7 @@ public final class Future<Value, Error> {
     @discardableResult
     public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
         // We don't use a default argument because this results in a more convenience code completion.
-        return self.on(scheduler:Scheduler.main, success: success, failure: failure, completion: completion)
+        return self.on(scheduler: Scheduler.main, success: success, failure: failure, completion: completion)
     }
 
     /// Attach callbacks to execute when the future has a result.
@@ -118,19 +103,15 @@ public final class Future<Value, Error> {
     }
 
     func observe(completion: @escaping (Result) -> Void) {
-        lock.lock()
-        guard let result = self.memoizedResult else {
-            // Create handlers lazily - in some cases they are no needed
-            handlers = handlers ?? []
-            handlers?.append(completion)
-            lock.unlock(); return // Still pending, handlers attached
+        switch resolver {
+        case let .promise(promise):
+            promise.observe(completion: completion)
+        case let .result(result):
+            completion(result)
         }
-        lock.unlock()
-
-        completion(result)
     }
 
-    // At convenience function which is used for implementing cascades of futures.
+    // At convenience method which is used for implementing cascades of futures.
     // It calls `observe(completion:)` directly for performance but technically,
     // it could be implemented in terms of public `on(scheduler: Scheduler.immediate`.
     func observe(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
@@ -156,21 +137,25 @@ public final class Future<Value, Error> {
 
     /// Returns the result if the future completed.
     public var result: Result? {
-        lock.lock(); defer { lock.unlock() }
-        return memoizedResult
+        switch resolver {
+        case let .promise(promise):
+            return promise.result
+        case let .result(result):
+            return result
+        }
     }
 }
 
 extension Future where Error == Never {
     func observe(success: @escaping (Value) -> Void) {
-        observe(success: success, failure: { _ in fatalError("Can never happen") })
+        observe(success: success, failure: { _ in fatalError("Future<Value, Never> can't produce an error") })
     }
 }
 
 // MARK: - Disambiguate Init
 
 extension Future where Error == Never {
-    public convenience init(value: Value) {
+    public init(value: Value) {
         self.init(result: .success(value))
     }
 }
@@ -182,9 +167,11 @@ extension Future {
     /// Returns a future with the result of mapping the given closure over the
     /// current future's value.
     public func map<NewValue>(_ transform: @escaping (Value) -> NewValue) -> Future<NewValue, Error> {
-        let future = Future<NewValue, Error>()
-        observe(success: { future.succeed(transform($0)) }, failure: future.fail)
-        return future
+        // Technically the same as `flatMap { Future<NewValue, Error>(value: transform($0) }`
+        // but this implementation is optimized for performance.
+        let promise = Future<NewValue, Error>.Promise()
+        observe(success: { promise.succeed(value: transform($0)) }, failure: promise.fail)
+        return promise.future
     }
 
     // Allow:
@@ -206,17 +193,17 @@ extension Future {
     /// // func loadAvatar(url: URL) -> Future<Avatar, Error>
     /// ```
     public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Error>) -> Future<NewValue, Error> {
-        let future = Future<NewValue, Error>()
-        observe(success: { transform($0).observe(completion: future.resolve) }, failure: future.fail)
-        return future
+        let promise = Future<NewValue, Error>.Promise()
+        observe(success: { transform($0).observe(completion: promise.resolve) }, failure: promise.fail)
+        return promise.future
     }
 
     public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Never>) -> Future<NewValue, Error> {
         // Technically the same as `flatMap { transform($0).castError() }`, but
         // we're doing it from scratch to avoid additional allocations from `castError`
-        let future = Future<NewValue, Error>()
-        observe(success: { transform($0).observe(success: future.succeed) }, failure: future.fail)
-        return future
+        let promise = Future<NewValue, Error>.Promise()
+        observe(success: { transform($0).observe(success: promise.succeed) }, failure: promise.fail)
+        return promise.future
     }
 }
 
@@ -226,15 +213,15 @@ extension Future where Error == Never {
     // Future<T, Never>.flatMap { Future<U, Never> } // disambiguate
 
     public func flatMap<NewValue, NewError>(_ transform: @escaping (Value) -> Future<NewValue, NewError>) -> Future<NewValue, NewError> {
-        let future = Future<NewValue, NewError>()
-        observe(success: { transform($0).observe(completion: future.resolve) })
-        return future
+        let promise = Future<NewValue, NewError>.Promise()
+        observe(success: { transform($0).observe(completion: promise.resolve) })
+        return promise.future
     }
 
     public func flatMap<NewValue>(_ transform: @escaping (Value) -> Future<NewValue, Never>) -> Future<NewValue, Never> {
-        let future = Future<NewValue, Never>()
-        observe(success: { transform($0).observe(success: future.succeed) })
-        return future
+        let promise = Future<NewValue, Never>.Promise()
+        observe(success: { transform($0).observe(success: promise.succeed) })
+        return promise.future
     }
 }
 
@@ -244,9 +231,9 @@ extension Future {
     /// Returns a future with the error which is the result of mapping the given
     /// closure over the current future's error.
     public func mapError<NewError>(_ transform: @escaping (Error) -> NewError) -> Future<Value, NewError> {
-        let future = Future<Value, NewError>()
-        observe(success: future.succeed, failure: { future.fail(transform($0)) })
-        return future
+        let promise = Future<Value, NewError>.Promise()
+        observe(success: promise.succeed, failure: { promise.fail(error: transform($0)) })
+        return promise.future
     }
 
     /// Returns a future which is eventually resolved with the result of the
@@ -256,9 +243,9 @@ extension Future {
     /// Allows you to continue the chain of futures by "recovering" from an error
     /// with a new future.
     public func flatMapError<NewError>(_ transform: @escaping (Error) -> Future<Value, NewError>) -> Future<Value, NewError> {
-        let future = Future<Value, NewError>()
-        observe(success: future.succeed, failure: { transform($0).observe(completion: future.resolve) })
-        return future
+        let promise = Future<Value, NewError>.Promise()
+        observe(success: promise.succeed, failure: { transform($0).observe(completion: promise.resolve) })
+        return promise.future
     }
 }
 
@@ -269,14 +256,14 @@ extension Future where Value == Any, Error == Any {
     /// Returns a future which succeedes when all the given futures succeed. If
     /// any of the futures fail, the returned future also fails with that error.
     public static func zip<V1, V2, E>(_ f1: Future<V1, E>, _ f2: Future<V2, E>) -> Future<(V1, V2), E> {
-        let future = Future<(V1, V2), E>()
+        let promise = Future<(V1, V2), E>.Promise()
         func success(value: Any) {
             guard let v1 = f1.value, let v2 = f2.value else { return }
-            future.succeed((v1, v2))
+            promise.succeed(value: (v1, v2))
         }
-        f1.observe(success: success, failure: future.fail)
-        f2.observe(success: success, failure: future.fail)
-        return future
+        f1.observe(success: success, failure: promise.fail)
+        f2.observe(success: success, failure: promise.fail)
+        return promise.future
     }
 
     /// Returns a future which succeedes when all the given futures succeed. If
@@ -328,26 +315,65 @@ extension Future {
     }
 
     /// A promise to provide a result later.
-    public struct Promise {
-        /// The future associated with the promise.
-        public let future = Future()
+    public final class Promise {
+        private var memoizedResult: Result? // nil when pending
+        private var handlers: [(Result) -> Void]?
+
+        /// Creates a new pending promise.
+        public init() {}
+
+        /// Returns a future associated with the promise.
+        public var future: Future {
+            return Future(resolver: .promise(self))
+        }
 
         /// Sends a value to the associated future.
         public func succeed(value: Value) {
-            future.succeed(value)
+            resolve(result: .success(value))
         }
 
         /// Sends an error to the associated future.
         public func fail(error: Error) {
-            future.fail(error)
+            resolve(result: .failure(error))
         }
 
         /// Sends a result to the associated future.
         public func resolve(result: Result) {
-            future.resolve(result)
+            lock.lock()
+            guard self.memoizedResult == nil else {
+                lock.unlock(); return // Already resolved
+            }
+            self.memoizedResult = result
+            let handlers = self.handlers
+            self.handlers = nil
+            lock.unlock()
+
+            handlers?.forEach { $0(result) }
+        }
+
+        func observe(completion: @escaping (Result) -> Void) {
+            lock.lock()
+            guard let result = self.memoizedResult else {
+                // Create handlers lazily - in some cases they are no needed
+                handlers = handlers ?? []
+                handlers?.append(completion)
+                lock.unlock(); return // Still pending, handlers attached
+            }
+            lock.unlock()
+
+            completion(result)
+        }
+
+        /// Returns the result if the future completed.
+        var result: Result? {
+            lock.lock(); defer { lock.unlock() }
+            return memoizedResult
         }
     }
 }
+
+/// A convenience typealias to make constructing promises easier.
+public typealias Promise<Value, Error> = Future<Value, Error>.Promise
 
 extension Future.Result: Equatable where Value: Equatable, Error: Equatable { }
 

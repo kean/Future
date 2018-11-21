@@ -82,7 +82,7 @@ enum MyError: Swift.Error {
 let sentinel = 1
 
 extension Future {    
-    class func eventuallySuccessfull() -> Future<Int, Error> {
+    static func eventuallySuccessfull() -> Future<Int, Error> {
         return Future<Int, Error>() { success, _ in
             DispatchQueue.global().async {
                 success(sentinel)
@@ -90,7 +90,7 @@ extension Future {
         }
     }
 
-    class func eventuallyFailed() -> Future<Int, MyError> {
+    static func eventuallyFailed() -> Future<Int, MyError> {
         return Future<Int, MyError>() { _, fail in
             DispatchQueue.global().async {
                 fail(MyError.e1)

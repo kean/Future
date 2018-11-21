@@ -34,8 +34,8 @@ class FirstTests: XCTestCase {
     }
 
     func testTwoSecondFails() {
-        let p1 = Future<Int, MyError>.promise
-        let p2 = Future<Int, MyError>.promise
+        let p1 = Promise<Int, MyError>()
+        let p2 = Promise<Int, MyError>()
 
         let first = Future.first(p1.future, p2.future)
 
@@ -54,8 +54,8 @@ class FirstTests: XCTestCase {
     }
 
     func testTwoSecondFailsWait() {
-        let p1 = Future<Int, MyError>.promise
-        let p2 = Future<Int, MyError>.promise
+        let p1 = Promise<Int, MyError>()
+        let p2 = Promise<Int, MyError>()
 
         let first = Future.first(p1.future, p2.future)
 
@@ -168,7 +168,7 @@ class RetryTests: XCTestCase {
             case let .predefined(attempts):
                 if attempts.count < attemptsCount {
                     XCTFail()
-                    return Future<Int, MyError>.promise.future
+                    return Promise<Int, MyError>().future
                 }
                 return attempts[attemptsCount-1]()
             }
@@ -243,25 +243,5 @@ class MaterializeTests: XCTestCase {
     func testFailure() {
         let future = Future<Int, MyError>(error: .e1)
         XCTAssertEqual(future.materialize().value?.error, .e1)
-    }
-}
-
-class IgnoreError: XCTestCase {
-    func testIgnoreError() {
-        let promise = Future<Int, MyError>.promise
-        let future = promise.future
-
-        let ignored = future.ignoreError()
-
-        // EXPECT none of the callbacks to be called
-        ignored.on(scheduler: Scheduler.immediate,
-                   success: { _ in XCTFail() },
-                   failure: { _ in XCTFail() },
-                   completion: { _ in XCTFail() })
-
-        promise.fail(error: .e1)
-
-        XCTAssertEqual(future.error, .e1)
-        XCTAssertNil(ignored.result)
     }
 }
