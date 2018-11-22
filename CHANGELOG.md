@@ -1,3 +1,10 @@
+# FutureX 0.14
+
+- Method `observe(on:)` is more flexible, it can now  be used to runs transformations like `map`, `tryMap` on a specified queue (and actually any other transformation too, it composes really well with them).
+- Instead of a convenience `Future { succeed, fail in }` we now have `Future { promise in }` which is consistent with the regular way you create Promise/Future pair and also more flexible and performant.
+- Inline the first handler in `Promise`. It's very often when there is only one observer for each `Promise`. These operations are now up to 15% faster.
+- Implement `CustomDebugStringConvertible` for `Promise`
+
 # FutureX 0.13
 
 This release is all about performance and quality of life improvements.
