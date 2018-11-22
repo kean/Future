@@ -34,7 +34,7 @@ public struct Future<Value, Error> {
     }
 
     private let resolver: Resolver
-    private let scheduler: ScheduleWork
+    private let scheduler: ScheduleWork?
 
     // MARK: Create
 
@@ -49,7 +49,7 @@ public struct Future<Value, Error> {
         closure(promise.succeed, promise.fail) // retain self
     }
 
-    private init(resolver: Resolver = .promise(Promise()), scheduler: @escaping ScheduleWork = Scheduler.main) {
+    private init(resolver: Resolver = .promise(Promise()), scheduler: ScheduleWork? = nil) {
         self.resolver = resolver
         self.scheduler = scheduler
     }
@@ -95,8 +95,8 @@ public struct Future<Value, Error> {
     /// - returns: Returns self so that you can continue the chain.
     @discardableResult
     public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
-        let scheduler = self.scheduler
-        cascade { result in
+        let scheduler = self.scheduler ?? Scheduler.main
+        cascadeImmediately { result in
             scheduler {
                 switch result {
                 case let .success(value): success?(value)
@@ -109,6 +109,16 @@ public struct Future<Value, Error> {
     }
 
     func cascade(completion: @escaping (Result) -> Void) {
+        if let scheduler = self.scheduler {
+            cascadeImmediately(completion: { result in
+                scheduler { completion(result) }
+            })
+        } else {
+            cascadeImmediately(completion: completion)
+        }
+    }
+
+    private func cascadeImmediately(completion: @escaping (Result) -> Void) {
         switch resolver {
         case let .promise(promise):
             promise.observe(completion: completion)

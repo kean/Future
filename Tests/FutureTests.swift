@@ -765,7 +765,7 @@ class ObserveOnTests: XCTestCase {
     }
 
     func testObserveOnMap() {
-        let (queue, _) = DispatchQueue.specific()
+        let (queue, key) = DispatchQueue.specific()
 
         let future = Future(value: 1).observe(on: queue)
 
@@ -773,8 +773,8 @@ class ObserveOnTests: XCTestCase {
         expectation.expectedFulfillmentCount = 2
 
         let result = future.map { _ -> Int in
-            // EXPECT map to still be called on the queue on which the
-            XCTAssertTrue(Thread.isMainThread)
+            // EXPECT to be called on the `observe(on:)` queue
+            XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
             expectation.fulfill()
             return 2
         }
@@ -783,6 +783,83 @@ class ObserveOnTests: XCTestCase {
             // EXPECT success to be called on main queue
             XCTAssertTrue(Thread.isMainThread)
             XCTAssertEqual(value, 2)
+            expectation.fulfill()
+        })
+
+        wait()
+    }
+
+    func testMap() {
+        let future = Future(value: 1)
+
+        let (queue, key) = DispatchQueue.specific()
+
+        let expectation = self.expectation()
+
+        // EXPECT map to be performed on the given queue
+        let _ = future
+            .observe(on: queue)
+            .map { value -> String in
+                XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
+                expectation.fulfill()
+                return String(value)
+        }
+
+        wait()
+    }
+
+    func testMapWhenResolvingLater() {
+        let promise = Future<Int, Never>.Promise()
+
+        let (queue, key) = DispatchQueue.specific()
+
+        let result = promise.future
+            .observe(on: queue)
+            .map { value -> String in
+                XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
+                return String(value)
+        }
+
+        // EXPECT `on` to still be called based on the default scheduler
+        let expectation = self.expectation()
+        result.on(success: { value in
+            XCTAssertTrue(Thread.isMainThread)
+            XCTAssertEqual(value, "1")
+            expectation.fulfill()
+        })
+
+        promise.succeed(value: 1)
+
+        wait()
+    }
+
+    func testTryMap() {
+        let future = Future(value: 1)
+
+        let (queue, key) = DispatchQueue.specific()
+
+        let expectation = self.expectation()
+
+        // EXPECT map to be performed on the given queue
+        let _ = future
+            .castError()
+            .observe(on: queue)
+            .tryMap { value -> String in
+                XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
+                expectation.fulfill()
+                return String(value)
+        }
+
+        wait()
+    }
+
+    func testObserve() {
+        let future = Future(value: 1).async(on: .global())
+
+        // EXPECT `on` to still be called based on the default scheduler
+        let expectation = self.expectation()
+        future.on(success: { _ in
+            XCTAssertTrue(Thread.isMainThread)
             expectation.fulfill()
         })
 

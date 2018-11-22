@@ -77,13 +77,12 @@ class PromisePerformanceTests: XCTestCase {
     }
 
     func testAttachingCallbacksToResolvedFuture() {
+        let futures = Array(0..<10000).map { _ in
+            return Future(value: 1)
+        }
+
         measure {
-            for _ in 0..<5000 {
-                let promise = Promise<Int, Error>()
-                let future = promise.future
-
-                promise.succeed(value: 1)
-
+            for future in futures {
                 future.on(success: { _ in })
             }
         }

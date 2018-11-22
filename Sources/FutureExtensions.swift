@@ -17,7 +17,7 @@ extension Future {
     /// Waits for the first future to resolve. If the first future to resolve
     /// fails, the returned future also fails.
     public static func first(_ futures: [Future]) -> Future {
-        let promise = Future<Value, Error>.Promise()
+        let promise = Future.Promise()
         for future in futures {
             future.cascade(completion: promise.resolve)
         }
