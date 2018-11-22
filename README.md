@@ -28,6 +28,7 @@ A future represents a result of a computation which may be available now, or in 
   * [Materialize](#materialize)
 - [**Threading**](#threading)
 - [**Cancellation**](#cancellation)
+- [**Performance**](#performance)
  
 ## Quick Start Guide
 
@@ -48,12 +49,12 @@ func someAsyncOperation() -> Future<Value, Error> {
 }
 ```
 
-Using a convenience init method:
+Using a convenience `init` method:
 
 ```swift
-let future = Future<Int, Error> { succeed, fail in
+Future<Int, Error> { promise in
     someAsyncOperationWithCallback { value, error in
-        // Succeed or fail
+        // Resolve the promise
     }
 }
 ```
@@ -243,6 +244,15 @@ future.observe(on: .global())
     on(success: { print("value: \($0)" })
 ```
 
+You can also use `observe(on:)` to perform transformations like `map`, `tryMap` and others on background queues:
+
+```swift
+future.observe(on: .global())
+  .map { /* heavy operation */
+```
+
+Please keep in mind that only the future returns directly by `observe(on:)` is guaranteed to run its continuations on the given queue (or scheduler).
+
 ## Cancellation
 
 The framework wouldn't be complete without cancellation. FutureX considers cancellation to be a concern orthogonal to `Future`. It implements a [`CancellationToken`](https://kean.github.io/post/cancellation-token) pattern for cooperative cancellation of asynchronous operations:
@@ -258,6 +268,12 @@ cts.cancel()
 
 // Both asynchronous operations are cancelled.
 ```
+
+## Performance
+
+Performance is a top priority for FutureX. Every feature was built with performance in mind.
+
+We avoid dynamic dispatch, reduce the number of allocations and deallocations, avoid doing any unnecessary work, implement methods in faster but less elegant way, avoid locking as much as possible, and more. There are also some key design differences that give FutureX an edge over other frameworks.
 
 ## Requirements
 
