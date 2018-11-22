@@ -248,7 +248,7 @@ You can also use `observe(on:)` to perform transformations like `map`, `tryMap` 
 
 ```swift
 future.observe(on: .global())
-  .map { /* heavy operation */
+    .map { /* heavy operation */ }
 ```
 
 Please keep in mind that only the future returns directly by `observe(on:)` is guaranteed to run its continuations on the given queue (or scheduler).
