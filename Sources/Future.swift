@@ -323,6 +323,7 @@ extension Future {
     /// A promise to provide a result later.
     public final class Promise {
         private var memoizedResult: Result? // nil when pending
+        private var inlinedHandler: ((Result) -> Void)?
         private var handlers: [(Result) -> Void]?
         private let lock = NSLock()
 
@@ -351,19 +352,26 @@ extension Future {
                 lock.unlock(); return // Already resolved
             }
             self.memoizedResult = result
+            let inlinedHandler = self.inlinedHandler
             let handlers = self.handlers
+            self.inlinedHandler = nil
             self.handlers = nil
             lock.unlock()
 
+            inlinedHandler?(result)
             handlers?.forEach { $0(result) }
         }
 
         func observe(completion: @escaping (Result) -> Void) {
             lock.lock()
             guard let result = self.memoizedResult else {
-                // Create handlers lazily - in some cases they are no needed
-                handlers = handlers ?? []
-                handlers?.append(completion)
+                if inlinedHandler == nil {
+                    inlinedHandler = completion
+                } else {
+                    // Create handlers lazily - in some cases they are no needed
+                    handlers = handlers ?? []
+                    handlers?.append(completion)
+                }
                 lock.unlock(); return // Still pending, handlers attached
             }
             lock.unlock()
