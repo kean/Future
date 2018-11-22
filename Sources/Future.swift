@@ -331,7 +331,7 @@ extension Future {
     }
 
     /// A promise to provide a result later.
-    public final class Promise {
+    public final class Promise: CustomDebugStringConvertible {
         private var memoizedResult: Result? // nil when pending
         private var inlinedHandler: ((Result) -> Void)?
         private var handlers: [(Result) -> Void]?
@@ -393,6 +393,18 @@ extension Future {
         var result: Result? {
             lock.lock(); defer { lock.unlock() }
             return memoizedResult
+        }
+
+        // MARK: CustomDebugStringConvertible
+
+        public var debugDescription: String {
+            lock.lock(); defer { lock.unlock() }
+            if let result = self.memoizedResult {
+                return "Promise<\(Value.self), \(Error.self)> { .resolved(result: \(result)) }"
+            } else {
+                let handlerCount = (handlers?.count ?? 0) + (inlinedHandler != nil ? 1 : 0)
+                return "Promise<\(Value.self), \(Error.self)> { .pending(handlers: \(handlerCount)) }"
+            }
         }
     }
 }
