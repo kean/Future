@@ -83,17 +83,17 @@ let sentinel = 1
 
 extension Future {    
     static func eventuallySuccessfull() -> Future<Int, Error> {
-        return Future<Int, Error>() { success, _ in
+        return Future<Int, Error>() { promise in
             DispatchQueue.global().async {
-                success(sentinel)
+                promise.succeed(value: sentinel)
             }
         }
     }
 
     static func eventuallyFailed() -> Future<Int, MyError> {
-        return Future<Int, MyError>() { _, fail in
+        return Future<Int, MyError>() { promise in
             DispatchQueue.global().async {
-                fail(MyError.e1)
+                promise.fail(error: .e1)
             }
         }
     }

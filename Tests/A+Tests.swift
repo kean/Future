@@ -13,9 +13,9 @@ class APlusTests: XCTestCase {
         describe("2.1.2.1: When fulfilled, a promise: must not transition to any other state.") {
 
             expect("trying to fulfill then immediately fulfill with a different value") { finish in
-                let future = Future<Int, MyError>() { succeed, _ in
-                    succeed(0)
-                    succeed(1)
+                let future = Future<Int, MyError> { promise in
+                    promise.succeed(value: 0)
+                    promise.succeed(value: 1)
                 }
                 future.on(success: {
                     XCTAssertEqual($0, 0)
@@ -24,9 +24,9 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill then immediately reject") { finish in
-                let future = Future<Int, MyError>() { succeed, fail in
-                    succeed(0)
-                    fail(MyError.e1)
+                let future = Future<Int, MyError> { promise in
+                    promise.succeed(value: 0)
+                    promise.fail(error: MyError.e1)
                 }
                 future.on(success: {
                     XCTAssertEqual($0, 0)
@@ -35,10 +35,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill then reject, delayed") { finish in
-                let future = Future<Int, MyError>() { succeed, fail in
+                let future = Future<Int, MyError> { promise in
                     after(ticks: 5) {
-                        succeed(0)
-                        fail(MyError.e1)
+                        promise.succeed(value: 0)
+                        promise.fail(error: .e1)
                     }
                 }
                 future.on(success: {
@@ -48,10 +48,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to fulfill immediately then reject delayed") { finish in
-                let future = Future<Int, MyError>() { succeed, fail in
-                    succeed(0)
+                let future = Future<Int, MyError> { promise in
+                    promise.succeed(value: 0)
                     after(ticks: 5) {
-                        fail(MyError.e1)
+                        promise.fail(error: MyError.e1)
                     }
                 }
                 future.on(success: {
@@ -66,9 +66,9 @@ class APlusTests: XCTestCase {
         describe("2.1.3.1: When rejected, a promise: must not transition to any other state.") {
 
             expect("reject then reject with different error") { finish in
-                let future = Future<Int, MyError>() { _, fail in
-                    fail(MyError.e1)
-                    fail(MyError.e2)
+                let future = Future<Int, MyError> { promise in
+                    promise.fail(error: MyError.e1)
+                    promise.fail(error: MyError.e2)
                 }
                 future.on(failure: {
                     XCTAssertEqual($0, MyError.e1)
@@ -77,9 +77,9 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to reject then immediately fulfill") { finish in
-                let future = Future<Int, MyError>() { succeed, fail in
-                    fail(MyError.e1)
-                    succeed(1)
+                let future = Future<Int, MyError> { promise in
+                    promise.fail(error: MyError.e1)
+                    promise.succeed(value: 1)
                 }
                 future.on(failure: {
                     XCTAssertEqual($0, MyError.e1)
@@ -88,10 +88,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to reject then fulfill, delayed") { finish in
-                let future = Future<Int, MyError>() { succeed, fail in
+                let future = Future<Int, MyError> { promise in
                     after(ticks: 5) {
-                        fail(MyError.e1)
-                        succeed(1)
+                        promise.fail(error: MyError.e1)
+                        promise.succeed(value: 1)
                     }
                 }
                 future.on(failure: {
@@ -101,10 +101,10 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to reject immediately then fulfill delayed") { finish in
-                let future = Future<Int, MyError>() { succeed, fail in
-                    fail(MyError.e1)
+                let future = Future<Int, MyError>() { promise in
+                    promise.fail(error: MyError.e1)
                     after(ticks: 5) {
-                        succeed(1)
+                        promise.succeed(value: 1)
                     }
                 }
                 future.on(failure: {
@@ -729,7 +729,7 @@ class APlusTests: XCTestCase {
                 describe("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") {
                     expect("via return from a fulfilled promise") { finish in
                         let future = Future(value: 1).flatMap { _ in
-                            return Future<Int, MyError> { (_,_) in } // pending
+                            return Future<Int, MyError> { _ in } // pending
                         }
                         future.on(completion: { _ in
                             XCTFail()
@@ -741,7 +741,7 @@ class APlusTests: XCTestCase {
                  
                     expect("via return from a rejected promise") { finish in
                         let future = Future<Int, MyError>(error: MyError.e1).flatMapError { _ in
-                            return Future<Int, MyError> { (_,_) in } // pending
+                            return Future<Int, MyError> { _ in } // pending
                         }
                         future.on(completion: { _ in
                             XCTFail()

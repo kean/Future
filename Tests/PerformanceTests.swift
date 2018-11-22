@@ -13,7 +13,7 @@ class PromisePerformanceTests: XCTestCase {
     func testInit() {
         measure {
             for _ in 0..<100_000 {
-                let _ = Future<Int, Void> { (_,_) in
+                let _ = Future<Int, Void> { _ in
                     return // do nothing
                 }
             }

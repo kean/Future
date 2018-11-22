@@ -43,10 +43,10 @@ public struct Future<Value, Error> {
     /// - parameter closure: The closure is called immediately on the current
     /// thread. You should start an asynchronous task and call either `succeed`
     /// or `fail` when it completes.
-    public init(_ closure: (_ succeed: @escaping (Value) -> Void, _ fail: @escaping (Error) -> Void) -> Void) {
+    public init(_ closure: (_ promise: Promise) -> Void) {
         let promise = Promise()
         self.init(resolver: .promise(promise))
-        closure(promise.succeed, promise.fail) // retain self
+        closure(promise) // retain self
     }
 
     private init(resolver: Resolver = .promise(Promise()), scheduler: ScheduleWork? = nil) {

@@ -852,19 +852,6 @@ class ObserveOnTests: XCTestCase {
 
         wait()
     }
-
-    func testObserve() {
-        let future = Future(value: 1).async(on: .global())
-
-        // EXPECT `on` to still be called based on the default scheduler
-        let expectation = self.expectation()
-        future.on(success: { _ in
-            XCTAssertTrue(Thread.isMainThread)
-            expectation.fulfill()
-        })
-
-        wait()
-    }
 }
 
 class WaitTests: XCTestCase {
