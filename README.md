@@ -14,25 +14,25 @@ A **future** represents a result of a computation which may be available now, or
 
 FutureX is designed ergonomics and performance in mind. It uses familiar functional terms so it's easy to learn and use. 
 
-> Check out [**FutureX Community**](https://github.com/FutureXCommunity) provides extensions for popular frameworks.
+> Check out [**FutureX Community**](https://github.com/FutureXCommunity) that provides extensions for popular frameworks.
 
 ## Getting Started
 
 - [**Quick Start Guide**](#quick-start-guide)
   * [Create Future](#create-future)
   * [Attach Callbacks](#attach-callbacks)
-  * [Wait, Result](#wait-result)
+  * [`wait`, `result`](#wait-result)
 - [**Functional Composition**](#functional-composition)
-  * [Map, FlatMap](#map-flatmap)
-  * [MapError, FlatMapError](#maperror-flatmaperror)
-  * [Zip, Reduce](#zip-reduce)
+  * [`map`, `flatMap`](#map-flatmap)
+  * [`mapError`, `flatMapError`](#maperror-flatmaperror)
+  * [`zip`, `reduce`](#zip-reduce)
 - [**Additions**](#additions)
-  * [First, ForEach](#first-foreach)
-  * [After, Retry](#after-retry)
-  * [Materialize](#materialize)
+  * [`first`, `forEach`](#first-foreach)
+  * [`after`, `retry`](#after-retry)
+  * [`materialize`](#materialize)
 - [**Threading**](#threading)
 - [**Cancellation**](#cancellation)
-- [**Note on Async/Await**](#async-await)
+- [**Note on Async/Await**](#asyncawait)
 - [**Performance**](#performance)
  
 ## Quick Start Guide
@@ -89,7 +89,7 @@ By default the callbacks are run on `.main` scheduler. It runs immediately if on
 
 > See [**Threading**](#threading) for a rationale and more info.
 
-### Wait, Result
+### `wait`, `result`
 
 Use `wait` method to block the current thread and wait until the future receives a result:
 
@@ -109,7 +109,7 @@ class Future<Value, Error> {
 
 ## Functional Composition
 
-### Map, FlatMap
+### `map`, `flatMap`
 
 Use familiar `map` and `flatMap` function to transform the future's values and chain futures:
 
@@ -122,7 +122,7 @@ let avatar = user
     .flatMap(loadAvatar)
 ```
 
-### MapError, FlatMapError
+### `mapError`, `flatMapError`
 
 `Future` has typed errors. To convert from one error type to another use `mapError`:
 
@@ -133,7 +133,7 @@ request.mapError(MyError.init(urlError:))
 
 Use `flatMapError` to "recover" from an error.
 
-### Zip, Reduce
+### `zip`, `reduce`
 
 Use  `zip`  to combine the result of up to three futures in a single future:
 
@@ -169,7 +169,7 @@ Future.reduce(0, [future1, future2], +).on(success: { value in
 
 In addition to the primary interface, there is also a set of extensions to `Future` which includes multiple convenience functions. Not all of them are mentioned here, look into `FutureExtensions.swift` to find more!
 
-### First, ForEach
+### `first`, `forEach`
 
 Use `first` to wait for a first future to succeed:
 
@@ -188,7 +188,7 @@ Future.forEach([startWork, startOtherWork]) { future in
 }
 ```
 
-### After, Retry
+### `after`, `retry`
 
 Use `after` to produce a value after a given time interval.
 
@@ -206,7 +206,7 @@ Future.retry(attempts: 3, delay: .seconds(3), startSomeWork)
 
 Retry is flexible. It allows you to specify multiple delay strategies including exponential backoff, to inspect the error before retrying and more.
 
-### Materialize
+### `materialize`
 
 This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Value, Error>.Result, Never>` - a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out `materialize` composes really well with other functions like `zip`, `reduce`, `first`, etc. All of these functions fail as soon as one of the given futures fail, but with `materialize` you can change the behavior of these functions so that they would wait until all futures are resolved, no matter successfully or with an error.
 
@@ -293,7 +293,7 @@ The task has full control over cancellation. You can ignore it, you can fail a p
 
 One of the major benefits of using futures is that when [async/await](https://gist.github.com/lattner/429b9070918248274f25b714dcfc7619) support is eventually added to Swift, it would be relatively easy to replace the code that uses futures.
 
-> There is a [fake (blocking) version](https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7) of async/await built for FutureX. It shouldn't be used in production, it's just for demo purposes.
+> There is a [fake (blocking) version](https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7) of async/await built for FutureX. It's not meant to be used in production.
 
 ## Performance
 
