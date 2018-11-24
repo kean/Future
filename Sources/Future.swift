@@ -92,9 +92,7 @@ public struct Future<Value, Error> {
     ///   - success: Gets called when the future is resolved successfully.
     ///   - failure: Gets called when the future is resolved with an error.
     ///   - completion: Gets called when the future is resolved.
-    /// - returns: Returns self so that you can continue the chain.
-    @discardableResult
-    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) -> Future {
+    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) {
         let scheduler = self.scheduler ?? Scheduler.main
         cascadeImmediately { result in
             scheduler {
@@ -105,7 +103,6 @@ public struct Future<Value, Error> {
                 completion?(result)
             }
         }
-        return self
     }
 
     func cascade(completion: @escaping (Result) -> Void) {

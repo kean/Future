@@ -15,15 +15,14 @@ class FutureTests: XCTestCase {
 
         let expectation = self.expectation()
         expectation.expectedFulfillmentCount = 2
-        future
-            .on(success: {
-                XCTAssertEqual($0, 1)
-                expectation.fulfill()
-            })
-            .on(success: {
-                XCTAssertEqual($0, 1)
-                expectation.fulfill()
-            })
+        future.on(success: {
+            XCTAssertEqual($0, 1)
+            expectation.fulfill()
+        })
+        future.on(success: {
+            XCTAssertEqual($0, 1)
+            expectation.fulfill()
+        })
 
         wait()
     }
