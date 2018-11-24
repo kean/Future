@@ -32,6 +32,7 @@ FutureX is designed ergonomics and performance in mind. It uses familiar functio
   * [Materialize](#materialize)
 - [**Threading**](#threading)
 - [**Cancellation**](#cancellation)
+- [**Note on Async/Await**](#async-await)
 - [**Performance**](#performance)
  
 ## Quick Start Guide
@@ -287,6 +288,12 @@ func loadData(with url: URL, _ token: CancellationToken = CancellationToken()) -
 ```
 
 The task has full control over cancellation. You can ignore it, you can fail a promise with a specific error, return a partial result, or not resolve a promise at all.
+
+## Async/Await
+
+One of the major benefits of using futures is that when [async/await](https://gist.github.com/lattner/429b9070918248274f25b714dcfc7619) support is eventually added to Swift, it would be relatively easy to replace the code that uses futures.
+
+> There is a [fake (blocking) version](https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7) of async/await built for FutureX. It shouldn't be used in production, it's just for demo purposes.
 
 ## Performance
 
