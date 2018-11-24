@@ -21,14 +21,14 @@ FutureX is designed ergonomics and performance in mind. It uses familiar functio
 - [**Quick Start Guide**](#quick-start-guide)
   * [Create Future](#create-future)
   * [Attach Callbacks](#attach-callbacks)
-  * [`wait`, `result`](#wait-result)
+  * [`wait`](#wait), [`result`](#result)
 - [**Functional Composition**](#functional-composition)
-  * [`map`, `flatMap`](#map-flatmap)
-  * [`mapError`, `flatMapError`](#maperror-flatmaperror)
-  * [`zip`, `reduce`](#zip-reduce)
+  * [`map`](#map-flatmap), [`flatMap`](#map-flatmap)
+  * [`mapError`](#maperror-flatmaperror), [`flatMapError`](#maperror-flatmaperror)
+  * [`zip`](#zip), [`reduce`](#reduce)
 - [**Additions**](#additions)
-  * [`first`, `forEach`](#first-foreach)
-  * [`after`, `retry`](#after-retry)
+  * [`first`](#first), [`forEach`](#foreach)
+  * [`after`](#after), [`retry`](#retry)
   * [`materialize`](#materialize)
 - [**Threading**](#threading)
 - [**Cancellation**](#cancellation)
@@ -89,13 +89,15 @@ By default the callbacks are run on `.main` scheduler. It runs immediately if on
 
 > See [**Threading**](#threading) for a rationale and more info.
 
-### `wait`, `result`
+### `wait`
 
 Use `wait` method to block the current thread and wait until the future receives a result:
 
 ```swift
 let result = future.wait() // Mostly useful for testing and debugging
 ```
+
+### `result`
 
 If the future already has a result you can read it synchronously:
 
@@ -133,7 +135,7 @@ request.mapError(MyError.init(urlError:))
 
 Use `flatMapError` to "recover" from an error.
 
-### `zip`, `reduce`
+### `zip`
 
 Use  `zip`  to combine the result of up to three futures in a single future:
 
@@ -154,6 +156,8 @@ Future.zip([future1, future2]).on(success: { values in
 })
 ```
 
+### `reduce`
+
 Use `reduce` to combine the results of multiple futures:
 
 ```swift
@@ -169,7 +173,7 @@ Future.reduce(0, [future1, future2], +).on(success: { value in
 
 In addition to the primary interface, there is also a set of extensions to `Future` which includes multiple convenience functions. Not all of them are mentioned here, look into `FutureExtensions.swift` to find more!
 
-### `first`, `forEach`
+### `first`
 
 Use `first` to wait for a first future to succeed:
 
@@ -177,6 +181,8 @@ Use `first` to wait for a first future to succeed:
 let requests: [Future<Value, Error>]
 Future.first(requests).on(success: { print("got response!") })
 ```
+
+### `forEach`
 
 Use `forEach` to perform the work in a sequence:
 
@@ -188,13 +194,15 @@ Future.forEach([startWork, startOtherWork]) { future in
 }
 ```
 
-### `after`, `retry`
+### `after`
 
 Use `after` to produce a value after a given time interval.
 
 ```swift
 Future.after(seconds: 2).on { _ in print("2 seconds have passed") })
 ```
+
+### `retry`
 
 Use `retry` to perform the given number of attempts to finish the work successfully.
 
