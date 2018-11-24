@@ -48,6 +48,10 @@
 		0CAA5D3E1DB1495E001F6D96 /* Future.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5108211D4E81CE00F1F405 /* Future.framework */; };
 		0CAA5D441DB1496B001F6D96 /* A+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */; };
 		0CAA5D451DB1496B001F6D96 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
+		0CD4DCD121A9A81800B45CA2 /* FutureCompatible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */; };
+		0CD4DCD221A9A81800B45CA2 /* FutureCompatible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */; };
+		0CD4DCD321A9A81800B45CA2 /* FutureCompatible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */; };
+		0CD4DCD421A9A81800B45CA2 /* FutureCompatible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -95,6 +99,7 @@
 		0CAA5D281DB14901001F6D96 /* Future tvOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Future tvOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAA5D391DB1495E001F6D96 /* Future macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Future macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAA5D461DB149FF001F6D96 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureCompatible.swift; sourceTree = "<group>"; };
 		0CE052001D4E830700A12B45 /* Future.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Future.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -215,6 +220,7 @@
 			children = (
 				0C20715A1D4E83A700EA5BEF /* Future.swift */,
 				0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */,
+				0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */,
 				0C9F167721A03A6A002EB416 /* CancellationToken.swift */,
 			);
 			path = Sources;
@@ -638,6 +644,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CD4DCD221A9A81800B45CA2 /* FutureCompatible.swift in Sources */,
 				0C9F165521A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715C1D4E83A700EA5BEF /* Future.swift in Sources */,
 				0C9F167921A03A6A002EB416 /* CancellationToken.swift in Sources */,
@@ -648,6 +655,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CD4DCD121A9A81800B45CA2 /* FutureCompatible.swift in Sources */,
 				0C9F165721A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715B1D4E83A700EA5BEF /* Future.swift in Sources */,
 				0C9F167821A03A6A002EB416 /* CancellationToken.swift in Sources */,
@@ -658,6 +666,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CD4DCD321A9A81800B45CA2 /* FutureCompatible.swift in Sources */,
 				0C9F165421A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715D1D4E83A700EA5BEF /* Future.swift in Sources */,
 				0C9F167A21A03A6A002EB416 /* CancellationToken.swift in Sources */,
@@ -707,6 +716,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CD4DCD421A9A81800B45CA2 /* FutureCompatible.swift in Sources */,
 				0C9F165621A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715E1D4E83A700EA5BEF /* Future.swift in Sources */,
 				0C9F167B21A03A6A002EB416 /* CancellationToken.swift in Sources */,
