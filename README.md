@@ -10,7 +10,11 @@
 
 <hr/>
 
-A future represents a result of a computation which may be available now, or in the future, or never.  `FutureX` provides a streamlined `Future<Value, Error>` with functional interface. Futures enable easy composition of asynchronous operations thanks to function like `map`, `flatMap`, `zip`, `reduce` and many others.
+A **future** represents a result of a computation which may be available now, or in the future, or never. **FutureX** provides a streamlined **`Future<Value, Error>`** implementation. Futures enable easy composition of async tasks thanks to functions like `map`, `flatMap`, `zip`, `reduce` and many others.
+
+FutureX is designed ergonomics and performance in mind. It uses familiar functional terms so it's easy to learn and use. 
+
+> Check out [**FutureX Community**](https://github.com/FutureXCommunity) provides extensions for popular frameworks.
 
 ## Getting Started
 

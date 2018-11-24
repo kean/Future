@@ -1,3 +1,9 @@
+# FutureX 0.15
+
+- `on` no longer returns `Future` to enable future extensions, discourage putting side effects in the middle of the chain, and simplify scheduleing model
+- `CancellationToken.noOp` renamed to `CancellationToken.none`.
+- Add `FutureCompatible` and `FutureExtension`
+
 # FutureX 0.14
 
 - Method `observe(on:)` is more flexible, it can now  be used to runs transformations like `map`, `tryMap` on a specified queue (and actually any other transformation too, it composes really well with them).
