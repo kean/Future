@@ -64,7 +64,11 @@ public struct CancellationToken {
     }
 
     /// Returns a token which never gets cancelled.
-    public static var noOp: CancellationToken {
-        return CancellationToken(source: nil)
+    public init() {
+        self.init(source: nil)
+    }
+
+    internal init(source: CancellationTokenSource?) {
+        self.source = source
     }
 }
