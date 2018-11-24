@@ -1,5 +1,5 @@
 <p align="left"><img src="https://user-images.githubusercontent.com/1567433/48920624-35d00680-ee9a-11e8-829b-47b0e9529d52.png" height="100"/>
-<p align="left">A streamlined <code>Future&lt;Value, Error&gt;</code> implementation with functional interface</p>
+<p align="left">A streamlined <code>Future&lt;Value, Error&gt;</code> implementation</p>
 <p align="left">
 <img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
@@ -288,7 +288,7 @@ The task has full control over cancellation. You can ignore it, you can fail a p
 
 Performance is a top priority for FutureX. Every feature was built with performance in mind.
 
-We avoid dynamic dispatch, reduce the number of allocations and deallocations, avoid doing any unnecessary work, implement methods in faster but less elegant way, avoid locking as much as possible, and more. There are also some key design differences that give FutureX an edge over other frameworks.
+We avoid dynamic dispatch, reduce the number of allocations and deallocations, avoid doing any unnecessary work, implement methods in sometimes less elegant but more performant way, avoid locking as much as possible, and more. There are also some key design differences that give FutureX an edge over other frameworks.
 
 ## Requirements
 

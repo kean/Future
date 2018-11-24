@@ -63,9 +63,9 @@ public struct CancellationToken {
         source?.register(closure)
     }
 
-    /// Returns a token which never gets cancelled.
-    public init() {
-        self.init(source: nil)
+    /// Returns a token which is never cancelled.
+    public static var none: CancellationToken {
+        return CancellationToken(source: nil)
     }
 
     internal init(source: CancellationTokenSource?) {
