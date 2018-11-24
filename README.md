@@ -14,7 +14,7 @@ A **future** represents a result of a computation which may be available now, or
 
 FutureX is designed ergonomics and performance in mind. It uses familiar functional terms so it's easy to learn and use. 
 
-> Check out [**FutureX Community**](https://github.com/FutureXCommunity) provides extensions for popular frameworks.
+> Check out [**FutureX Community**](https://github.com/FutureXCommunity) that provides extensions for popular frameworks.
 
 ## Getting Started
 
