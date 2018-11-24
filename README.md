@@ -12,7 +12,7 @@
 
 A **future** represents a result of a computation which may be available now, or in the future, or never. **FutureX** provides a streamlined **`Future<Value, Error>`** implementation. Futures enable easy composition of async tasks thanks to functions like `map`, `flatMap`, `zip`, `reduce` and many others.
 
-FutureX is designed ergonomics and performance in mind. It uses familiar functional terms so it's easy to learn and use. 
+FutureX is designed with ergonomics and performance in mind. It uses familiar functional terms so it's easy to learn and use. 
 
 > Check out [**FutureX Community**](https://github.com/FutureXCommunity) that provides extensions for popular frameworks.
 
@@ -299,7 +299,7 @@ The task has full control over cancellation. You can ignore it, you can fail a p
 
 ## Async/Await
 
-One of the major benefits of using futures is that when [async/await](https://gist.github.com/lattner/429b9070918248274f25b714dcfc7619) support is eventually added to Swift, it would be relatively easy to replace the code that uses futures.
+Async/await is often built on top of futures. When [async/await](https://gist.github.com/lattner/429b9070918248274f25b714dcfc7619) support is eventually added to Swift, it would be relatively easy to replace the code that uses futures with async/await.
 
 > There is a [fake (blocking) version](https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7) of async/await built for FutureX. It's not meant to be used in production.
 
