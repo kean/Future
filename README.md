@@ -255,19 +255,34 @@ Please keep in mind that only the future returns directly by `observe(on:)` is g
 
 ## Cancellation
 
-The framework wouldn't be complete without cancellation. FutureX considers cancellation to be a concern orthogonal to `Future`. It implements a [`CancellationToken`](https://kean.github.io/post/cancellation-token) pattern for cooperative cancellation of asynchronous operations:
+Cancellation is a concern orthogonal to `Future`. Think about `Future` as a simple callback replacement - callbacks don't support cancellation.
+
+FutureX implements a [`CancellationToken`](https://kean.github.io/post/cancellation-token) pattern for cooperative cancellation of async tasks. A token is created through a cancellation token source.
 
 ```swift
 let cts = CancellationTokenSource()
-getUser(token: cts.token).flatMap { user in
-    getAvatar(user.avatarUrl, token: cts.token)
-}
+asyncWork(token: cts.token).on(success: {
+    // Operation finished
+}) 
 
-// At some point in the future:
+// At some point later, can be on the other thread:
 cts.cancel()
-
-// Both asynchronous operations are cancelled.
 ```
+
+To cancel multiple async tasks, you can pass the same token to all of them. Implementing async tasks that support cancellation is easy:
+
+```swift
+func loadData(with url: URL, _ token: CancellationToken = CancellationToken()) -> Future<Data, URLError> {
+    let promise = Promise<Data, URLError>()
+    let task = URLSession.shared.dataTask(with: url) { data, error in
+        // Handle response
+    }
+    token.register(task.cancel)
+    return promise.future
+}
+```
+
+The task has full control over cancellation. You can ignore it, you can fail a promise with a specific error, return a partial result, or not resolve a promise at all.
 
 ## Performance
 
