@@ -38,9 +38,13 @@ FutureX is designed with ergonomics and performance in mind. It uses familiar fu
  
 ## Quick Start Guide
 
+Let's start with a quick overview of the types:
+
+<img src="https://user-images.githubusercontent.com/1567433/48986011-26a5be80-f10f-11e8-8962-ee0e68c91c4e.png" width="680px">
+
 ### Create Future
 
-Using `Promise`:
+The most common way to create a future is by using `Promise`:
 
 ```swift
 func someAsyncOperation() -> Future<Value, Error> {
@@ -55,7 +59,7 @@ func someAsyncOperation() -> Future<Value, Error> {
 }
 ```
 
-Using a convenience `init` method:
+Sometimes a convenience `init` method comes handy:
 
 ```swift
 Future<Int, Error> { promise in
@@ -65,7 +69,7 @@ Future<Int, Error> { promise in
 }
 ```
 
-With a value or an error:
+In some cases you need to create a future which already has a result:
 
 ```swift
 Future(value: 1) // Automatically inferred to be Future<Int, Never>
@@ -124,6 +128,10 @@ let avatar = user
     .map { $0.avatarURL }
     .flatMap(loadAvatar)
 ```
+
+If you are not familiar with `flatMap` it might be hard to wrap your head around it. But when it clicks, using it becomes second nature.
+
+<img src="https://user-images.githubusercontent.com/1567433/48986010-26a5be80-f10f-11e8-8a98-00eae179f4ac.png" width="640px">
 
 ### `mapError`, `flatMapError`
 
