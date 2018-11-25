@@ -33,7 +33,7 @@ FutureX is designed with ergonomics and performance in mind. It uses familiar fu
   * [`materialize`](#materialize)
 - [**Threading**](#threading)
 - [**Cancellation**](#cancellation)
-- [**Note on Async/Await**](#asyncawait)
+- [**Async/Await**](#asyncawait)
 - [**Performance**](#performance)
  
 ## Quick Start Guide
@@ -286,7 +286,7 @@ cts.cancel()
 To cancel multiple async tasks, you can pass the same token to all of them. Implementing async tasks that support cancellation is easy:
 
 ```swift
-func loadData(with url: URL, _ token: CancellationToken = CancellationToken()) -> Future<Data, URLError> {
+func loadData(with url: URL, _ token: CancellationToken = .none) -> Future<Data, URLError> {
     let promise = Promise<Data, URLError>()
     let task = URLSession.shared.dataTask(with: url) { data, error in
         // Handle response
