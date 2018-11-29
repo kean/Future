@@ -159,6 +159,15 @@ public struct Future<Value, Error> {
     }
 }
 
+extension Future where Error == Swift.Error {
+    public init(_ closure: @autoclosure () throws -> Value) {
+        let promise = Promise()
+        self.init(resolver: .promise(promise))
+        do { promise.succeed(value: try closure()) }
+        catch { promise.fail(error: error) }
+    }
+}
+
 extension Future where Error == Never {
     func cascade(success: @escaping (Value) -> Void) {
         cascade(success: success, failure: { _ in fatalError("Future<Value, Never> can't produce an error") })
