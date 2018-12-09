@@ -160,11 +160,12 @@ public struct Future<Value, Error> {
 }
 
 extension Future where Error == Swift.Error {
-    public init(_ closure: @autoclosure () throws -> Value) {
-        let promise = Promise()
-        self.init(resolver: .promise(promise))
-        do { promise.succeed(value: try closure()) }
-        catch { promise.fail(error: error) }
+    public init(_ closure: () throws -> Value) {
+        do {
+            self.init(value: try closure())
+        } catch {
+            self.init(error: error)
+        }
     }
 }
 

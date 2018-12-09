@@ -118,6 +118,17 @@ class FutureTests: XCTestCase {
         XCTAssertEqual(future.value, 1)
     }
 
+    // MARK: Init with Throwing Closure
+
+    func testInitWithThrowingClosure() {
+        let future = Future<Int, Error> {
+            throw NSError(domain: "test", code: 1, userInfo: nil)
+        }
+
+        // EXPECT future to be created with an error
+        XCTAssertEqual((future.error as NSError?)?.domain, "test")
+    }
+
     // MARK: Resolve Result
 
     func testPromiseResolve() {

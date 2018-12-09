@@ -146,20 +146,9 @@ extension Future where Error == Swift.Error {
     /// current future's value. If the `transform` closure throws, the resulting
     /// future also throws.
     public func tryMap<NewValue>(_ transform: @escaping (Value) throws -> NewValue) -> Future<NewValue, Error> {
-        // This could be implemented in terms of `flatMap` by to avoid additional
-        // allocation and indirection we use `observe` directly.
-        //
-        //  return flatMap { value in
-        //      do { return Future<NewValue, Error>(value: try transform(value)) }
-        //      catch { return Future<NewValue, Error>(error: error) }
-        // }
-
-        let promise = Future<NewValue, Error>.Promise()
-        cascade(success: { value in
-            do { promise.succeed(value: try transform(value)) }
-            catch { promise.fail(error: error) }
-        }, failure: promise.fail)
-        return promise.future
+        return flatMap { value -> Future<NewValue, Error> in
+            return Future<NewValue, Error> { try transform(value) }
+        }
     }
 }
 
