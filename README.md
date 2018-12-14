@@ -38,18 +38,18 @@ FutureX is designed with ergonomics and performance in mind. It uses familiar fu
  
 ## Quick Start Guide
 
-Let's start with a quick overview of the types:
+Let's start with a quick overview of the types. The central type is of course `Future`:
 
 <img src="https://user-images.githubusercontent.com/1567433/48986011-26a5be80-f10f-11e8-8962-ee0e68c91c4e.png" width="680px">
 
 ### Create Future
 
-The most common way to create a future is by using `Promise`:
+To create a future you can use `Promise`:
 
 ```swift
 func someAsyncOperation() -> Future<Value, Error> {
     let promise = Promise<Value, Error>()
-    someAsyncOperationWithCallback { value, error in
+    asyncTaskWithCallback { value, error in
         // If success
         promise.succeed(result: value)
         // If error
@@ -59,17 +59,17 @@ func someAsyncOperation() -> Future<Value, Error> {
 }
 ```
 
-Sometimes a convenience `init` method comes handy:
+Sometimes a convenience `init` method comes in handy:
 
 ```swift
-Future<Int, Error> { promise in
-    someAsyncOperationWithCallback { value, error in
+Future<Value, Error> { promise in
+    asyncTaskWithCallback { value, error in
         // Resolve the promise
     }
 }
 ```
 
-In some cases you need to create a future which already has a result:
+If you already know the result you can create a future with it:
 
 ```swift
 Future(value: 1) // Automatically inferred to be Future<Int, Never>
@@ -284,14 +284,19 @@ FutureX implements a [`CancellationToken`](https://kean.github.io/post/cancellat
 ```swift
 let cts = CancellationTokenSource()
 asyncWork(token: cts.token).on(success: {
-    // Operation finished
+    // To prevent closure from running when task is cancelled use `isCancelling`:
+    guard !cts.isCancelling else { return }
+    
+    // Do something with the result
 }) 
 
 // At some point later, can be on the other thread:
 cts.cancel()
 ```
 
-To cancel multiple async tasks, you can pass the same token to all of them. Implementing async tasks that support cancellation is easy:
+To cancel multiple async tasks, you can pass the same token to all of them.
+
+Implementing async tasks that support cancellation is easy:
 
 ```swift
 func loadData(with url: URL, _ token: CancellationToken = .none) -> Future<Data, URLError> {
