@@ -93,7 +93,7 @@ public struct Future<Value, Error> {
     ///   - failure: Gets called when the future is resolved with an error.
     ///   - completion: Gets called when the future is resolved.
     public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) {
-        let scheduler = self.scheduler ?? Scheduler.main
+        let scheduler = self.scheduler ?? Scheduler.default
         cascadeImmediately { result in
             scheduler {
                 switch result {
@@ -426,6 +426,11 @@ extension Future.Result: Equatable where Value: Equatable, Error: Equatable { }
 public typealias ScheduleWork = (_ work: @escaping () -> Void) -> Void
 
 public enum Scheduler {
+    /// `Scheduler.main` by default. Change the scheduler to change the default
+    /// behavior where callbacks attached via `on` method are always called on
+    /// the main thread.
+    public static var `default` = Scheduler.main
+
     /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
     public static let main: ScheduleWork = { work in
         Thread.isMainThread ? work() : DispatchQueue.main.async(execute: work)

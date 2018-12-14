@@ -888,6 +888,60 @@ class WaitTests: XCTestCase {
     }
 }
 
+class ChangingDefaultSchedulerTests: XCTestCase {
+    private var previousScheduler: ScheduleWork!
+
+    override func setUp() {
+        previousScheduler = Scheduler.default
+    }
+
+    override func tearDown() {
+        Scheduler.default = previousScheduler
+    }
+
+    func testChangingDefaultScheduler() {
+        // WHEN a custom default scheduler is set
+        let (queue, key) = DispatchQueue.specific()
+        Scheduler.default = Scheduler.async(on: queue)
+
+        // EXPECT callbacks to be dispatched on a new default scheduler
+        let future = Future(value: 1)
+        let expectation = self.expectation()
+        future.on(success: { _ in
+            XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
+            expectation.fulfill()
+        })
+        wait()
+    }
+
+    func testChangingDefaultSchedulerDoesntAffectTransformations() {
+        // WHEN a custom default scheduler is set
+        let (queue, _) = DispatchQueue.specific()
+        Scheduler.default = Scheduler.async(on: queue)
+
+        // GIVEN a promise
+        let promise = Promise<Int, Never>()
+        let (workQueue, workKey) = DispatchQueue.specific()
+
+        // EXPECT map (and other transformations) to still be performed on the queue
+        // on which operations was completed
+        let result = promise.future.map { value -> Int in
+            XCTAssertNotNil(DispatchQueue.getSpecific(key: workKey))
+            return value + 1
+        }
+
+        workQueue.async {
+            promise.succeed(value: 2)
+        }
+
+        let expectation = self.expectation()
+        result.on(success: { _ in
+            expectation.fulfill()
+        })
+        wait()
+    }
+}
+
 private typealias F = Future<Int, MyError>
 private typealias P = F.Promise
 
