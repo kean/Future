@@ -159,18 +159,6 @@ public struct Future<Value, Error> {
     }
 }
 
-extension Future where Error == Swift.Error {
-    /// Creates a future by evaluating the given throwing closure, capturing the
-    /// returned value as a success, or any thrown error as a failure.
-    public init(catching body: () throws -> Value) {
-        do {
-            self.init(value: try body())
-        } catch {
-            self.init(error: error)
-        }
-    }
-}
-
 extension Future where Error == Never {
     func cascade(success: @escaping (Value) -> Void) {
         cascade(success: success, failure: { _ in fatalError("Future<Value, Never> can't produce an error") })
@@ -454,6 +442,28 @@ public enum Scheduler {
     public static func async(on queue: DispatchQueue, flags: DispatchWorkItemFlags = []) -> ScheduleWork {
         return { work in
             queue.async(flags: flags, execute: work)
+        }
+    }
+}
+
+// MARK: - Catching Init
+
+extension Future where Error == Swift.Error {
+    /// Creates a future by evaluating the given throwing closure, capturing the
+    /// returned value as a success, or any thrown error as a failure.
+    public init(catching body: () throws -> Value) {
+        self.init(result: Result(catching: body))
+    }
+}
+
+extension Future.Result where Error == Swift.Error {
+    /// Creates a future by evaluating the given throwing closure, capturing the
+    /// returned value as a success, or any thrown error as a failure.
+    public init(catching body: () throws -> Value) {
+        do {
+            self = .success(try body())
+        } catch {
+            self = .failure(error)
         }
     }
 }
