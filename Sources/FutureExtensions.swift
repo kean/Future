@@ -147,7 +147,7 @@ extension Future where Error == Swift.Error {
     /// future also throws.
     public func tryMap<NewValue>(_ transform: @escaping (Value) throws -> NewValue) -> Future<NewValue, Error> {
         return flatMap { value -> Future<NewValue, Error> in
-            return Future<NewValue, Error> { try transform(value) }
+            return Future<NewValue, Error>(catching: { try transform(value) })
         }
     }
 }

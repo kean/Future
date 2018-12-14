@@ -160,9 +160,11 @@ public struct Future<Value, Error> {
 }
 
 extension Future where Error == Swift.Error {
-    public init(_ closure: () throws -> Value) {
+    /// Creates a future by evaluating the given throwing closure, capturing the
+    /// returned value as a success, or any thrown error as a failure.
+    public init(catching body: () throws -> Value) {
         do {
-            self.init(value: try closure())
+            self.init(value: try body())
         } catch {
             self.init(error: error)
         }
