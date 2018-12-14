@@ -319,10 +319,12 @@ extension Future where Value == Any, Error == Any {
     }
 }
 
-// MARK: - Result, Promise
+// MARK: - Result
 
 extension Future {
 
+    /// A value that represents either a success or a failure, including an
+    /// associated value in each case.
     public enum Result {
         case success(Value), failure(Error)
 
@@ -338,6 +340,11 @@ extension Future {
             return error
         }
     }
+}
+
+// MARK: - Promise
+
+extension Future {
 
     /// A promise to provide a result later.
     public final class Promise: CustomDebugStringConvertible {
