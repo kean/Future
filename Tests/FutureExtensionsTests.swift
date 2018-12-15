@@ -179,6 +179,18 @@ class TryMapTests: XCTestCase {
     }
 }
 
+class CastErrorTests: XCTestCase {
+    func testCastError() {
+        // EXPECT castError to compile with a default argument
+        let _: Future<Int, MyError> = Future(value: 1).castError()
+    }
+
+    func testCastErrorCustomArgument() {
+        // EXPECT castError to compile with a custom error typ argument
+        _ = Future(value: 1).castError(MyError.self)
+    }
+}
+
 class ForEachTests: XCTestCase {
     func testForEach() {
         let futures: [() -> Future<Int, MyError>] = [

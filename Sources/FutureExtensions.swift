@@ -152,7 +152,7 @@ extension Future where Error == Swift.Error {
     }
 }
 
-// MARK: - Cast
+// MARK: - CastError
 
 extension Future where Error == Never {
 
@@ -160,7 +160,7 @@ extension Future where Error == Never {
     /// error - to `Future<Value, NewError>` which can. The returned future never
     /// actually produces an error but it makes it easier to compose it with the
     /// ones that can.
-    public func castError<NewError>() -> Future<Value, NewError> {
+    public func castError<NewError>(_ : NewError.Type = NewError.self) -> Future<Value, NewError> {
         return mapError { _ in fatalError("Future<Value, Never> can't produce an error") }
     }
 }
