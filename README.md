@@ -1,5 +1,5 @@
-<p align="left"><img src="https://user-images.githubusercontent.com/1567433/48920624-35d00680-ee9a-11e8-829b-47b0e9529d52.png" height="100"/>
-<p align="left">A streamlined <code>Future&lt;Value, Error&gt;</code> implementation</p>
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/50047319-05ebdb80-00b3-11e9-9524-09b7a84c36e8.png" height="82"/>
+<p align="left">Streamlined <code>Future&lt;Value, Error&gt;</code> implementation</p>
 <p align="left">
 <img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
@@ -10,48 +10,35 @@
 
 <hr/>
 
-A **future** represents a result of a computation which may be available now, or in the future, or never. **FutureX** provides a streamlined **`Future<Value, Error>`** implementation. Futures enable easy composition of async tasks thanks to functions like `map`, `flatMap`, `zip`, `reduce` and many others.
-
-FutureX is designed with ergonomics and performance in mind. It uses familiar functional terms so it's easy to learn and use. 
+**Future** represents a result of an async task which may be available now, or in the future, or never. **Future**X provides a streamlined **`Future<Value, Error>`** engineered with ergonomics and performance in mind. Futures enable easy composition of async tasks using familiar functions like `map`, `flatMap`, `zip`, `reduce` which are easy to learn and use.
 
 > <img src="https://user-images.githubusercontent.com/1567433/48973894-a584f380-f04a-11e8-88f8-b66c083a5bbb.png" width="40px"> <br/>
 > Check out [**FutureX Community**](https://github.com/FutureXCommunity) for extensions for popular frameworks and more.
 
 ## Getting Started
 
-- [**Quick Start Guide**](#quick-start-guide)
-  * [Create Future](#create-future)
-  * [Attach Callbacks](#attach-callbacks)
-  * [`wait`](#wait), [`result`](#result)
-- [**Functional Composition**](#functional-composition)
-  * [`map`](#map-flatmap), [`flatMap`](#map-flatmap)
-  * [`mapError`](#maperror-flatmaperror), [`flatMapError`](#maperror-flatmaperror)
-  * [`zip`](#zip), [`reduce`](#reduce)
-- [**Additions**](#additions)
-  * [`first`](#first), [`forEach`](#foreach)
-  * [`after`](#after), [`retry`](#retry)
-  * [`materialize`](#materialize)
-- [**Threading**](#threading)
-- [**Cancellation**](#cancellation)
-- [**Async/Await**](#asyncawait)
-- [**Performance**](#performance)
- 
+- [**Quick Start Guide**](#quick-start-guide) : 
+[Overview](#quick-start-guide) · [Create Future](#create-future) · [Attach Callbacks](#attach-callbacks) · [`wait`](#wait)
+- [**Functional Composition**](#functional-composition) : [`map`](#map-flatmap) · [`flatMap`](#map-flatmap) · [`mapError`](#maperror-flatmaperror) · [`flatMapError`](#maperror-flatmaperror) · [`zip`](#zip) · [`reduce`](#reduce)
+- [**Additions**](#additions) : [`first`](#first) · [`forEach`](#foreach) · [`after`](#after) · [`retry`](#retry) · [`materialize`](#materialize)
+- [**Threading**](#threading) · [**Cancellation**](#cancellation) · [**Async/Await**](#asyncawait) · [**Performance**](#performance)
+
 ## Quick Start Guide
 
-Let's start with a quick overview of the types. The central type is of course `Future`:
+Let's start with an overview of the available types. The central type is of course `Future`. Each `Future` is created with a private `Resolver`. It can be either a `Promise` (when the work happens asynchronously) or a `Result` (when the result is already available).
 
 <img src="https://user-images.githubusercontent.com/1567433/48986011-26a5be80-f10f-11e8-8962-ee0e68c91c4e.png" width="680px">
 
 ### Create Future
 
-To create a future you can use `Promise`:
+To create a future that represents a result of an async task use `Promise`:
 
 ```swift
-func someAsyncOperation() -> Future<Value, Error> {
+func someAsyncTask() -> Future<Value, Error> {
     let promise = Promise<Value, Error>()
-    asyncTaskWithCallback { value, error in
+    performAsyncTask { value, error in
         // If success
-        promise.succeed(result: value)
+        promise.succeed(value: value)
         // If error
         promise.fail(error: error)
     }
@@ -59,23 +46,28 @@ func someAsyncOperation() -> Future<Value, Error> {
 }
 ```
 
-Sometimes a convenience `init` method comes in handy:
+> `Promise` is thread safe. You can call `succeed` or `fail` from any thread and any number of times - only the first result is sent to the `Future`.
+
+If the result of the work is already available by the time you need a future, you can use one of these special initializers:
 
 ```swift
-Future<Value, Error> { promise in
-    asyncTaskWithCallback { value, error in
-        // Resolve the promise
+// Init with a value
+Future(value: 1) // Inferred to be Future<Int, Never>
+Future<Int, MyError>(value: 1)
+
+// Init with an error
+Future<Int, MyError>(error: .dataCorrupted)
+
+// Init with a throwing closure
+Future<Int, Error> {
+    guard let value = Int(string) else {
+        throw Error.dataCorrupted
     }
+    return value
 }
 ```
 
-If you already know the result you can create a future with it:
-
-```swift
-Future(value: 1) // Automatically inferred to be Future<Int, Never>
-Future<Int, MyError>(value: 1)
-Future<Int, MyError>(error: .unknown)
-```
+> These init methods require no allocations. Prefer to use them when you know the result.
 
 ### Attach Callbacks
 
@@ -90,7 +82,7 @@ future.on(success: { print("received value: \($0)" },
 
 Each callback is optional - you don't have to attach all at the same time. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. 
 
-By default the callbacks are run on `.main` scheduler. It runs immediately if on the main thread, otherwise asynchronously on the main thread. 
+By default, the callbacks are run on the `.main` scheduler. It runs immediately if on the main thread, otherwise asynchronously on the main thread. 
 
 > See [**Threading**](#threading) for a rationale and more info.
 
@@ -110,7 +102,7 @@ If the future already has a result you can read it synchronously:
 class Future<Value, Error> {
     var value: Value? { get }
     var error: Error? { get }
-    var result: Result<Value, Error> { get }
+    var result: Result { get }
 }
 ```
 
@@ -319,9 +311,11 @@ Async/await is often built on top of futures. When [async/await](https://gist.gi
 
 ## Performance
 
-Performance is a top priority for FutureX. Every feature was built with performance in mind.
+Every feature in FutureX is engineered with performance in mind.
 
-We avoid dynamic dispatch, reduce the number of allocations and deallocations, avoid doing any unnecessary work, implement methods in sometimes less elegant but more performant way, avoid locking as much as possible, and more. There are also some key design differences that give FutureX an edge over other frameworks.
+We avoid dynamic dispatch, reduce the number of allocations and deallocations, avoid doing unnecessary work and lock as less as possible. Methods are often implemented in a sometimes less elegant but more performant way.
+
+There are also some key design differences that give FutureX an edge over other frameworks. One example is `Future` type itself which is designed as struct which allows some common operations to be performed without a single allocation.
 
 ## Requirements
 
