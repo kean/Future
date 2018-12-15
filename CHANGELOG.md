@@ -1,3 +1,9 @@
+# FutureX 0.16
+
+- Add  `Future` initializer which takes a throwing closure:  `init(catching body: () throws -> Value)`. This feature was added in the first FutureX PR [#1](https://github.com/kean/FutureX/pull/1), thanks to [@moto0000](https://github.com/moto0000)!
+- Add `castError` variant which takes an error type as an argument
+- Add `Scheduler.default` which can be used to change the default scheduler which is `Scheduler.main`
+
 # FutureX 0.15
 
 - `on` no longer returns `Future` to enable future extensions, discourage putting side effects in the middle of the chain, and simplify scheduleing model
