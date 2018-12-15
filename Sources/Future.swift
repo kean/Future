@@ -46,10 +46,10 @@ public struct Future<Value, Error> {
     public init(_ closure: (_ promise: Promise) -> Void) {
         let promise = Promise()
         self.init(resolver: .promise(promise))
-        closure(promise) // retain self
+        closure(promise)
     }
 
-    private init(resolver: Resolver = .promise(Promise()), scheduler: ScheduleWork? = nil) {
+    private init(resolver: Resolver, scheduler: ScheduleWork? = nil) {
         self.resolver = resolver
         self.scheduler = scheduler
     }
@@ -94,7 +94,7 @@ public struct Future<Value, Error> {
     ///   - completion: Gets called when the future is resolved.
     public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) {
         let scheduler = self.scheduler ?? Scheduler.default
-        cascadeImmediately { result in
+        _cascade { result in
             scheduler {
                 switch result {
                 case let .success(value): success?(value)
@@ -107,15 +107,15 @@ public struct Future<Value, Error> {
 
     func cascade(completion: @escaping (Result) -> Void) {
         if let scheduler = self.scheduler {
-            cascadeImmediately(completion: { result in
+            _cascade { result in
                 scheduler { completion(result) }
-            })
+            }
         } else {
-            cascadeImmediately(completion: completion)
+            _cascade(completion: completion)
         }
     }
 
-    private func cascadeImmediately(completion: @escaping (Result) -> Void) {
+    private func _cascade(completion: @escaping (Result) -> Void) {
         switch resolver {
         case let .promise(promise):
             promise.observe(completion: completion)
@@ -124,9 +124,13 @@ public struct Future<Value, Error> {
         }
     }
 
-    // At convenience method which is used for implementing cascades of futures.
-    // It calls `observe(completion:)` directly for performance but technically,
-    // it could be implemented in terms of public `on(scheduler: Scheduler.immediate`.
+    /// A convenience method which is used for implementing cascades of futures.
+    ///
+    /// It calls `cascade(completion:)` directly but technically it could be
+    /// implemented in terms of public methods without much of a performance hit:
+    ///
+    ///     future.observe(on: Scheduler.immediate).on(completion: { ... })
+    ///
     func cascade(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
         cascade { result in
             switch result {
@@ -160,6 +164,8 @@ public struct Future<Value, Error> {
 }
 
 extension Future where Error == Never {
+    /// A special variant that doesn't require a `failure` closure -
+    /// `Future<Value, Never>` can't produce an error.
     func cascade(success: @escaping (Value) -> Void) {
         cascade(success: success, failure: { _ in fatalError("Future<Value, Never> can't produce an error") })
     }
@@ -168,6 +174,8 @@ extension Future where Error == Never {
 // MARK: - Disambiguate Init
 
 extension Future where Error == Never {
+    /// Creates a future with the given value and automatically assigns `Error`
+    /// to be `Never`.
     public init(value: Value) {
         self.init(result: .success(value))
     }
