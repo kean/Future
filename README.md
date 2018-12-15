@@ -131,7 +131,7 @@ let avatar = user
 
 If you are not familiar with `flatMap` it might be hard to wrap your head around it. But when it clicks, using it becomes second nature.
 
-<img src="https://user-images.githubusercontent.com/1567433/48986010-26a5be80-f10f-11e8-8a98-00eae179f4ac.png" width="640px">
+<img src="https://user-images.githubusercontent.com/1567433/50041360-e2457880-0053-11e9-8496-a3cfc71c0b0a.png" width="640px">
 
 ### `mapError`, `flatMapError`
 
