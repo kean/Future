@@ -1,4 +1,4 @@
-<p align="left"><img src="https://user-images.githubusercontent.com/1567433/50047319-05ebdb80-00b3-11e9-9524-09b7a84c36e8.png" height="82"/>
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/50047319-05ebdb80-00b3-11e9-9524-09b7a84c36e8.png" height="70"/>
 <p align="left">Streamlined <code>Future&lt;Value, Error&gt;</code> implementation</p>
 <p align="left">
 <img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
@@ -10,7 +10,9 @@
 
 <hr/>
 
-**Future** represents a result of an async task which may be available now, or in the future, or never. **Future**X provides a streamlined **`Future<Value, Error>`** engineered with ergonomics and performance in mind. Futures enable easy composition of async tasks using familiar functions like `map`, `flatMap`, `zip`, `reduce` which are easy to learn and use.
+**Future** represents a result of a task which may be available now, or in the future, or never. **Future**X provides a streamlined **`Future<Value, Error>`** type engineered with ergonomics and performance in mind.
+
+Futures enable easy composition of tasks using familiar functions like `map`, `flatMap`, `zip`, `reduce` and others which are easy to learn and use.
 
 > <img src="https://user-images.githubusercontent.com/1567433/48973894-a584f380-f04a-11e8-88f8-b66c083a5bbb.png" width="40px"> <br/>
 > Check out [**FutureX Community**](https://github.com/FutureXCommunity) for extensions for popular frameworks and more.
