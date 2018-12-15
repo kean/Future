@@ -75,7 +75,8 @@ extension Future {
         }
     }
 
-    /// Performs the given number of attempts to finish the work successfully.
+    /// Performs the given number of attempts until the work is successfully
+    /// finished.
     ///
     /// - parameters:
     ///     - attempts: The number of attempts to make. Pass `2` to retry once
@@ -95,9 +96,7 @@ extension Future {
                     return Future(error: error)
                 }
                 let delay = delay.delay(attempt: attemptsCounter)
-                return Future<Void, Never>.after(seconds: delay)
-                    .castError()
-                    .flatMap(attempt)
+                return Future<Void, Never>.after(seconds: delay).flatMap(attempt)
             }
         }
         return attempt()
