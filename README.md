@@ -29,13 +29,25 @@ Futures enable composition of tasks using familiar functions like `map`, `flatMa
 
 ## Quick Start Guide
 
-Let's start with an overview of the available types. The central type is of course `Future`. Each `Future` is created with a private `Resolver`. It can be either a `Promise` (when the work happens asynchronously) or a `Result` (when the result is already available).
+Let's start with an overview of the available types. The central ones are of course `Future` and its `Result`:
 
-<img src="https://user-images.githubusercontent.com/1567433/48986011-26a5be80-f10f-11e8-8962-ee0e68c91c4e.png" width="680px">
+```swift
+struct Future<Value, Error> {
+    var result: Result? { get }
+    
+    func on(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void)
+
+    enum Result {
+        case success(Value), failure(Error)
+    }
+}
+```
+
+> `Future` is parameterized with two generic arguments - `Value` and `Error`. This not only takes advantage of Swift type-safety features but also allows to do things like represent futures that never fail using `Never` - `Future<Value, Never>`.
 
 ### Create Future
 
-To create a future that represents a result of an async task use `Promise`:
+To create a future you would normally use a `Promise`:
 
 ```swift
 func someAsyncTask() -> Future<Value, Error> {
@@ -52,7 +64,7 @@ func someAsyncTask() -> Future<Value, Error> {
 
 > `Promise` is thread safe. You can call `succeed` or `fail` from any thread and any number of times - only the first result is sent to the `Future`.
 
-If the result of the work is already available by the time you need a future, you can use one of these special initializers:
+If the result of the work is already available by the time the future is created use one of these initializers:
 
 ```swift
 // Init with a value
@@ -71,7 +83,7 @@ Future<Int, Error> {
 }
 ```
 
-> These init methods require no allocations. Prefer to use them when you know the result.
+> These `init` methods require no allocations which makes them faster than using a `Promise`.
 
 ### Attach Callbacks
 
