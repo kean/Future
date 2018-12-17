@@ -69,6 +69,7 @@
 		0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "A+Tests.swift"; sourceTree = "<group>"; };
 		0CAA5D221DB14859001F6D96 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0CAA5D461DB149FF001F6D96 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		0CD0B07421C8423A000581BB /* Future.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Future.xcconfig; sourceTree = "<group>"; };
 		0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureCompatible.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				0C5108301D4E820D00F1F405 /* Info.plist */,
+				0CD0B07421C8423A000581BB /* Future.xcconfig */,
 			);
 			path = "Supporting Files";
 			sourceTree = SOURCE_ROOT;
@@ -506,6 +508,7 @@
 		};
 		0C5108271D4E81CE00F1F405 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0CD0B07421C8423A000581BB /* Future.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -553,23 +556,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SUPPORTED_PLATFORMS = "iphoneos macosx appletvos watchos iphonesimulator appletvsimulator watchsimulator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
 		0C5108281D4E81CE00F1F405 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0CD0B07421C8423A000581BB /* Future.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -611,16 +609,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SUPPORTED_PLATFORMS = "iphoneos macosx appletvos watchos iphonesimulator appletvsimulator watchsimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
