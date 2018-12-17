@@ -83,7 +83,9 @@ public struct Future<Value, Error> {
         return Future(resolver: resolver, scheduler: scheduler)
     }
 
-    /// Attach callbacks to execute when the future has a result.
+    /// Attach callbacks to the future. If the future already has a result,
+    /// callbacks are executed immediatelly. If the future doesn't have a result
+    /// yet, callbacks will be executed when the future is resolved.
     ///
     /// By default, the callbacks are run on `Scheduler.main` which runs immediately
     /// if on the main thread, otherwise asynchronously on the main thread.
@@ -92,7 +94,7 @@ public struct Future<Value, Error> {
     ///   - success: Gets called when the future is resolved successfully.
     ///   - failure: Gets called when the future is resolved with an error.
     ///   - completion: Gets called when the future is resolved.
-    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) {
+    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
         let scheduler = self.scheduler ?? Scheduler.default
         _cascade { result in
             scheduler {
@@ -100,9 +102,17 @@ public struct Future<Value, Error> {
                 case let .success(value): success?(value)
                 case let .failure(error): failure?(error)
                 }
-                completion?(result)
+                completion?()
             }
         }
+    }
+
+    /// Attaches a callback that gets called when the future gets resolved
+    /// successfully. See `func on(success:failure:completion:)` for more info.
+    public func on(success: @escaping (Value) -> Void) {
+        // Disambiguates so that `on` with a trailing closure selects a
+        // `success` closure, not a `completion`.
+        on(success: success, failure: nil, completion: nil)
     }
 
     func cascade(completion: @escaping (Result) -> Void) {

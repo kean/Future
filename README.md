@@ -35,7 +35,7 @@ Let's start with an overview of the available types. The central ones are of cou
 struct Future<Value, Error> {
     var result: Result? { get }
     
-    func on(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void)
+    func on(success: ((Value) -> Void)?, failure: ((Error) -> Void)?, completion: (() -> Void)?)
 
     enum Result {
         case success(Value), failure(Error)
@@ -87,16 +87,16 @@ Future<Int, Error> {
 
 ### Attach Callbacks
 
-To attach callbacks to the `Future` use  `on` method:
+To attach callbacks (each one is optional) to the `Future` use  `on` method:
 
 ```swift
 let future: Future<Value, Error>
 future.on(success: { print("received value: \($0)" },
           failure: { print("failed with error: \($0)" }),
-          completion: { print("completed with result: \($0)" })
+          completion: { print("completed" })
 ```
 
-Each callback is optional - you don't have to attach all at the same time. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. 
+If the future already has a result, callbacks are executed immediatelly. If the future doesn't have a result yet, callbacks will be executed when the future is resolved. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. 
 
 By default, the callbacks are run on the `.main` scheduler. It runs immediately if on the main thread, otherwise asynchronously on the main thread. 
 
@@ -207,7 +207,7 @@ Use `forEach` to perform the work in a sequence:
 // `startWork` is a function that returns a future
 Future.forEach([startWork, startOtherWork]) { future in
     // In the callback you can subscribe to each future when work is started
-    future.on(success: { print("some work completed") })
+    future.on(success: { print("work is completed") })
 }
 ```
 
@@ -216,7 +216,7 @@ Future.forEach([startWork, startOtherWork]) { future in
 Use `after` to produce a value after a given time interval.
 
 ```swift
-Future.after(seconds: 2).on { _ in print("2 seconds have passed") })
+Future.after(seconds: 2).on { print("2 seconds have passed") }
 ```
 
 ### `retry`
@@ -238,10 +238,10 @@ This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Va
 > Notice that we use native `Never` type to represent a situation when error can never be produced.
 
 ```swift
-Future.zip(futures.map { $0.materialize() }).on(success: { results in
+Future.zip(futures.map { $0.materialize() }).on { results in
     // All futures are resolved and we get the list of all of the results -
     // either values or errors.
-})
+}
 ```
 
 ## Threading
