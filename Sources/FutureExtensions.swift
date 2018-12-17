@@ -185,7 +185,7 @@ extension Future {
     public func wait() -> Result {
         let semaphore = DispatchSemaphore(value: 0)
         observe(on: waitQueue).on(completion: {
-            semaphore.signal
+            semaphore.signal()
         })
         semaphore.wait()
         return result! // Must have result at this point
