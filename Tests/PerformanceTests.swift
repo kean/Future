@@ -44,7 +44,7 @@ class FutureCallbacksTests: XCTestCase {
             for future in futures {
                 future.on(success: { _ in },
                           failure: { _ in },
-                          completion: { _ in })
+                          completion: { })
             }
         }
     }
@@ -61,7 +61,7 @@ class FutureCallbacksTests: XCTestCase {
                 for future in futures[iteration] {
                     future.on(success: { _ in },
                               failure: { _ in },
-                              completion: { _ in })
+                              completion: { })
                 }
             }
         }
@@ -74,7 +74,7 @@ class FutureCallbacksTests: XCTestCase {
             for future in futures {
                 future.on(success: { _ in },
                           failure: { _ in },
-                          completion: { _ in })
+                          completion: { })
             }
         }
     }
@@ -86,11 +86,11 @@ class FutureCallbacksTests: XCTestCase {
             for future in futures {
                 future.on(success: { _ in },
                           failure: { _ in },
-                          completion: { _ in })
+                          completion: { })
 
                 future.on(success: { _ in },
                           failure: { _ in },
-                          completion: { _ in })
+                          completion: { })
             }
         }
     }
@@ -107,7 +107,7 @@ class FutureCallbacksTests: XCTestCase {
                 for future in futures[iteration] {
                     future.on(success: { _ in },
                               failure: { _ in },
-                              completion: { _ in })
+                              completion: { })
                 }
             }
         }
