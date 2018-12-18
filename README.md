@@ -43,7 +43,7 @@ struct Future<Value, Error> {
 }
 ```
 
-> `Future` is parameterized with two generic arguments – `Value` and `Error`. This not only takes advantage of Swift type-safety features but also allows to do things like represent futures that never fail using `Never` – `Future<Value, Never>`.
+> `Future` is parameterized with two generic arguments – `Value` and `Error`. This allows us to take advantage of Swift type-safety features and also model futures that never fail using `Never` – `Future<Value, Never>`.
 
 ### Create Future
 
@@ -137,9 +137,11 @@ let avatar = user
     .flatMap(loadAvatar)
 ```
 
-If you are not familiar with `flatMap` it might be hard to wrap your head around it. But when it clicks, using it becomes second nature.
+If you are not familiar with `flatMap`, at first it might be hard to wrap your head around it. But when it clicks, using it becomes second nature.
 
 <img src="https://user-images.githubusercontent.com/1567433/50041360-e2457880-0053-11e9-8496-a3cfc71c0b0a.png" width="640px">
+
+> There is actually not one, but a few `flatMap` variants. The extra ones allow you to seamlessly mix futures that can produce an error and the ones that can't. 
 
 ### `mapError`, `flatMapError`
 
@@ -151,6 +153,8 @@ request.mapError(MyError.init(urlError:))
 ```
 
 Use `flatMapError` to "recover" from an error.
+
+> If you have a future that never produces an error (`Future<_, Never>`) you can cast it to the future which can produce _any_ error using `castError` method. In most cases, this is not needed though.
 
 ### `zip`
 
@@ -216,7 +220,7 @@ Future.forEach([startWork, startOtherWork]) { future in
 Use `after` to produce a value after a given time interval.
 
 ```swift
-Future.after(seconds: 2).on { print("2 seconds have passed") }
+Future.after(seconds: 2.5).on { print("2.5 seconds passed") })
 ```
 
 ### `retry`
@@ -319,11 +323,13 @@ func loadData(with url: URL, _ token: CancellationToken = .none) -> Future<Data,
 
 The task has full control over cancellation. You can ignore it, you can fail a promise with a specific error, return a partial result, or not resolve a promise at all.
 
+> `CancellationTokenSource` itself is built using `Future`  and benefits from all of its performance optimizations.
+
 ## Async/Await
 
 Async/await is often built on top of futures. When [async/await](https://gist.github.com/lattner/429b9070918248274f25b714dcfc7619) support is eventually added to Swift, it would be relatively easy to replace the code that uses futures with async/await.
 
-> There is a [fake (blocking) version](https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7) of async/await built for FutureX. It's not meant to be used in production.
+> There is a [(blocking) version](https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7) of async/await built on top FutureX. It's not meant to be used in production.
 
 ## Performance
 
