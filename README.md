@@ -43,7 +43,7 @@ struct Future<Value, Error> {
 }
 ```
 
-> `Future` is parameterized with two generic arguments - `Value` and `Error`. This not only takes advantage of Swift type-safety features but also allows to do things like represent futures that never fail using `Never` - `Future<Value, Never>`.
+> `Future` is parameterized with two generic arguments – `Value` and `Error`. This not only takes advantage of Swift type-safety features but also allows to do things like represent futures that never fail using `Never` – `Future<Value, Never>`.
 
 ### Create Future
 
@@ -62,7 +62,7 @@ func someAsyncTask() -> Future<Value, Error> {
 }
 ```
 
-> `Promise` is thread safe. You can call `succeed` or `fail` from any thread and any number of times - only the first result is sent to the `Future`.
+> `Promise` is thread safe. You can call `succeed` or `fail` from any thread and any number of times – only the first result is sent to the `Future`.
 
 If the result of the work is already available by the time the future is created use one of these initializers:
 
@@ -233,7 +233,7 @@ Retry is flexible. It allows you to specify multiple delay strategies including 
 
 ### `materialize`
 
-This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Value, Error>.Result, Never>` - a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out `materialize` composes really well with other functions like `zip`, `reduce`, `first`, etc. All of these functions fail as soon as one of the given futures fail, but with `materialize` you can change the behavior of these functions so that they would wait until all futures are resolved, no matter successfully or with an error.
+This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Value, Error>.Result, Never>` – a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out `materialize` composes really well with other functions like `zip`, `reduce`, `first`, etc. All of these functions fail as soon as one of the given futures fail, but with `materialize` you can change the behavior of these functions so that they would wait until all futures are resolved, no matter successfully or with an error.
 
 > Notice that we use native `Never` type to represent a situation when error can never be produced.
 
@@ -285,7 +285,7 @@ Please keep in mind that only the future returns directly by `observe(on:)` is g
 
 ## Cancellation
 
-Cancellation is a concern orthogonal to `Future`. Think about `Future` as a simple callback replacement - callbacks don't support cancellation.
+Cancellation is a concern orthogonal to `Future`. Think about `Future` as a simple callback replacement – callbacks don't support cancellation.
 
 FutureX implements a [`CancellationToken`](https://kean.github.io/post/cancellation-token) pattern for cooperative cancellation of async tasks. A token is created through a cancellation token source.
 
