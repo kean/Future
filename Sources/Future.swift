@@ -446,7 +446,9 @@ public enum Scheduler {
     /// the main thread.
     public static var `default` = Scheduler.main
 
-    /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
+    /// If the task finishes on the main thread, the callbacks are executed
+    /// immediately. Otherwise, they are dispatched to be executed
+    /// asynchronously on the main thread.
     public static let main: ScheduleWork = { work in
         Thread.isMainThread ? work() : DispatchQueue.main.async(execute: work)
     }

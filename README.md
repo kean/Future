@@ -24,7 +24,7 @@ Futures enable composition of tasks using familiar functions like `map`, `flatMa
 - [**Quick Start Guide**](#quick-start-guide) : 
 [Overview](#quick-start-guide) · [Create Future](#create-future) · [Attach Callbacks](#attach-callbacks) · [`wait`](#wait)
 - [**Functional Composition**](#functional-composition) : [`map`](#map-flatmap) · [`flatMap`](#map-flatmap) · [`mapError`](#maperror-flatmaperror) · [`flatMapError`](#maperror-flatmaperror) · [`zip`](#zip) · [`reduce`](#reduce)
-- [**Additions**](#additions) : [`first`](#first) · [`forEach`](#foreach) · [`after`](#after) · [`retry`](#retry) · [`materialize`](#materialize)
+- [**Extensions**](#extensions) : [`first`](#first) · [`forEach`](#foreach) · [`after`](#after) · [`retry`](#retry) · [`materialize`](#materialize)
 - [**Threading**](#threading) · [**Cancellation**](#cancellation) · [**Async/Await**](#asyncawait) · [**Performance**](#performance)
 
 ## Quick Start Guide
@@ -62,7 +62,7 @@ func someAsyncTask() -> Future<Value, Error> {
 }
 ```
 
-> `Promise` is thread safe. You can call `succeed` or `fail` from any thread and any number of times – only the first result is sent to the `Future`.
+> `Promise` is thread-safe. You can call `succeed` or `fail` from any thread and any number of times – only the first result is sent to the `Future`.
 
 If the result of the work is already available by the time the future is created use one of these initializers:
 
@@ -83,7 +83,7 @@ Future<Int, Error> {
 }
 ```
 
-> These `init` methods require no allocations which makes them faster than using a `Promise`.
+> These `init` methods require no allocations which makes them really fast, faster than allocation a  `Promise` instance.
 
 ### Attach Callbacks
 
@@ -96,9 +96,9 @@ future.on(success: { print("received value: \($0)" },
           completion: { print("completed" })
 ```
 
-If the future already has a result, callbacks are executed immediatelly. If the future doesn't have a result yet, callbacks will be executed when the future is resolved. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. 
+If the future already has a result, callbacks are executed immediately. If the future doesn't have a result yet, callbacks will be executed when the future is resolved. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. 
 
-By default, the callbacks are run on the `.main` scheduler. It runs immediately if on the main thread, otherwise asynchronously on the main thread. 
+By default, the callbacks are run on the `.main` scheduler.  If the task finishes on the main thread, the callbacks are executed immediately. Otherwise, they are dispatched to be executed asynchronously on the main thread.
 
 > See [**Threading**](#threading) for a rationale and more info.
 
@@ -141,7 +141,7 @@ If you are not familiar with `flatMap`, at first it might be hard to wrap your h
 
 <img src="https://user-images.githubusercontent.com/1567433/50041360-e2457880-0053-11e9-8496-a3cfc71c0b0a.png" width="640px">
 
-> There is actually not one, but a few `flatMap` variants. The extra ones allow you to seamlessly mix futures that can produce an error and the ones that can't. 
+> There is actually not one, but a few `flatMap` variations. The extra ones allow you to seamlessly mix futures that can produce an error and the ones that can't. 
 
 ### `mapError`, `flatMapError`
 
@@ -190,7 +190,7 @@ Future.reduce(0, [future1, future2], +).on(success: { value in
 })
 ```
 
-## Additions
+## Extensions
 
 In addition to the primary interface, there is also a set of extensions to `Future` which includes multiple convenience functions. Not all of them are mentioned here, look into `FutureExtensions.swift` to find more!
 
@@ -237,7 +237,7 @@ Retry is flexible. It allows you to specify multiple delay strategies including 
 
 ### `materialize`
 
-This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Value, Error>.Result, Never>` – a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out `materialize` composes really well with other functions like `zip`, `reduce`, `first`, etc. All of these functions fail as soon as one of the given futures fail, but with `materialize` you can change the behavior of these functions so that they would wait until all futures are resolved, no matter successfully or with an error.
+This one is fascinating. It converts `Future<Value, Error>` to `Future<Future<Value, Error>.Result, Never>` – a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out `materialize` composes really well with other functions like `zip`, `reduce`, `first`, etc. All of these functions fail as soon as one of the given futures fails. But with `materialize` you can change the behavior of these functions so that they would wait until all futures are resolved, no matter successfully or with an error.
 
 > Notice that we use native `Never` type to represent a situation when error can never be produced.
 
@@ -256,7 +256,9 @@ There are three schedulers available:
 
 ```swift
 enum Scheduler {
-    /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
+    /// If the task finishes on the main thread, the callbacks are executed
+    /// immediately. Otherwise, they are dispatched to be executed
+    /// asynchronously on the main thread.
     static var main: ScheduleWork
 
     /// Immediately executes the given closure.
@@ -285,7 +287,7 @@ future.observe(on: .global())
     .map { /* heavy operation */ }
 ```
 
-Please keep in mind that only the future returns directly by `observe(on:)` is guaranteed to run its continuations on the given queue (or scheduler).
+> Please keep in mind that only the future returned directly by `observe(on:)` is guaranteed to run its continuations on the given queue (or scheduler).
 
 ## Cancellation
 
