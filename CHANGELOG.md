@@ -1,3 +1,10 @@
+# FutureX 1.0
+
+- Add Swift 5.0 support
+- Add SwiftPM 5.0 support
+- Remove Swift 4.0 and Swift 4.1 support
+- Remove iOS 9, tvOS 9, watchOS 2.0, macOS 10.10 and macOS 10.11 support
+
 # FutureX 0.17
 
 Refined `on` method to attach callbacks. There are just two minor changes:
