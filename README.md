@@ -343,6 +343,11 @@ There are also some key design differences that give FutureX an edge over other 
 
 ## Requirements
 
+| FutureX                 | Swift                     | Xcode                | Platforms                                           |
+|------------------    |-----------------------    |------------------    |-------------------------------------------------    |
+| FutureX 0.18             | Swift 4.2 – 5.0           | Xcode 10.1 – 10.2     | iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0      |
+| FutureX 0.17     | Swift 4.0 – 4.2     | Xcode 9.2 – 10.1     |  iOS 9.0 / watchOS 2.0 / macOS 10.11 / tvOS 9.0     | 
+
 - iOS 9.0 / watchOS 2.0 / OS X 10.11 / tvOS 9.0
 - Xcode 10
 - Swift 4.2

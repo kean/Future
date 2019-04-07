@@ -2,25 +2,50 @@ language: objective-c
 os: osx
 osx_image: xcode10
 
+git:
+  depth: 1
+
 env:
-  matrix:
-  - DESTINATION="OS=11.3,name=iPhone X"
-    SCHEME="Future"     RUN_TESTS="YES"
-  - DESTINATION="OS=10.3.1,name=iPhone 7 Plus"
-    SCHEME="Future"     RUN_TESTS="YES"
-  - DESTINATION="OS=9.3,name=iPhone 5"
-    SCHEME="Future"     RUN_TESTS="YES"
+  global:
+  - SCHEME="Future"
 
-  - DESTINATION="OS=11.3,name=Apple TV 4K"
-    SCHEME="Future"    RUN_TESTS="YES"
+matrix:
+  include:
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=12.2,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=12.1,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=12.0,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=11.4,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=11.0.1,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=10.3.1,name=iPhone SE" RUN_TESTS="YES" SWIFT_VERSION="5.0"
 
-  - DESTINATION="arch=x86_64"
-    SCHEME="Future"   RUN_TESTS="YES"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=12.2,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="4.2"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=11.4,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="4.2"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=10.3.1,name=iPhone SE" RUN_TESTS="YES" SWIFT_VERSION="4.2"
 
-  - DESTINATION="OS=4.2,name=Apple Watch - 42mm"
-    SCHEME="Future" RUN_TESTS="NO"
-  - DESTINATION="OS=3.2,name=Apple Watch - 42mm"
-    SCHEME="Future" RUN_TESTS="NO"
+    - osx_image: xcode10.1
+      env: DESTINATION="OS=11.4,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="4.2"
+
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=12.2,name=Apple TV 4K" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=11.3,name=Apple TV 4K" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+
+    - osx_image: xcode10.2
+      env: DESTINATION="arch=x86_64" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=4.2,name=Apple Watch - 42mm" RUN_TESTS="NO" SWIFT_VERSION="5.0"
+    - osx_image: xcode10.2
+      env: DESTINATION="OS=3.2,name=Apple Watch - 42mm" RUN_TESTS="NO" SWIFT_VERSION="5.0"
 
 script:
   - set -o pipefail
@@ -28,9 +53,7 @@ script:
   - xcodebuild -showsdks
 
   - if [ $RUN_TESTS == "YES" ]; then
-      xcodebuild test -scheme "$SCHEME" -destination "$DESTINATION" -configuration Debug | xcpretty;
-      xcodebuild test -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release | xcpretty;
+      xcodebuild test -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release SWIFT_VERSION="$SWIFT_VERSION" | xcpretty;
     else
-      xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" -configuration Debug | xcpretty;
-      xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release | xcpretty;
+      xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release SWIFT_VERSION="$SWIFT_VERSION" | xcpretty;
     fi

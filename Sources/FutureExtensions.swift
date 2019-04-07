@@ -49,7 +49,9 @@ extension Future where Value == Void, Error == Never {
 
     private static func after(deadline: DispatchTime, on queue: DispatchQueue = .global()) -> Future<Void, Never> {
         let promise = Promise()
-        queue.asyncAfter(deadline: deadline, execute: promise.succeed) // Never produces an error
+        queue.asyncAfter(deadline: deadline) {
+            promise.succeed(value: ()) // Never produces an error
+        }
         return promise.future
     }
 }
