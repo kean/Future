@@ -22,7 +22,9 @@ import Foundation
 ///
 /// Futures are easily composable. `Future<Value, Error>` provides a set of
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
-public struct Future<Value, Error> {
+public struct Future<Value, Error: Swift.Error> {
+    public typealias Result = Swift.Result<Value, Error>
+
     private enum Resolver {
         // A future is resolved by a promise. Promise is a class, it has locks,
         // array of handlers, etc.
@@ -154,12 +156,20 @@ public struct Future<Value, Error> {
 
     /// Returns the value if the future has a value.
     public var value: Value? {
-        return result?.value
+        guard let result = result else { return nil }
+        switch result {
+        case let .success(value): return value
+        case .failure: return nil
+        }
     }
 
     /// Returns the error if the future has an error.
     public var error: Error? {
-        return result?.error
+        guard let result = result else { return nil }
+        switch result {
+        case .success: return nil
+        case let .failure(error): return error
+        }
     }
 
     /// Returns the result if the future completed.
@@ -282,7 +292,7 @@ extension Future {
 
 // MARK: - Zip
 
-extension Future where Value == Any, Error == Any {
+extension Future where Value == Any, Error == Swift.Error {
 
     /// Returns a future which succeedes when all the given futures succeed. If
     /// any of the futures fail, the returned future also fails with that error.
@@ -312,7 +322,7 @@ extension Future where Value == Any, Error == Any {
 
 // MARK: - Reduce
 
-extension Future where Value == Any, Error == Any {
+extension Future where Value == Any, Error == Swift.Error {
 
     /// Returns a future that succeeded when all the given futures succeed.
     /// The future contains the result of combining the `initialResult` with
@@ -321,29 +331,6 @@ extension Future where Value == Any, Error == Any {
     public static func reduce<V1, V2, E>(_ initialResult: V1, _ futures: [Future<V2, E>], _ combiningFunction: @escaping (V1, V2) -> V1) -> Future<V1, E> {
         return futures.reduce(Future<V1, E>(value: initialResult)) { lhs, rhs in
             return Future.zip(lhs, rhs).map(combiningFunction)
-        }
-    }
-}
-
-// MARK: - Result
-
-extension Future {
-
-    /// A value that represents either a success or a failure, including an
-    /// associated value in each case.
-    public enum Result {
-        case success(Value), failure(Error)
-
-        /// Returns the value in case of success, `nil` otherwise.
-        public var value: Value? {
-            guard case let .success(value) = self else { return nil }
-            return value
-        }
-
-        /// Returns the value in case of failure, `nil` otherwise.
-        public var error: Error? {
-            guard case let .failure(error) = self else { return nil }
-            return error
         }
     }
 }
@@ -432,9 +419,7 @@ extension Future {
 }
 
 /// A convenience typealias to make constructing promises easier.
-public typealias Promise<Value, Error> = Future<Value, Error>.Promise
-
-extension Future.Result: Equatable where Value: Equatable, Error: Equatable { }
+public typealias Promise<Value, Error: Swift.Error> = Future<Value, Error>.Promise
 
 // MARK: - Scheduler
 
@@ -473,17 +458,5 @@ extension Future where Error == Swift.Error {
     /// returned value as a success, or any thrown error as a failure.
     public init(catching body: () throws -> Value) {
         self.init(result: Result(catching: body))
-    }
-}
-
-extension Future.Result where Error == Swift.Error {
-    /// Creates a future by evaluating the given throwing closure, capturing the
-    /// returned value as a success, or any thrown error as a failure.
-    public init(catching body: () throws -> Value) {
-        do {
-            self = .success(try body())
-        } catch {
-            self = .failure(error)
-        }
     }
 }

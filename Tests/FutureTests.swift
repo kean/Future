@@ -374,19 +374,23 @@ class SchedulersTests: XCTestCase {
 }
 
 class MapErrorTest: XCTestCase {
+    struct NewError: Swift.Error, Hashable {
+        let id: String
+    }
+
     func testMapError() {
         // GIVEN failed future
         let future = Future<Int, MyError>(error: .e1)
 
         // WHEN mapping error
         let mapped = future.mapError { _ in
-            return "e1"
+            return NewError(id: "e1")
         }
 
         // EXPECT mapped future to return a new error
         let expectation = self.expectation()
         mapped.on(failure: { error in
-            XCTAssertEqual(mapped.error, "e1")
+            XCTAssertEqual(mapped.error, NewError(id: "e1"))
             expectation.fulfill()
         })
 
@@ -399,14 +403,14 @@ class MapErrorTest: XCTestCase {
 
         // WHEN recovering from error with a value
         let mapped = promise.future.mapError { _ in
-            return "e1"
+            return NewError(id: "e1")
         }
 
         DispatchQueue.global().async {
             promise.fail(error: .e1)
         }
 
-        XCTAssertEqual(mapped.wait().error, "e1")
+        XCTAssertEqual(mapped.wait().error, NewError(id: "e1"))
     }
 }
 
