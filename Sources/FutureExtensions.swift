@@ -194,4 +194,4 @@ extension Future {
     }
 }
 
-private let waitQueue = DispatchQueue(label:  "com.github.kean.futurex.wait-queue", attributes: .concurrent)
+private let waitQueue = DispatchQueue(label: "com.github.kean.futurex.wait-queue", attributes: .concurrent)

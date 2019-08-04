@@ -873,7 +873,7 @@ class ObserveOnTests: XCTestCase {
         let expectation = self.expectation()
 
         // EXPECT map to be performed on the given queue
-        let _ = future
+        _ = future
             .observe(on: queue)
             .map { value -> String in
                 XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
@@ -917,7 +917,7 @@ class ObserveOnTests: XCTestCase {
         let expectation = self.expectation()
 
         // EXPECT map to be performed on the given queue
-        let _ = future
+        _ = future
             .castError()
             .observe(on: queue)
             .tryMap { value -> String in

@@ -11,7 +11,7 @@ class FutureInitializationTests: XCTestCase {
     func testInitPending() {
         measure {
             for _ in 0..<100_000 {
-                let _ = Future<Int, Void> { _ in
+                _ = Future<Int, Void> { _ in
                     return // do nothing
                 }
             }
@@ -21,7 +21,7 @@ class FutureInitializationTests: XCTestCase {
     func testInitWithValue() {
         measure {
             for _ in 0..<100_000 {
-                let _ = Future(value: 1)
+                _ = Future(value: 1)
             }
         }
     }
@@ -29,7 +29,7 @@ class FutureInitializationTests: XCTestCase {
     func testInitWithError() {
         measure {
             for _ in 0..<100_000 {
-                let _ = Future<Int, MyError>(error: .e1)
+                _ = Future<Int, MyError>(error: .e1)
             }
         }
     }
@@ -243,7 +243,7 @@ class FutureMapPerformanceTests: XCTestCase {
 
         measure {
             for future in futures {
-                let _ = future.map { $0 + 1}
+                _ = future.map { $0 + 1}
             }
         }
     }
@@ -258,7 +258,7 @@ class FutureFlatMapPerformanceTests: XCTestCase {
 
         measure {
             for future in futures {
-                let _ = future.flatMap {
+                _ = future.flatMap {
                     Future(value: $0)
                 }
             }
@@ -272,7 +272,7 @@ class FutureFlatMapPerformanceTests: XCTestCase {
 
         measure {
             for future in futures {
-                let _ = future.flatMap {
+                _ = future.flatMap {
                     Future(value: $0)
                 }
             }
@@ -286,7 +286,7 @@ class FutureFlatMapPerformanceTests: XCTestCase {
 
         measure {
             for future in futures {
-                let _ = future.flatMap { _ in
+                _ = future.flatMap { _ in
                     Promise<Int, Never>().future // pending
                 }
             }
@@ -303,7 +303,7 @@ class FutureMiscPerformanceTests: XCTestCase {
         let queue = DispatchQueue(label: "testObserveOn")
         measure {
             for future in futures {
-                let _ = future.observe(on: queue)
+                _ = future.observe(on: queue)
             }
         }
     }

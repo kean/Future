@@ -193,9 +193,7 @@ class CastErrorTests: XCTestCase {
 
 class ForEachTests: XCTestCase {
     func testForEach() {
-        let futures: [() -> Future<Int, MyError>] = [
-            { Future<Int, MyError>(value: 1) },
-            { Future<Int, MyError>(value: 2) }
+        let futures: [() -> Future<Int, MyError>] = [ { Future<Int, MyError>(value: 1) }, { Future<Int, MyError>(value: 2) }
         ]
 
         var expected = [1, 2]
@@ -209,9 +207,7 @@ class ForEachTests: XCTestCase {
 
     func testForEachSecondFails() {
         func testForEach() {
-            let futures: [() -> Future<Int, MyError>] = [
-                { Future<Int, MyError>(value: 1) },
-                { Future<Int, MyError>(error: .e1) }
+            let futures: [() -> Future<Int, MyError>] = [ { Future<Int, MyError>(value: 1) }, { Future<Int, MyError>(error: .e1) }
             ]
 
             var expected: [Future<Int, MyError>.Result] = [.success(1), .failure(.e1)]
