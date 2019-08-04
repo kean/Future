@@ -115,10 +115,10 @@ let result = future.wait() // Mostly useful for testing and debugging
 If the future already has a result you can read it synchronously:
 
 ```swift
-class Future<Value, Error> {
+struct Future<Value, Error> {
     var value: Value? { get }
     var error: Error? { get }
-    var result: Result { get }
+    var result: Result? { get }
 }
 ```
 

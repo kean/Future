@@ -1,3 +1,7 @@
+# FutureX 1.1
+
+- Replace custom `Future.Result` type with `Swift.Result`
+
 # FutureX 1.0
 
 - Add Swift 5.0 support
