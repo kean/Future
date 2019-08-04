@@ -1,49 +1,40 @@
 language: objective-c
 os: osx
-osx_image: xcode10
 
 git:
   depth: 1
 
-env:
-  global:
-  - SCHEME="Future"
+stages:
+  - name: test
 
-matrix:
+jobs:
   include:
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=12.2,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=12.1,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=12.0,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=11.4,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=11.0.1,name=iPhone X" RUN_TESTS="YES" SWIFT_VERSION="5.0"
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=10.3.1,name=iPhone SE" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - stage: test
+      name: Run Unit Tests (iOS, Xcode 10.2)
+      osx_image: xcode10.2
+      script: Scripts/test.sh -d "OS=12.2,name=iPhone X" -d "OS=11.4,name=iPhone X" -d "OS=10.3.1,name=iPhone SE"
 
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=12.2,name=Apple TV 4K" RUN_TESTS="YES" SWIFT_VERSION="5.0"
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=11.3,name=Apple TV 4K" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - stage: test
+      name: Run Unit Tests (macOS, Xcode 10.2)
+      osx_image: xcode10.2
+      script: Scripts/test.sh -d "arch=x86_64"
 
-    - osx_image: xcode10.2
-      env: DESTINATION="arch=x86_64" RUN_TESTS="YES" SWIFT_VERSION="5.0"
+    - stage: test
+      name: Run Unit Tests (tvOS, Xcode 10.2)
+      osx_image: xcode10.2
+      script: Scripts/test.sh -d "OS=12.2,name=Apple TV 4K" -d "OS=11.3,name=Apple TV 4K"
 
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=4.2,name=Apple Watch - 42mm" RUN_TESTS="NO" SWIFT_VERSION="5.0"
-    - osx_image: xcode10.2
-      env: DESTINATION="OS=3.2,name=Apple Watch - 42mm" RUN_TESTS="NO" SWIFT_VERSION="5.0"
+    - stage: test
+      name: Build (watchOS, Xcode 10.2)
+      osx_image: xcode10.2
+      script: Scripts/build.sh -d "OS=4.2,name=Apple Watch - 42mm"
 
-script:
-  - set -o pipefail
-  - xcodebuild -version
-  - xcodebuild -showsdks
+    - stage: test
+      name: Run Unit Tests (iOS, Xcode 11)
+      osx_image: xcode11
+      script: Scripts/test.sh -d "OS=13.0,name=iPhone Xs"
 
-  - if [ $RUN_TESTS == "YES" ]; then
-      xcodebuild test -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release SWIFT_VERSION="$SWIFT_VERSION" | xcpretty;
-    else
-      xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release SWIFT_VERSION="$SWIFT_VERSION" | xcpretty;
-    fi
+    - stage: test
+      name: Swift Build (Swift Package Manager)
+      osx_image: xcode11
+      script: swift build
