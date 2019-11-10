@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
 
 import XCTest
 import Foundation
@@ -11,14 +11,14 @@ import Future
 var descriptions = [String]() // stack of test descriptions
 
 extension XCTestCase {
-    func describe(_ description: String, _ block: () -> Void = {}) -> Void {
+    func describe(_ description: String, _ block: () -> Void = {}) {
         precondition(Thread.isMainThread)
 
         descriptions.append(description)
         block()
         descriptions.removeLast()
     }
-    
+
     func expect(_ description: String = "GenericExpectation", count: Int = 1, file: StaticString = #file, line: UInt = #line, _ block: (_ fulfill: @escaping () -> Void) -> Void) {
         precondition(Thread.isMainThread)
 
@@ -81,9 +81,9 @@ enum MyError: Swift.Error {
 
 let sentinel = 1
 
-extension Future {    
+extension Future {
     static func eventuallySuccessfull() -> Future<Int, Error> {
-        return Future<Int, Error>() { promise in
+        return Future<Int, Error> { promise in
             DispatchQueue.global().async {
                 promise.succeed(value: sentinel)
             }
@@ -91,10 +91,27 @@ extension Future {
     }
 
     static func eventuallyFailed() -> Future<Int, MyError> {
-        return Future<Int, MyError>() { promise in
+        return Future<Int, MyError> { promise in
             DispatchQueue.global().async {
                 promise.fail(error: .e1)
             }
+        }
+    }
+}
+
+
+extension Result {
+    var value: Success? {
+        switch self {
+        case let .success(value): return value
+        case .failure: return nil
+        }
+    }
+
+    var error: Failure? {
+        switch self {
+        case .success: return nil
+        case let .failure(error): return error
         }
     }
 }

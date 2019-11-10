@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
 
 import Foundation
 
@@ -49,7 +49,9 @@ extension Future where Value == Void, Error == Never {
 
     private static func after(deadline: DispatchTime, on queue: DispatchQueue = .global()) -> Future<Void, Never> {
         let promise = Promise()
-        queue.asyncAfter(deadline: deadline, execute: promise.succeed) // Never produces an error
+        queue.asyncAfter(deadline: deadline) {
+            promise.succeed(value: ()) // Never produces an error
+        }
         return promise.future
     }
 }
@@ -75,7 +77,8 @@ extension Future {
         }
     }
 
-    /// Performs the given number of attempts to finish the work successfully.
+    /// Performs the given number of attempts until the work is successfully
+    /// finished.
     ///
     /// - parameters:
     ///     - attempts: The number of attempts to make. Pass `2` to retry once
@@ -95,9 +98,7 @@ extension Future {
                     return Future(error: error)
                 }
                 let delay = delay.delay(attempt: attemptsCounter)
-                return Future<Void, Never>.after(seconds: delay)
-                    .castError()
-                    .flatMap(attempt)
+                return Future<Void, Never>.after(seconds: delay).flatMap(attempt)
             }
         }
         return attempt()
@@ -146,24 +147,13 @@ extension Future where Error == Swift.Error {
     /// current future's value. If the `transform` closure throws, the resulting
     /// future also throws.
     public func tryMap<NewValue>(_ transform: @escaping (Value) throws -> NewValue) -> Future<NewValue, Error> {
-        // This could be implemented in terms of `flatMap` by to avoid additional
-        // allocation and indirection we use `observe` directly.
-        //
-        //  return flatMap { value in
-        //      do { return Future<NewValue, Error>(value: try transform(value)) }
-        //      catch { return Future<NewValue, Error>(error: error) }
-        // }
-
-        let promise = Future<NewValue, Error>.Promise()
-        cascade(success: { value in
-            do { promise.succeed(value: try transform(value)) }
-            catch { promise.fail(error: error) }
-        }, failure: promise.fail)
-        return promise.future
+        return flatMap { value -> Future<NewValue, Error> in
+            return Future<NewValue, Error>(catching: { try transform(value) })
+        }
     }
 }
 
-// MARK: - Cast
+// MARK: - CastError
 
 extension Future where Error == Never {
 
@@ -171,7 +161,7 @@ extension Future where Error == Never {
     /// error - to `Future<Value, NewError>` which can. The returned future never
     /// actually produces an error but it makes it easier to compose it with the
     /// ones that can.
-    public func castError<NewError>() -> Future<Value, NewError> {
+    public func castError<NewError>(_ : NewError.Type = NewError.self) -> Future<Value, NewError> {
         return mapError { _ in fatalError("Future<Value, Never> can't produce an error") }
     }
 }
@@ -196,12 +186,12 @@ extension Future {
     /// main thread!
     public func wait() -> Result {
         let semaphore = DispatchSemaphore(value: 0)
-        observe(on: waitQueue).on(completion: { _
-            in semaphore.signal()
+        observe(on: waitQueue).on(completion: {
+            semaphore.signal()
         })
         semaphore.wait()
         return result! // Must have result at this point
     }
 }
 
-private let waitQueue = DispatchQueue(label:  "com.github.kean.futurex.wait-queue", attributes: .concurrent)
+private let waitQueue = DispatchQueue(label: "com.github.kean.futurex.wait-queue", attributes: .concurrent)

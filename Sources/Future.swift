@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
 
 import Foundation
 
@@ -22,7 +22,9 @@ import Foundation
 ///
 /// Futures are easily composable. `Future<Value, Error>` provides a set of
 /// functions like `map`, `flatMap`, `zip`, `reduce` and more to compose futures.
-public struct Future<Value, Error> {
+public struct Future<Value, Error: Swift.Error> {
+    public typealias Result = Swift.Result<Value, Error>
+
     private enum Resolver {
         // A future is resolved by a promise. Promise is a class, it has locks,
         // array of handlers, etc.
@@ -46,10 +48,10 @@ public struct Future<Value, Error> {
     public init(_ closure: (_ promise: Promise) -> Void) {
         let promise = Promise()
         self.init(resolver: .promise(promise))
-        closure(promise) // retain self
+        closure(promise)
     }
 
-    private init(resolver: Resolver = .promise(Promise()), scheduler: ScheduleWork? = nil) {
+    private init(resolver: Resolver, scheduler: ScheduleWork? = nil) {
         self.resolver = resolver
         self.scheduler = scheduler
     }
@@ -83,7 +85,9 @@ public struct Future<Value, Error> {
         return Future(resolver: resolver, scheduler: scheduler)
     }
 
-    /// Attach callbacks to execute when the future has a result.
+    /// Attach callbacks to the future. If the future already has a result,
+    /// callbacks are executed immediatelly. If the future doesn't have a result
+    /// yet, callbacks will be executed when the future is resolved.
     ///
     /// By default, the callbacks are run on `Scheduler.main` which runs immediately
     /// if on the main thread, otherwise asynchronously on the main thread.
@@ -92,30 +96,38 @@ public struct Future<Value, Error> {
     ///   - success: Gets called when the future is resolved successfully.
     ///   - failure: Gets called when the future is resolved with an error.
     ///   - completion: Gets called when the future is resolved.
-    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: ((Result) -> Void)? = nil) {
-        let scheduler = self.scheduler ?? Scheduler.main
-        cascadeImmediately { result in
+    public func on(success: ((Value) -> Void)? = nil, failure: ((Error) -> Void)? = nil, completion: (() -> Void)? = nil) {
+        let scheduler = self.scheduler ?? Scheduler.default
+        _cascade { result in
             scheduler {
                 switch result {
                 case let .success(value): success?(value)
                 case let .failure(error): failure?(error)
                 }
-                completion?(result)
+                completion?()
             }
         }
     }
 
+    /// Attaches a callback that gets called when the future gets resolved
+    /// successfully. See `func on(success:failure:completion:)` for more info.
+    public func on(success: @escaping (Value) -> Void) {
+        // Disambiguates so that `on` with a trailing closure selects a
+        // `success` closure, not a `completion`.
+        on(success: success, failure: nil, completion: nil)
+    }
+
     func cascade(completion: @escaping (Result) -> Void) {
         if let scheduler = self.scheduler {
-            cascadeImmediately(completion: { result in
+            _cascade { result in
                 scheduler { completion(result) }
-            })
+            }
         } else {
-            cascadeImmediately(completion: completion)
+            _cascade(completion: completion)
         }
     }
 
-    private func cascadeImmediately(completion: @escaping (Result) -> Void) {
+    private func _cascade(completion: @escaping (Result) -> Void) {
         switch resolver {
         case let .promise(promise):
             promise.observe(completion: completion)
@@ -124,9 +136,13 @@ public struct Future<Value, Error> {
         }
     }
 
-    // At convenience method which is used for implementing cascades of futures.
-    // It calls `observe(completion:)` directly for performance but technically,
-    // it could be implemented in terms of public `on(scheduler: Scheduler.immediate`.
+    /// A convenience method which is used for implementing cascades of futures.
+    ///
+    /// It calls `cascade(completion:)` directly but technically it could be
+    /// implemented in terms of public methods without much of a performance hit:
+    ///
+    ///     future.observe(on: Scheduler.immediate).on(completion: { ... })
+    ///
     func cascade(success: @escaping (Value) -> Void, failure: @escaping (Error) -> Void) {
         cascade { result in
             switch result {
@@ -140,12 +156,20 @@ public struct Future<Value, Error> {
 
     /// Returns the value if the future has a value.
     public var value: Value? {
-        return result?.value
+        guard let result = result else { return nil }
+        switch result {
+        case let .success(value): return value
+        case .failure: return nil
+        }
     }
 
     /// Returns the error if the future has an error.
     public var error: Error? {
-        return result?.error
+        guard let result = result else { return nil }
+        switch result {
+        case .success: return nil
+        case let .failure(error): return error
+        }
     }
 
     /// Returns the result if the future completed.
@@ -159,16 +183,9 @@ public struct Future<Value, Error> {
     }
 }
 
-extension Future where Error == Swift.Error {
-    public init(_ closure: @autoclosure () throws -> Value) {
-        let promise = Promise()
-        self.init(resolver: .promise(promise))
-        do { promise.succeed(value: try closure()) }
-        catch { promise.fail(error: error) }
-    }
-}
-
 extension Future where Error == Never {
+    /// A special variant that doesn't require a `failure` closure -
+    /// `Future<Value, Never>` can't produce an error.
     func cascade(success: @escaping (Value) -> Void) {
         cascade(success: success, failure: { _ in fatalError("Future<Value, Never> can't produce an error") })
     }
@@ -177,6 +194,8 @@ extension Future where Error == Never {
 // MARK: - Disambiguate Init
 
 extension Future where Error == Never {
+    /// Creates a future with the given value and automatically assigns `Error`
+    /// to be `Never`.
     public init(value: Value) {
         self.init(result: .success(value))
     }
@@ -273,7 +292,7 @@ extension Future {
 
 // MARK: - Zip
 
-extension Future where Value == Any, Error == Any {
+extension Future where Value == Any, Error == Swift.Error {
 
     /// Returns a future which succeedes when all the given futures succeed. If
     /// any of the futures fail, the returned future also fails with that error.
@@ -303,7 +322,7 @@ extension Future where Value == Any, Error == Any {
 
 // MARK: - Reduce
 
-extension Future where Value == Any, Error == Any {
+extension Future where Value == Any, Error == Swift.Error {
 
     /// Returns a future that succeeded when all the given futures succeed.
     /// The future contains the result of combining the `initialResult` with
@@ -316,25 +335,9 @@ extension Future where Value == Any, Error == Any {
     }
 }
 
-// MARK: - Result, Promise
+// MARK: - Promise
 
 extension Future {
-
-    public enum Result {
-        case success(Value), failure(Error)
-
-        /// Returns the value in case of success, `nil` otherwise.
-        public var value: Value? {
-            guard case let .success(value) = self else { return nil }
-            return value
-        }
-
-        /// Returns the value in case of failure, `nil` otherwise.
-        public var error: Error? {
-            guard case let .failure(error) = self else { return nil }
-            return error
-        }
-    }
 
     /// A promise to provide a result later.
     public final class Promise: CustomDebugStringConvertible {
@@ -416,16 +419,21 @@ extension Future {
 }
 
 /// A convenience typealias to make constructing promises easier.
-public typealias Promise<Value, Error> = Future<Value, Error>.Promise
-
-extension Future.Result: Equatable where Value: Equatable, Error: Equatable { }
+public typealias Promise<Value, Error: Swift.Error> = Future<Value, Error>.Promise
 
 // MARK: - Scheduler
 
 public typealias ScheduleWork = (_ work: @escaping () -> Void) -> Void
 
 public enum Scheduler {
-    /// Runs immediately if on the main thread, otherwise asynchronously on the main thread.
+    /// `Scheduler.main` by default. Change the scheduler to change the default
+    /// behavior where callbacks attached via `on` method are always called on
+    /// the main thread.
+    public static var `default` = Scheduler.main
+
+    /// If the task finishes on the main thread, the callbacks are executed
+    /// immediately. Otherwise, they are dispatched to be executed
+    /// asynchronously on the main thread.
     public static let main: ScheduleWork = { work in
         Thread.isMainThread ? work() : DispatchQueue.main.async(execute: work)
     }
@@ -440,5 +448,15 @@ public enum Scheduler {
         return { work in
             queue.async(flags: flags, execute: work)
         }
+    }
+}
+
+// MARK: - Catching Init
+
+extension Future where Error == Swift.Error {
+    /// Creates a future by evaluating the given throwing closure, capturing the
+    /// returned value as a success, or any thrown error as a failure.
+    public init(catching body: () throws -> Value) {
+        self.init(result: Result(catching: body))
     }
 }

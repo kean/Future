@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
 
 import XCTest
 import Future
@@ -8,7 +8,7 @@ import Future
 // Tests migrated from JS https://github.com/promises-aplus/promises-tests
 
 class APlusTests: XCTestCase {
-        
+
     func test_2_1_2() {
         describe("2.1.2.1: When fulfilled, a promise: must not transition to any other state.") {
 
@@ -61,7 +61,7 @@ class APlusTests: XCTestCase {
             }
         }
     }
-    
+
     func test_2_1_3() {
         describe("2.1.3.1: When rejected, a promise: must not transition to any other state.") {
 
@@ -101,7 +101,7 @@ class APlusTests: XCTestCase {
             }
 
             expect("trying to reject immediately then fulfill delayed") { finish in
-                let future = Future<Int, MyError>() { promise in
+                let future = Future<Int, MyError> { promise in
                     promise.fail(error: MyError.e1)
                     after(ticks: 5) {
                         promise.succeed(value: 1)
@@ -597,12 +597,12 @@ class APlusTests: XCTestCase {
                         XCTAssertEqual($0, sentinel)
                         callCount += 1
                         XCTAssertEqual(callCount, 1)
-                        
+
                         future.on(success: {
                             XCTAssertEqual($0, sentinel)
                             callCount += 1
                             XCTAssertEqual(callCount, 2)
-                            
+
                             future.on(success: {
                                 XCTAssertEqual($0, sentinel)
                                 callCount += 1
@@ -677,7 +677,7 @@ class APlusTests: XCTestCase {
                             XCTAssertEqual($0, MyError.e1)
                             callCount += 1
                             XCTAssertEqual(callCount, 2)
-                            
+
                             future.on(failure: {
                                 XCTAssertEqual($0, MyError.e1)
                                 callCount += 1
@@ -696,25 +696,25 @@ class APlusTests: XCTestCase {
                 describe("is a promise") {
                     // Doesn't make sense in Swift
                 }
-                
+
                 describe("2.2.7.1: If either `onFulfilled` or `onRejected` returns a value `x`, run the Promise Resolution procedure `[[Resolve]](promise2, x)`") {
                     // See separate 3.3 tests
                 }
-                
+
                 describe("2.2.7.2: If either `onFulfilled` or `onRejected` throws an exception `e`, `promise2` must be rejected with `e` as the reason.") {
                     // We don't test that since we don't allow then/catch to throw
                 }
-                
+
                 describe("2.2.7.3: If `onFulfilled` is not a function and `promise1` is fulfilled, `promise2` must be fulfilled with the same value.") {
                     // Doesn't make sense in Swift
                 }
-                
+
                 describe("2.2.7.4: If `onRejected` is not a function and `promise1` is rejected, `promise2` must be rejected with the same reason.") {
                     // Doesn't make sense in Swift
                 }
             }
         }
-        
+
         func test_2_3_1() {
             describe("2.3.1: If `promise` and `x` refer to the same object, reject `promise` with a `TypeError' as the reason.") {
                 // First of, this is really a fatal error which is a result of
@@ -723,7 +723,7 @@ class APlusTests: XCTestCase {
                 // like an overkill at this point.
             }
         }
-        
+
         func test_2_3_2() {
             describe("2.3.2: If `x` is a promise, adopt its state") {
                 describe("2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.") {
@@ -731,19 +731,19 @@ class APlusTests: XCTestCase {
                         let future = Future(value: 1).flatMap { _ in
                             return Future<Int, MyError> { _ in } // pending
                         }
-                        future.on(completion: { _ in
+                        future.on(completion: {
                             XCTFail()
                         })
                         after(ticks: 20) {
                             finish()
                         }
                     }
-                 
+
                     expect("via return from a rejected promise") { finish in
                         let future = Future<Int, MyError>(error: MyError.e1).flatMapError { _ in
                             return Future<Int, MyError> { _ in } // pending
                         }
-                        future.on(completion: { _ in
+                        future.on(completion: {
                             XCTFail()
                         })
                         after(ticks: 20) {
@@ -769,7 +769,6 @@ class APlusTests: XCTestCase {
                         })
                     }
                 }
-
 
                 describe("2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.") {
                     expect("`x` is already-rejected") { finish in

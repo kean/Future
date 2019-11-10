@@ -1,42 +1,40 @@
 language: objective-c
 os: osx
-osx_image: xcode10
 
-env:
-  global:
-  - IOS_SCHEME="Future iOS"
-  - MACOS_SCHEME="Future macOS"
-  - TVOS_SCHEME="Future tvOS"
-  - WATCHOS_SCHEME="Future watchOS"
+git:
+  depth: 1
 
-  matrix:
-  - DESTINATION="OS=11.3,name=iPhone X"
-    SCHEME="$IOS_SCHEME"     RUN_TESTS="YES"
-  - DESTINATION="OS=10.3.1,name=iPhone 7 Plus"
-    SCHEME="$IOS_SCHEME"     RUN_TESTS="YES"
-  - DESTINATION="OS=9.3,name=iPhone 5"
-    SCHEME="$IOS_SCHEME"     RUN_TESTS="YES"
+stages:
+  - name: test
 
-  - DESTINATION="OS=11.3,name=Apple TV 4K"
-    SCHEME="$TVOS_SCHEME"    RUN_TESTS="YES"
+jobs:
+  include:
+    - stage: test
+      name: Run Unit Tests (iOS, Xcode 10.2)
+      osx_image: xcode10.2
+      script: Scripts/test.sh -d "OS=12.2,name=iPhone X" -d "OS=11.4,name=iPhone X" -d "OS=10.3.1,name=iPhone SE"
 
-  - DESTINATION="arch=x86_64"
-    SCHEME="$MACOS_SCHEME"   RUN_TESTS="YES"
+    - stage: test
+      name: Run Unit Tests (macOS, Xcode 10.2)
+      osx_image: xcode10.2
+      script: Scripts/test.sh -d "arch=x86_64"
 
-  - DESTINATION="OS=4.2,name=Apple Watch - 42mm"
-    SCHEME="$WATCHOS_SCHEME" RUN_TESTS="NO"
-  - DESTINATION="OS=3.2,name=Apple Watch - 42mm"
-    SCHEME="$WATCHOS_SCHEME" RUN_TESTS="NO"
+    - stage: test
+      name: Run Unit Tests (tvOS, Xcode 10.2)
+      osx_image: xcode10.2
+      script: Scripts/test.sh -d "OS=12.2,name=Apple TV 4K" -d "OS=11.3,name=Apple TV 4K"
 
-script:
-  - set -o pipefail
-  - xcodebuild -version
-  - xcodebuild -showsdks
+    - stage: test
+      name: Build (watchOS, Xcode 10.2)
+      osx_image: xcode10.2
+      script: Scripts/build.sh -d "OS=4.2,name=Apple Watch - 42mm"
 
-  - if [ $RUN_TESTS == "YES" ]; then
-      xcodebuild test -scheme "$SCHEME" -destination "$DESTINATION" -configuration Debug | xcpretty;
-      xcodebuild test -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release | xcpretty;
-    else
-      xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" -configuration Debug | xcpretty;
-      xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release | xcpretty;
-    fi
+    - stage: test
+      name: Run Unit Tests (iOS, Xcode 11)
+      osx_image: xcode11
+      script: Scripts/test.sh -d "OS=13.0,name=iPhone Xs"
+
+    - stage: test
+      name: Swift Build (Swift Package Manager)
+      osx_image: xcode11
+      script: swift build

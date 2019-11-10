@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
 
 import XCTest
 import Foundation
@@ -179,11 +179,21 @@ class TryMapTests: XCTestCase {
     }
 }
 
+class CastErrorTests: XCTestCase {
+    func testCastError() {
+        // EXPECT castError to compile with a default argument
+        let _: Future<Int, MyError> = Future(value: 1).castError()
+    }
+
+    func testCastErrorCustomArgument() {
+        // EXPECT castError to compile with a custom error typ argument
+        _ = Future(value: 1).castError(MyError.self)
+    }
+}
+
 class ForEachTests: XCTestCase {
     func testForEach() {
-        let futures: [() -> Future<Int, MyError>] = [
-            { Future<Int, MyError>(value: 1) },
-            { Future<Int, MyError>(value: 2) }
+        let futures: [() -> Future<Int, MyError>] = [ { Future<Int, MyError>(value: 1) }, { Future<Int, MyError>(value: 2) }
         ]
 
         var expected = [1, 2]
@@ -197,9 +207,7 @@ class ForEachTests: XCTestCase {
 
     func testForEachSecondFails() {
         func testForEach() {
-            let futures: [() -> Future<Int, MyError>] = [
-                { Future<Int, MyError>(value: 1) },
-                { Future<Int, MyError>(error: .e1) }
+            let futures: [() -> Future<Int, MyError>] = [ { Future<Int, MyError>(value: 1) }, { Future<Int, MyError>(error: .e1) }
             ]
 
             var expected: [Future<Int, MyError>.Result] = [.success(1), .failure(.e1)]

@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
 
 import XCTest
 import Foundation
@@ -31,10 +31,10 @@ class FutureTests: XCTestCase {
     func testDefaultOn() {
         let future = Future<Int, MyError>(value: 1)
         let expectation = self.expectation()
-        future.on { result in
-            XCTAssertEqual(result.value, 1)
+        future.on {
             expectation.fulfill()
         }
+        future.on(success: { _ in }, failure: { _ in })
         wait()
     }
 
@@ -118,6 +118,17 @@ class FutureTests: XCTestCase {
         XCTAssertEqual(future.value, 1)
     }
 
+    // MARK: Init with Throwing Closure
+
+    func testInitWithThrowingClosure() {
+        let future = Future<Int, Error> {
+            throw NSError(domain: "test", code: 1, userInfo: nil)
+        }
+
+        // EXPECT future to be created with an error
+        XCTAssertEqual((future.error as NSError?)?.domain, "test")
+    }
+
     // MARK: Resolve Result
 
     func testPromiseResolve() {
@@ -127,7 +138,73 @@ class FutureTests: XCTestCase {
     }
 }
 
-class SchedulersTest: XCTestCase {
+// Basically just test that these things compile.
+class FutureOnTests: XCTestCase {
+    func testOn() {
+        let future = Future<Int, MyError>(value: 1)
+
+        // EXPECT can attach success closure
+        future.on(success: { value in print(value) })
+
+        // EXPECT can attach success and failure closures
+        future.on(success: { value in print(value) },
+                  failure: { error in print(error) })
+
+        // EXPECT can attach success and completion closures
+        future.on(success: { value in print(value) },
+                  completion: { print("completion") })
+
+        // EXPECT can attach success, failure, and completion closures
+        future.on(success: { value in print(value) },
+                  failure: { error in print(error) },
+                  completion: { print("completed") })
+
+        // EXPECT can attach failure closure
+        future.on(failure: { error in print(error) })
+
+        // EXPECT can attach failure and completion closures
+        future.on(failure: { error in print(error) },
+                  completion: { print("completed") })
+
+        // EXPECT can attach completion closure
+        future.on(completion: { print("completed") })
+
+        // EXPECT `on` with a trailing closure defaults to `success`
+        future.on { value in print(value) }
+
+        // EXPECT materialize() can be used to observe result instead
+        future.materialize().on { result in print(result) }
+    }
+
+    func testOnValueVoid() {
+        let future = Future<Void, MyError>(value: ())
+
+        // EXPECT `on` with a trailing closure defaults to `success`
+        future.on { value in print(value) }
+    }
+
+    func testOnErrorNever() {
+        let future = Future<Int, Never>(value: 1)
+
+        // EXPECT `on` with a trailing closure defaults to `success`
+        future.on { value in print(value) }
+
+        // EXPECT can still attach completion
+        future.on(completion: { print("completion") })
+    }
+
+    func testOnValueVoidErrorNever() {
+        let future = Future<Void, Never>(value: ())
+
+        // EXPECT `on` with a trailing closure defaults to `success`
+        future.on { print("success") }
+
+        // EXPECT can still attach completion
+        future.on(completion: { print("completion") })
+    }
+}
+
+class SchedulersTests: XCTestCase {
 
     // MARK: .main(immediate: true) (default)
 
@@ -140,7 +217,7 @@ class SchedulersTest: XCTestCase {
         // WHEN `on` called on the main thread
         // EXPECT callbacks to be called synchronously
         future.on(success: { _ in isSuccessCalled = true },
-                  completion: { _ in isCompletedCalled = true })
+                  completion: { isCompletedCalled = true })
         XCTAssertTrue(isSuccessCalled)
         XCTAssertTrue(isCompletedCalled)
     }
@@ -169,7 +246,7 @@ class SchedulersTest: XCTestCase {
                     XCTAssertTrue(Thread.isMainThread)
                     expectation.fulfill()
                 },
-                completion: { _ in
+                completion: {
                     isCompletedCalled = true
                     XCTAssertTrue(Thread.isMainThread)
                     expectation.fulfill()
@@ -192,7 +269,7 @@ class SchedulersTest: XCTestCase {
         // EXPECT callbacks to be called synchronously
         future.observe(on: Scheduler.immediate)
             .on(success: { _ in isSuccessCalled = true },
-                completion: { _ in isCompletedCalled = true }
+                completion: { isCompletedCalled = true }
         )
         XCTAssertTrue(isSuccessCalled)
         XCTAssertTrue(isCompletedCalled)
@@ -218,7 +295,7 @@ class SchedulersTest: XCTestCase {
                     XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                     expectation.fulfill()
                 },
-                    completion: { _ in
+                    completion: {
                         isCompletedCalled = true
                         XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                         expectation.fulfill()
@@ -253,7 +330,7 @@ class SchedulersTest: XCTestCase {
                 XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                 expectation.fulfill()
             },
-                completion: { _ in
+                completion: {
                     isCompletedCalled = true
                     XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
                     expectation.fulfill()
@@ -287,7 +364,7 @@ class SchedulersTest: XCTestCase {
             failure: { _ in
                 XCTAssertTrue(Thread.isMainThread)
             },
-            completion: { _ in
+            completion: {
                 XCTAssertTrue(Thread.isMainThread)
                 expectation.fulfill()
             }
@@ -297,19 +374,23 @@ class SchedulersTest: XCTestCase {
 }
 
 class MapErrorTest: XCTestCase {
+    struct NewError: Swift.Error, Hashable {
+        let id: String
+    }
+
     func testMapError() {
         // GIVEN failed future
         let future = Future<Int, MyError>(error: .e1)
 
         // WHEN mapping error
         let mapped = future.mapError { _ in
-            return "e1"
+            return NewError(id: "e1")
         }
 
         // EXPECT mapped future to return a new error
         let expectation = self.expectation()
         mapped.on(failure: { error in
-            XCTAssertEqual(mapped.error, "e1")
+            XCTAssertEqual(mapped.error, NewError(id: "e1"))
             expectation.fulfill()
         })
 
@@ -322,14 +403,14 @@ class MapErrorTest: XCTestCase {
 
         // WHEN recovering from error with a value
         let mapped = promise.future.mapError { _ in
-            return "e1"
+            return NewError(id: "e1")
         }
 
         DispatchQueue.global().async {
             promise.fail(error: .e1)
         }
 
-        XCTAssertEqual(mapped.wait().error, "e1")
+        XCTAssertEqual(mapped.wait().error, NewError(id: "e1"))
     }
 }
 
@@ -796,7 +877,7 @@ class ObserveOnTests: XCTestCase {
         let expectation = self.expectation()
 
         // EXPECT map to be performed on the given queue
-        let _ = future
+        _ = future
             .observe(on: queue)
             .map { value -> String in
                 XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
@@ -840,7 +921,7 @@ class ObserveOnTests: XCTestCase {
         let expectation = self.expectation()
 
         // EXPECT map to be performed on the given queue
-        let _ = future
+        _ = future
             .castError()
             .observe(on: queue)
             .tryMap { value -> String in
@@ -874,6 +955,60 @@ class WaitTests: XCTestCase {
         }
 
         XCTAssertEqual(future.wait().error, .e1)
+    }
+}
+
+class ChangingDefaultSchedulerTests: XCTestCase {
+    private var previousScheduler: ScheduleWork!
+
+    override func setUp() {
+        previousScheduler = Scheduler.default
+    }
+
+    override func tearDown() {
+        Scheduler.default = previousScheduler
+    }
+
+    func testChangingDefaultScheduler() {
+        // WHEN a custom default scheduler is set
+        let (queue, key) = DispatchQueue.specific()
+        Scheduler.default = Scheduler.async(on: queue)
+
+        // EXPECT callbacks to be dispatched on a new default scheduler
+        let future = Future(value: 1)
+        let expectation = self.expectation()
+        future.on(success: { _ in
+            XCTAssertNotNil(DispatchQueue.getSpecific(key: key))
+            expectation.fulfill()
+        })
+        wait()
+    }
+
+    func testChangingDefaultSchedulerDoesntAffectTransformations() {
+        // WHEN a custom default scheduler is set
+        let (queue, _) = DispatchQueue.specific()
+        Scheduler.default = Scheduler.async(on: queue)
+
+        // GIVEN a promise
+        let promise = Promise<Int, Never>()
+        let (workQueue, workKey) = DispatchQueue.specific()
+
+        // EXPECT map (and other transformations) to still be performed on the queue
+        // on which operations was completed
+        let result = promise.future.map { value -> Int in
+            XCTAssertNotNil(DispatchQueue.getSpecific(key: workKey))
+            return value + 1
+        }
+
+        workQueue.async {
+            promise.succeed(value: 2)
+        }
+
+        let expectation = self.expectation()
+        result.on(success: { _ in
+            expectation.fulfill()
+        })
+        wait()
     }
 }
 

@@ -1,3 +1,29 @@
+# FutureX 1.1
+
+- Replace custom `Future.Result` type with `Swift.Result`
+
+# FutureX 1.0
+
+- Add Swift 5.0 support
+- Add SwiftPM 5.0 support
+- Remove Swift 4.0 and Swift 4.1 support
+- Remove iOS 9, tvOS 9, watchOS 2.0, macOS 10.10 and macOS 10.11 support
+
+# FutureX 0.17
+
+Refined `on` method to attach callbacks. There are just two minor changes:
+
+- Completion closure signature is now `() -> Void` instead of `(Result) -> Void`. Completion is designed to be used in addition to `success` and `failure` to do things like hiding activity indicators. That's why the `Result` variant never really made sense. If you'd like to use `Result` instead, use `future.materialize().on { result in }`.
+- Add a `func on(success: (Value) -> Void)` method. Now `future.on { }` (with a trailing closure) is inferred by the compiler to add `success` closure. Previously, it used to attach `completion` closure. This change makes it a little bit nices to attach callbacks to futures that can't produce errors (`Future<_, Never>`).
+
+There is also a change in the project structure. We now use a single multi-platform target instead of four separate targets - one for each platform.
+
+# FutureX 0.16
+
+- Add  `Future` initializer which takes a throwing closure:  `init(catching body: () throws -> Value)`. This feature was added in the first FutureX PR [#1](https://github.com/kean/FutureX/pull/1), thanks to [@moto0000](https://github.com/moto0000)!
+- Add `castError` variant which takes an error type as an argument
+- Add `Scheduler.default` which can be used to change the default scheduler which is `Scheduler.main`
+
 # FutureX 0.15
 
 - `on` no longer returns `Future` to enable future extensions, discourage putting side effects in the middle of the chain, and simplify scheduleing model

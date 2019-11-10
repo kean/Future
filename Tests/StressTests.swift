@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2016-2018 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
 
 import XCTest
 import Foundation
@@ -30,7 +30,7 @@ private func stressDataRace<Value: Equatable>(expectation e1: XCTestExpectation,
         let promise = Promise<Value, Error>()
         let future = promise.future
 
-        DispatchQueue.concurrentPerform(iterations: stressFactor) { n in
+        DispatchQueue.concurrentPerform(iterations: stressFactor) { _ in
             stressFunction(future)
         }
 
