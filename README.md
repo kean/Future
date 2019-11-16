@@ -88,9 +88,9 @@ To attach callbacks (each one is optional) to the `Future` use  `on` method:
 
 ```swift
 let future: Future<Value, Error>
-future.on(success: { print("received value: \($0)" },
-          failure: { print("failed with error: \($0)" }),
-          completion: { print("completed" })
+future.on(success: { print("received value: \($0)") },
+          failure: { print("failed with error: \($0)") }),
+          completion: { print("completed") })
 ```
 
 If the future already has a result, callbacks are executed immediately. If the future doesn't have a result yet, callbacks will be executed when the future is resolved. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. 
