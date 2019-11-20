@@ -162,7 +162,9 @@ extension Future where Error == Never {
     /// actually produces an error but it makes it easier to compose it with the
     /// ones that can.
     public func castError<NewError>(_ : NewError.Type = NewError.self) -> Future<Value, NewError> {
-        return mapError { _ in fatalError("Future<Value, Never> can't produce an error") }
+        let promise = Future<Value, NewError>.Promise()
+        cascade(success: promise.succeed, failure: { _ in })
+        return promise.future
     }
 }
 
