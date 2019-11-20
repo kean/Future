@@ -19,7 +19,7 @@ Futures enable composition of tasks using familiar functions like `map`, `flatMa
 
 - [**Quick Start Guide**](#quick-start-guide) ‣ 
 [Overview](#quick-start-guide) · [Create Future](#create-future) · [Attach Callbacks](#attach-callbacks) · [`wait`](#wait)
-- [**Functional Composition**](#functional-composition) ‣ [`map`](#map-flatmap) · [`flatMap`](#map-flatmap) · [`mapError`](#maperror-flatmaperror) · [`flatMapError`](#maperror-flatmaperror) · [`zip`](#zip) · [`reduce`](#reduce)
+- [**Composition**](#composition) ‣ [`map`](#map-flatmap) · [`flatMap`](#map-flatmap) · [`mapError`](#maperror-flatmaperror) · [`flatMapError`](#maperror-flatmaperror) · [`zip`](#zip) · [`reduce`](#reduce)
 - [**Extensions**](#extensions) ‣ [`first`](#first) · [`forEach`](#foreach) · [`after`](#after) · [`retry`](#retry) · [`materialize`](#materialize)
 - [**Threading**](#threading) · [**Cancellation**](#cancellation) · [**Async/Await**](#asyncawait) · [**Performance**](#performance)
 
@@ -120,7 +120,7 @@ struct Future<Value, Error> {
 }
 ```
 
-## Functional Composition
+## Composition
 
 ### `map`, `flatMap`
 
