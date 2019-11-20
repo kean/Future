@@ -1,12 +1,12 @@
 <br/>
 
-<p align="left"><img src="https://user-images.githubusercontent.com/1567433/50047319-05ebdb80-00b3-11e9-9524-09b7a84c36e8.png" height="70"/>
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/69201359-0800ba80-0b0c-11ea-96fd-bcb54239c9a9.png" height="70"/>
 <p align="left">Streamlined <code>Future&lt;Value, Error&gt;</code> implementation</p>
 <p align="left">
-<img src="https://img.shields.io/cocoapods/v/FutureX.svg?label=version">
+<img src="https://img.shields.io/cocoapods/v/Future.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
 <img src="https://img.shields.io/badge/supports-CocoaPods%2C%20Carthage%2C%20SwiftPM-green.svg">
-<a href="https://travis-ci.org/kean/FutureX"><img src="https://travis-ci.org/kean/FutureX.svg?branch=master"></a>
+<a href="https://travis-ci.org/kean/Future"><img src="https://travis-ci.org/kean/Future.svg?branch=master"></a>
 <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
 </p>
 
@@ -290,7 +290,7 @@ future.observe(on: .global())
 
 Cancellation is a concern orthogonal to `Future`. Think about `Future` as a simple callback replacement – callbacks don't support cancellation.
 
-FutureX implements a [`CancellationToken`](https://kean.github.io/post/cancellation-token) pattern for cooperative cancellation of async tasks. A token is created through a cancellation token source.
+`Future` implements a [`CancellationToken`](https://kean.github.io/post/cancellation-token) pattern for cooperative cancellation of async tasks. A token is created through a cancellation token source.
 
 ```swift
 let cts = CancellationTokenSource()
@@ -328,24 +328,24 @@ The task has full control over cancellation. You can ignore it, you can fail a p
 
 Async/await is often built on top of futures. When [async/await](https://gist.github.com/lattner/429b9070918248274f25b714dcfc7619) support is eventually added to Swift, it would be relatively easy to replace the code that uses futures with async/await.
 
-> There is a [(blocking) version](https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7) of async/await built on top FutureX. It's not meant to be used in production.
+> There is a [(blocking) version](https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7) of async/await built on top Future. It's not meant to be used in production.
 
 ## Performance
 
-Every feature in FutureX is engineered with performance in mind.
+Every feature in Future is engineered with performance in mind.
 
 We avoid dynamic dispatch, reduce the number of allocations and deallocations, avoid doing unnecessary work and lock as less as possible. Methods are often implemented in a sometimes less elegant but more performant way.
 
-There are also some key design differences that give FutureX an edge over other frameworks. One example is `Future` type itself which is designed as struct which allows some common operations to be performed without a single allocation.
+There are also some key design differences that give Future an edge over other frameworks. One example is `Future` type itself which is designed as struct which allows some common operations to be performed without a single allocation.
 
 ## Requirements
 
-| FutureX         | Swift         | Xcode          | Platforms                                         |
-|-----------------|---------------|----------------|---------------------------------------------------|
-| FutureX 1.1     | Swift 5.0     | Xcode 10.2     | iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0  |
-| FutureX 1.0     | Swift 4.2     | Xcode 10.1     | iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0  |
-| FutureX 0.17    | Swift 4.0     | Xcode 9.2      | iOS 9.0 / watchOS 2.0 / macOS 10.11 / tvOS 9.0    | 
+| Future         | Swift         | Xcode          | Platforms                                         |
+|----------------|---------------|----------------|---------------------------------------------------|
+| Future 1.1     | Swift 5.0     | Xcode 10.2     | iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0  |
+| Future 1.0     | Swift 4.2     | Xcode 10.1     | iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0  |
+| Future 0.17    | Swift 4.0     | Xcode 9.2      | iOS 9.0 / watchOS 2.0 / macOS 10.11 / tvOS 9.0    | 
 
 ## License
 
-FutureX is available under the MIT license. See the LICENSE file for more info.
+`Future` is available under the MIT license. See the LICENSE file for more info.

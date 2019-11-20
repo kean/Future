@@ -1,7 +1,3 @@
-# FutureX 1.1.1
-
-- Add a version compatible with Swift Package Manager
-
 # FutureX 1.1
 
 - Replace custom `Future.Result` type with `Swift.Result`

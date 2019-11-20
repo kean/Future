@@ -55,7 +55,6 @@
 		0C5108371D4E824A00F1F405 /* Future.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Future.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C74EECF1FEE9FA900732850 /* PerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		0C7E0EB81DBA0E3E00BA75EC /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
-		0C7E0EB91DBA0F1900BA75EC /* FutureX.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = FutureX.podspec; sourceTree = "<group>"; };
 		0C9F15B721984D90002EB416 /* FutureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureTests.swift; sourceTree = "<group>"; };
 		0C9F15BD219CC0F8002EB416 /* StressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressTests.swift; sourceTree = "<group>"; };
 		0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureExtensions.swift; sourceTree = "<group>"; };
@@ -173,7 +172,6 @@
 		0CAA5D061DB14524001F6D96 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				0C7E0EB91DBA0F1900BA75EC /* FutureX.podspec */,
 				0CAA5D071DB14531001F6D96 /* Package.swift */,
 				0CAA5D081DB14531001F6D96 /* README.md */,
 				0C7E0EB81DBA0E3E00BA75EC /* CHANGELOG.md */,
@@ -438,7 +436,7 @@
 				INFOPLIST_FILE = Tests/Host/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.FutureX-Host";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Future-Host";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -458,7 +456,7 @@
 				INFOPLIST_FILE = Tests/Host/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.FutureX-Host";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.kean.Future-Host";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -629,7 +627,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 1.1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.FutureX;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Future;
 				PRODUCT_NAME = Future;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -646,7 +644,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 1.1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.FutureX;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.kean.Future;
 				PRODUCT_NAME = Future;
 				SKIP_INSTALL = YES;
 			};
