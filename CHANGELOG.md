@@ -1,5 +1,11 @@
 # Future 1.x
 
+## Future 1.3.0
+
+*November 20, 2019*
+
+- Remove `FutureCompatible.swift` from the framework
+
 ## Future 1.2.0
 
 *November 19, 2019*

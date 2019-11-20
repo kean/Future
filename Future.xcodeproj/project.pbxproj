@@ -25,7 +25,6 @@
 		0C9F168721A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
 		0CAA5D211DB14780001F6D96 /* A+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */; };
 		0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
-		0CD4DCD121A9A81800B45CA2 /* FutureCompatible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,6 +61,7 @@
 		0C9F167721A03A6A002EB416 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
 		0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationTokenTests.swift; sourceTree = "<group>"; };
 		0CA3815F2384D23D0036D972 /* Installation Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Installation Guide.md"; sourceTree = "<group>"; };
+		0CA381612385672A0036D972 /* FutureCompatible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureCompatible.swift; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D121DB14766001F6D96 /* Future Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Future Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,7 +70,6 @@
 		0CAA5D221DB14859001F6D96 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0CAA5D461DB149FF001F6D96 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		0CD0B07421C8423A000581BB /* Future.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Future.xcconfig; sourceTree = "<group>"; };
-		0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureCompatible.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,7 +148,6 @@
 			children = (
 				0C20715A1D4E83A700EA5BEF /* Future.swift */,
 				0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */,
-				0CD4DCD021A9A81800B45CA2 /* FutureCompatible.swift */,
 				0C9F167721A03A6A002EB416 /* CancellationToken.swift */,
 			);
 			path = Sources;
@@ -175,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				0CA3815F2384D23D0036D972 /* Installation Guide.md */,
+				0CA381612385672A0036D972 /* FutureCompatible.swift */,
 			);
 			path = Documentation;
 			sourceTree = "<group>";
@@ -391,7 +390,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CD4DCD121A9A81800B45CA2 /* FutureCompatible.swift in Sources */,
 				0C9F165721A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715B1D4E83A700EA5BEF /* Future.swift in Sources */,
 				0C9F167821A03A6A002EB416 /* CancellationToken.swift in Sources */,
