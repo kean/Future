@@ -187,7 +187,7 @@ extension Future where Error == Never {
     /// A special variant that doesn't require a `failure` closure -
     /// `Future<Value, Never>` can't produce an error.
     func cascade(success: @escaping (Value) -> Void) {
-        cascade(success: success, failure: { _ in fatalError("Future<Value, Never> can't produce an error") })
+        cascade(success: success, failure: { _ in })
     }
 }
 
