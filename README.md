@@ -3,16 +3,15 @@
 <p align="left"><img src="https://user-images.githubusercontent.com/1567433/69201359-0800ba80-0b0c-11ea-96fd-bcb54239c9a9.png" height="70"/>
 <p align="left">Streamlined <code>Future&lt;Value, Error&gt;</code> implementation</p>
 <p align="left">
-<img src="https://img.shields.io/cocoapods/v/Future.svg?label=version">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
-<img src="https://img.shields.io/badge/supports-CocoaPods%2C%20Carthage%2C%20SwiftPM-green.svg">
+<img src="https://img.shields.io/badge/supports-Carthage%2C%20SwiftPM-green.svg">
 <a href="https://travis-ci.org/kean/Future"><img src="https://travis-ci.org/kean/Future.svg?branch=master"></a>
 <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
 </p>
 
 <hr/>
 
-**Future** represents a result of a task which may be available now, or in the future, or never. **Future**X provides a streamlined **`Future<Value, Error>`** type engineered with ergonomics and performance in mind.
+**Future** represents a result of a task which may be available now, or in the future, or never. **Future** provides a streamlined **`Future<Value, Error>`** type engineered with ergonomics and performance in mind.
 
 Futures enable composition of tasks using familiar functions like `map`, `flatMap`, `zip`, `reduce` and others which are all easy to learn and use.
 
@@ -23,6 +22,8 @@ Futures enable composition of tasks using familiar functions like `map`, `flatMa
 - [**Functional Composition**](#functional-composition) ‣ [`map`](#map-flatmap) · [`flatMap`](#map-flatmap) · [`mapError`](#maperror-flatmaperror) · [`flatMapError`](#maperror-flatmaperror) · [`zip`](#zip) · [`reduce`](#reduce)
 - [**Extensions**](#extensions) ‣ [`first`](#first) · [`forEach`](#foreach) · [`after`](#after) · [`retry`](#retry) · [`materialize`](#materialize)
 - [**Threading**](#threading) · [**Cancellation**](#cancellation) · [**Async/Await**](#asyncawait) · [**Performance**](#performance)
+
+To learn more see a full [**API Reference**](https://kean-org.github.io/docs/future/reference/1.2.0/index.html). When you are ready to install, follow the [**Installation Guide**](https://github.com/kean/Future/blob/master/Documentation/Installation%20Guide.md). See [**Requirements**](#h_requirements) for a list of supported platforms.
 
 ## Quick Start Guide
 
