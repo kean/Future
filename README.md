@@ -1,6 +1,6 @@
 <br/>
 
-<p align="left"><img src="https://user-images.githubusercontent.com/1567433/69201359-0800ba80-0b0c-11ea-96fd-bcb54239c9a9.png" height="70"/>
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/69201359-0800ba80-0b0c-11ea-96fd-bcb54239c9a9.png" height="90"/>
 <p align="left">Streamlined <code>Future&lt;Value, Error&gt;</code> implementation</p>
 <p align="left">
 <img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS-lightgrey.svg">
