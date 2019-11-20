@@ -343,8 +343,7 @@ extension Future {
         private var memoizedResult: Result? // nil when pending
         private var inlinedHandler: ((Result) -> Void)?
         private var handlers: [(Result) -> Void]?
-        /// The Lock fastest option (https://gist.github.com/steipete/36350a8a60693d440954b95ea6cbbafc)
-        private var lock = os_unfair_lock()
+        private let lock = NSLock()
 
         /// Creates a new pending promise.
         public init() {}
@@ -366,24 +365,23 @@ extension Future {
 
         /// Sends a result to the associated future.
         public func resolve(result: Result) {
-            os_unfair_lock_lock(&lock)
+            lock.lock()
             guard self.memoizedResult == nil else {
-                os_unfair_lock_unlock(&lock)
-                return // Already resolved
+                return lock.unlock() // Already resolved
             }
             self.memoizedResult = result
             let inlinedHandler = self.inlinedHandler
             let handlers = self.handlers
             self.inlinedHandler = nil
             self.handlers = nil
-            os_unfair_lock_unlock(&lock)
+            lock.unlock()
 
             inlinedHandler?(result)
             handlers?.forEach { $0(result) }
         }
 
         func observe(completion: @escaping (Result) -> Void) {
-            os_unfair_lock_lock(&lock)
+            lock.lock()
             guard let result = memoizedResult else {
                 if inlinedHandler == nil {
                     inlinedHandler = completion
@@ -392,25 +390,24 @@ extension Future {
                     handlers = handlers ?? []
                     handlers?.append(completion)
                 }
-                os_unfair_lock_unlock(&lock)
-                return // Still pending, handlers attached
+                return lock.unlock() // Still pending, handlers attached
             }
-            os_unfair_lock_unlock(&lock)
+            lock.unlock()
 
             completion(result)
         }
 
         /// Returns the result if the future completed.
         var result: Result? {
-            os_unfair_lock_lock(&lock)
-            defer { os_unfair_lock_unlock(&lock) }
+            lock.lock()
+            defer { lock.unlock() }
             return memoizedResult
         }
 
         // MARK: CustomDebugStringConvertible
         public var debugDescription: String {
-            os_unfair_lock_lock(&lock)
-            defer { os_unfair_lock_unlock(&lock) }
+            lock.lock()
+            defer { lock.unlock() }
             if let result = memoizedResult {
                 return "Promise<\(Value.self), \(Error.self)> { .resolved(result: \(result)) }"
             } else {

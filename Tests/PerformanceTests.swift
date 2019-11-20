@@ -11,7 +11,7 @@ class FutureInitializationTests: XCTestCase {
     func testInitPending() {
         measure {
             for _ in 0..<100_000 {
-                _ = Future<Int, Void> { _ in
+                _ = Future<Int, Never> { _ in
                     return // do nothing
                 }
             }
@@ -117,7 +117,7 @@ class FutureCallbacksTests: XCTestCase {
 class PromiseResolveTests: XCTestCase {
 
     func testSucceedWithOneCallback() {
-        let items = (0..<100_000).map { _ in Promise<Int, Void>() }
+        let items = (0..<100_000).map { _ in Promise<Int, Never>() }
 
         for item in items {
             item.future.on(success: { _ in })
@@ -131,7 +131,7 @@ class PromiseResolveTests: XCTestCase {
     }
 
     func testSucceedWithTwoCallback() {
-        let items = (0..<100_000).map { _ in Promise<Int, Void>() }
+        let items = (0..<100_000).map { _ in Promise<Int, Never>() }
 
         for item in items {
             item.future.on(success: { _ in })
@@ -171,9 +171,9 @@ class FutureChainsTests: XCTestCase {
             expecation.expectedFulfillmentCount = 5000
 
             for _ in 0..<5000 {
-                let future = Future<Int, Void>(value: 1)
+                let future = Future<Int, Never>(value: 1)
                     .map { $0 + 1 }
-                    .flatMap { Future<Int, Void>(value: $0 + 1) }
+                    .flatMap { Future<Int, Never>(value: $0 + 1) }
                     .mapError { $0 }
 
                 future.on(success: { _ in expecation.fulfill() })
@@ -189,9 +189,9 @@ class FutureChainsTests: XCTestCase {
 
             for _ in 0..<5000 {
                 let future = Future.zip([
-                    Future<Int, Void>(value: 1),
-                    Future<Int, Void>(value: 2),
-                    Future<Int, Void>(value: 4)]
+                    Future<Int, Never>(value: 1),
+                    Future<Int, Never>(value: 2),
+                    Future<Int, Never>(value: 4)]
                 )
 
                 future.on(success: { _ in expecation.fulfill() })
