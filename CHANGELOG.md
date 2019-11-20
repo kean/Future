@@ -2,6 +2,8 @@
 
 ## Future 1.2.0
 
+*November 19, 2019*
+
 - Fix Xcode warnings – [9](https://github.com/kean/FutureX/pull/9)
 - Add Installation Guide and [**API Reference**](https://kean-org.github.io/docs/future/reference/1.2.0/index.html)
 - Remove CocoaPods support
