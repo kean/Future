@@ -27,17 +27,14 @@ To learn more see a full [**API Reference**](https://kean-org.github.io/docs/fut
 
 ## Quick Start Guide
 
-Let's start with an overview of the available types. The central ones are of course `Future` and its `Result`:
+Let's start with an overview of the available types. The central ones is, of course, `Future`:
 
 ```swift
 struct Future<Value, Error> {
+    public typealias Result = Swift.Result<Value, Error>
     var result: Result? { get }
     
     func on(success: ((Value) -> Void)?, failure: ((Error) -> Void)?, completion: (() -> Void)?)
-
-    enum Result {
-        case success(Value), failure(Error)
-    }
 }
 ```
 
