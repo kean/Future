@@ -13,7 +13,9 @@ let package = Package(
     products: [
         .library(name: "Future", targets: ["Future"])
     ],
+    dependencies: [],
     targets: [
-        .target(name: "Future", path: "Sources")
+        .target(name: "Future", dependencies: [], path: "Sources"),
+        .testTarget(name: "FutureTests", dependencies: ["Future"], path: "Tests")
     ]
 )
