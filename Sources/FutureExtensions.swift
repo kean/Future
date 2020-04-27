@@ -11,7 +11,7 @@ extension Future {
     /// Waits for the first future to resolve. If the first future to resolve
     /// fails, the returned future also fails.
     public static func first(_ futures: Future...) -> Future {
-        return self.first(futures)
+        self.first(futures)
     }
 
     /// Waits for the first future to resolve. If the first future to resolve
@@ -35,7 +35,7 @@ extension Future where Value == Void, Error == Never {
     ///     - seconds: The time interval after which the future succeeds.
     ///     - queue: The queue on which futures succeeds, `.global` by default.
     public static func after(seconds: TimeInterval, on queue: DispatchQueue = .global()) -> Future<Void, Never> {
-        return after(deadline: .now() + seconds, on: queue)
+        after(deadline: .now() + seconds, on: queue)
     }
 
     /// Returns a future which succeeds after a given time interval.
@@ -44,7 +44,7 @@ extension Future where Value == Void, Error == Never {
     ///     - interval: The time interval after which the future succeeds.
     ///     - queue: The queue on which futures succeeds, `.global` by default.
     public static func after(_ interval: DispatchTimeInterval, on queue: DispatchQueue = .global()) -> Future<Void, Never> {
-        return after(deadline: .now() + interval, on: queue)
+        after(deadline: .now() + interval, on: queue)
     }
 
     private static func after(deadline: DispatchTime, on queue: DispatchQueue = .global()) -> Future<Void, Never> {
@@ -147,8 +147,8 @@ extension Future where Error == Swift.Error {
     /// current future's value. If the `transform` closure throws, the resulting
     /// future also throws.
     public func tryMap<NewValue>(_ transform: @escaping (Value) throws -> NewValue) -> Future<NewValue, Error> {
-        return flatMap { value -> Future<NewValue, Error> in
-            return Future<NewValue, Error>(catching: { try transform(value) })
+        flatMap { value -> Future<NewValue, Error> in
+            Future<NewValue, Error>(catching: { try transform(value) })
         }
     }
 }
@@ -172,7 +172,7 @@ extension Future {
 
     /// Casts the future to `Future<Void, Error>`.
     public func asVoid() -> Future<Void, Error> {
-        return map { _ in () }
+        map { _ in () }
     }
 }
 

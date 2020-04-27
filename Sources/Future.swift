@@ -38,7 +38,7 @@ public struct Future<Value, Error: Swift.Error> {
     private let resolver: Resolver
     private let scheduler: ScheduleWork?
 
-    // MARK: Create
+    // MARK: Initializers
 
     /// Creates a new, pending future.
     ///
@@ -71,18 +71,18 @@ public struct Future<Value, Error: Swift.Error> {
         self.init(resolver: .result(result))
     }
 
-    // MARK: Callbacks
+    // MARK: Adding Callbacks
 
     /// Returns a new future which dispatches the callbacks on the given scheduler.
     /// This includes both `on` method and the composition functions like `map`.
     public func observe(on queue: DispatchQueue) -> Future {
-        return Future(resolver: resolver, scheduler: Scheduler.async(on: queue))
+        Future(resolver: resolver, scheduler: Scheduler.async(on: queue))
     }
 
     /// Returns a new future which dispatches the callbacks on the given scheduler.
     /// This includes both `on` method and the composition functions like `map`.
     public func observe(on scheduler: @escaping ScheduleWork) -> Future {
-        return Future(resolver: resolver, scheduler: scheduler)
+        Future(resolver: resolver, scheduler: scheduler)
     }
 
     /// Attach callbacks to the future. If the future already has a result,
@@ -156,20 +156,14 @@ public struct Future<Value, Error: Swift.Error> {
 
     /// Returns the value if the future has a value.
     public var value: Value? {
-        guard let result = result else { return nil }
-        switch result {
-        case let .success(value): return value
-        case .failure: return nil
-        }
+        guard case let .success(value) = result else { return nil }
+        return value
     }
 
     /// Returns the error if the future has an error.
     public var error: Error? {
-        guard let result = result else { return nil }
-        switch result {
-        case .success: return nil
-        case let .failure(error): return error
-        }
+        guard case let .failure(error) = result else { return nil }
+        return error
     }
 
     /// Returns the result if the future completed.
@@ -350,7 +344,7 @@ extension Future {
 
         /// Returns a future associated with the promise.
         public var future: Future {
-            return Future(resolver: .promise(self))
+            Future(resolver: .promise(self))
         }
 
         /// Sends a value to the associated future.
