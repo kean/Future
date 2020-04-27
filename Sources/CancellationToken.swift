@@ -2,8 +2,6 @@
 //
 // Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
 
-import Foundation
-
 // MARK: - CancellationTokenSource
 
 /// Manages cancellation tokens and signals them when cancellation is requested.

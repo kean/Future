@@ -23,6 +23,7 @@
 		0C9F165821A0290B002EB416 /* FutureExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F1643219F5297002EB416 /* FutureExtensionsTests.swift */; };
 		0C9F167821A03A6A002EB416 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F167721A03A6A002EB416 /* CancellationToken.swift */; };
 		0C9F168721A044F7002EB416 /* CancellationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */; };
+		0CA7588D24577D0F009FC6E3 /* FutureOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA7588C24577D0F009FC6E3 /* FutureOperators.swift */; };
 		0CAA5D211DB14780001F6D96 /* A+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D1F1DB14780001F6D96 /* A+Tests.swift */; };
 		0CAA5D231DB14859001F6D96 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAA5D221DB14859001F6D96 /* Extensions.swift */; };
 /* End PBXBuildFile section */
@@ -62,6 +63,7 @@
 		0C9F168621A044F7002EB416 /* CancellationTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationTokenTests.swift; sourceTree = "<group>"; };
 		0CA3815F2384D23D0036D972 /* Installation Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Installation Guide.md"; sourceTree = "<group>"; };
 		0CA381612385672A0036D972 /* FutureCompatible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureCompatible.swift; sourceTree = "<group>"; };
+		0CA7588C24577D0F009FC6E3 /* FutureOperators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureOperators.swift; sourceTree = "<group>"; };
 		0CAA5D071DB14531001F6D96 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0CAA5D081DB14531001F6D96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0CAA5D121DB14766001F6D96 /* Future Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Future Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -147,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				0C20715A1D4E83A700EA5BEF /* Future.swift */,
+				0CA7588C24577D0F009FC6E3 /* FutureOperators.swift */,
 				0C9F1627219F4FDF002EB416 /* FutureExtensions.swift */,
 				0C9F167721A03A6A002EB416 /* CancellationToken.swift */,
 			);
@@ -399,6 +402,7 @@
 			files = (
 				0C9F165721A028BD002EB416 /* FutureExtensions.swift in Sources */,
 				0C20715B1D4E83A700EA5BEF /* Future.swift in Sources */,
+				0CA7588D24577D0F009FC6E3 /* FutureOperators.swift in Sources */,
 				0C9F167821A03A6A002EB416 /* CancellationToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
