@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2016-2019 Alexander Grebenyuk (github.com/kean).
+// Copyright (c) 2016-2020 Alexander Grebenyuk (github.com/kean).
 
 // MARK: - Map, FlatMap
 
