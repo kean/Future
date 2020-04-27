@@ -5,6 +5,8 @@
 *April 27, 2019*
 
 - Add Linux support - [#12](https://github.com/kean/Future/pull/12), by [Joseph Heck](https://github.com/heckj)
+- Increaes mininum supported platform requirements to iOS 11.0 / watchOS 4.0 / macOS 10.13 / tvOS 11.0
+- Increase minimum supported Xcode version to Xcode 11
 
 ## Future 1.3.0
 
