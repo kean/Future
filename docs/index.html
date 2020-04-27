@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html"> Docs</a> (87% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html"> Reference</a>
+        <img id="carat" src="img/carat.png" />
+          Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/Scheduler.html">Scheduler</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/CancellationToken.html">CancellationToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/CancellationTokenSource.html">CancellationTokenSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Future.html">Future</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Future/Promise.html">– Promise</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Future/Delay.html">– Delay</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:6Future7Promisea">Promise</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:6Future12ScheduleWorka">ScheduleWork</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <p><br/></p>
+
+<p align="left"><img src="https://user-images.githubusercontent.com/1567433/69201359-0800ba80-0b0c-11ea-96fd-bcb54239c9a9.png" height="90"/>
+<p align="left">Streamlined <code>Future&lt;Value, Error&gt;</code> implementation</p>
+<p align="left">
+<img src="https://img.shields.io/badge/platforms-iOS%2C%20macOS%2C%20watchOS%2C%20tvOS%2C%20Linux-lightgrey.svg">
+<img src="https://img.shields.io/badge/supports-Carthage%2C%20SwiftPM-green.svg">
+<a href="https://travis-ci.org/kean/Future"><img src="https://travis-ci.org/kean/Future.svg?branch=master"></a>
+<img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen.svg">
+</p>
+
+<hr/>
+
+<p><strong>Future</strong> represents a result of a task which may be available now, or in the future, or never. <strong>Future</strong> provides a streamlined <strong><code>Future&lt;Value, Error&gt;</code></strong> type engineered with ergonomics and performance in mind.</p>
+
+<p>Futures enable composition of tasks using familiar functions like <code>map</code>, <code>flatMap</code>, <code>zip</code>, <code>reduce</code> and others which are all easy to learn and use.</p>
+<h2 id='getting-started' class='heading'>Getting Started</h2>
+
+<ul>
+<li><a href="#quick-start-guide"><strong>Quick Start Guide</strong></a> ‣ 
+<a href="#quick-start-guide">Overview</a> · <a href="#create-future">Create Future</a> · <a href="#attach-callbacks">Attach Callbacks</a> · <a href="#wait"><code>wait</code></a></li>
+<li><a href="#composition"><strong>Composition</strong></a> ‣ <a href="#map-flatmap"><code>map</code></a> · <a href="#map-flatmap"><code>flatMap</code></a> · <a href="#maperror-flatmaperror"><code>mapError</code></a> · <a href="#maperror-flatmaperror"><code>flatMapError</code></a> · <a href="#zip"><code>zip</code></a> · <a href="#reduce"><code>reduce</code></a></li>
+<li><a href="#extensions"><strong>Extensions</strong></a> ‣ <a href="#first"><code>first</code></a> · <a href="#foreach"><code>forEach</code></a> · <a href="#after"><code>after</code></a> · <a href="#retry"><code>retry</code></a> · <a href="#materialize"><code>materialize</code></a></li>
+<li><a href="#threading"><strong>Threading</strong></a> · <a href="#cancellation"><strong>Cancellation</strong></a> · <a href="#asyncawait"><strong>Async/Await</strong></a> · <a href="#performance"><strong>Performance</strong></a></li>
+</ul>
+
+<p>To learn more see a full <a href="https://kean-org.github.io/docs/future/reference/1.2.0/index.html"><strong>API Reference</strong></a>. When you are ready to install, follow the <a href="https://github.com/kean/Future/blob/master/Documentation/Installation%20Guide.md"><strong>Installation Guide</strong></a>. See <a href="#h_requirements"><strong>Requirements</strong></a> for a list of supported platforms.</p>
+<h2 id='quick-start-guide' class='heading'>Quick Start Guide</h2>
+
+<p>Let&rsquo;s start with an overview of the available types. The central ones is, of course, <code><a href="Structs/Future.html">Future</a></code>:</p>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Result</span> <span class="o">=</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span>
+    <span class="k">var</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt">Value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">failure</span><span class="p">:</span> <span class="p">((</span><span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span>
+<span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p><code><a href="Structs/Future.html">Future</a></code> is parameterized with two generic arguments – <code>Value</code> and <code>Error</code>. This allows us to take advantage of Swift type-safety features and also model futures that never fail using <code>Never</code> – <code>Future&lt;Value, Never&gt;</code>.</p>
+</blockquote>
+<h3 id='create-future' class='heading'>Create Future</h3>
+
+<p>To create a future you would normally use a <code><a href="Typealiases.html#/s:6Future7Promisea">Promise</a></code>:</p>
+<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">someAsyncTask</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">promise</span> <span class="o">=</span> <span class="kt">Promise</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">()</span>
+    <span class="n">performAsyncTask</span> <span class="p">{</span> <span class="n">value</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span>
+        <span class="c1">// If success</span>
+        <span class="n">promise</span><span class="o">.</span><span class="nf">succeed</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">value</span><span class="p">)</span>
+        <span class="c1">// If error</span>
+        <span class="n">promise</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="nv">error</span><span class="p">:</span> <span class="n">error</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">promise</span><span class="o">.</span><span class="n">future</span>
+<span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p><code><a href="Typealiases.html#/s:6Future7Promisea">Promise</a></code> is thread-safe. You can call <code>succeed</code> or <code>fail</code> from any thread and any number of times – only the first result is sent to the <code><a href="Structs/Future.html">Future</a></code>.</p>
+</blockquote>
+
+<p>If the result of the work is already available by the time the future is created use one of these initializers:</p>
+<pre class="highlight swift"><code><span class="c1">// Init with a value</span>
+<span class="kt">Future</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">// Inferred to be Future&lt;Int, Never&gt;</span>
+<span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Int</span><span class="p">,</span> <span class="kt">MyError</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">// Init with an error</span>
+<span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Int</span><span class="p">,</span> <span class="kt">MyError</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">error</span><span class="p">:</span> <span class="o">.</span><span class="n">dataCorrupted</span><span class="p">)</span>
+
+<span class="c1">// Init with a throwing closure</span>
+<span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Int</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">guard</span> <span class="k">let</span> <span class="nv">value</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="kt">Error</span><span class="o">.</span><span class="n">dataCorrupted</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">value</span>
+<span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p>These <code>init</code> methods require no allocations which makes them really fast, faster than allocation a  <code><a href="Typealiases.html#/s:6Future7Promisea">Promise</a></code> instance.</p>
+</blockquote>
+<h3 id='attach-callbacks' class='heading'>Attach Callbacks</h3>
+
+<p>To attach callbacks (each one is optional) to the <code><a href="Structs/Future.html">Future</a></code> use  <code>on</code> method:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">future</span><span class="p">:</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span>
+<span class="n">future</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"received value: </span><span class="se">\(</span><span class="nv">$0</span><span class="se">)</span><span class="s">"</span><span class="p">)</span> <span class="p">},</span>
+          <span class="nv">failure</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"failed with error: </span><span class="se">\(</span><span class="nv">$0</span><span class="se">)</span><span class="s">"</span><span class="p">)</span> <span class="p">}),</span>
+          <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"completed"</span><span class="p">)</span> <span class="p">})</span>
+</code></pre>
+
+<p>If the future already has a result, callbacks are executed immediately. If the future doesn&rsquo;t have a result yet, callbacks will be executed when the future is resolved. The future guarantees that it can be resolved with only one result, the callbacks are also guaranteed to run only once. </p>
+
+<p>By default, the callbacks are run on the <code>.main</code> scheduler.  If the task finishes on the main thread, the callbacks are executed immediately. Otherwise, they are dispatched to be executed asynchronously on the main thread.</p>
+
+<blockquote>
+<p>See <a href="#threading"><strong>Threading</strong></a> for a rationale and more info.</p>
+</blockquote>
+<h3 id='code-wait-code' class='heading'><code>wait</code></h3>
+
+<p>Use <code>wait</code> method to block the current thread and wait until the future receives a result:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="nf">wait</span><span class="p">()</span> <span class="c1">// Mostly useful for testing and debugging</span>
+</code></pre>
+<h3 id='code-result-code' class='heading'><code>result</code></h3>
+
+<p>If the future already has a result you can read it synchronously:</p>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="k">var</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="k">var</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='composition' class='heading'>Composition</h2>
+<h3 id='code-map-code-code-flatmap-code' class='heading'><code>map</code>, <code>flatMap</code></h3>
+
+<p>Use familiar <code>map</code> and <code>flatMap</code> function to transform the future&rsquo;s values and chain futures:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">user</span><span class="p">:</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">User</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span>
+<span class="kd">func</span> <span class="nf">loadAvatar</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">UIImage</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span class="nv">avatar</span> <span class="o">=</span> <span class="n">user</span>
+    <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">avatarURL</span> <span class="p">}</span>
+    <span class="o">.</span><span class="nf">flatMap</span><span class="p">(</span><span class="n">loadAvatar</span><span class="p">)</span>
+</code></pre>
+
+<p>If you are not familiar with <code>flatMap</code>, at first it might be hard to wrap your head around it. But when it clicks, using it becomes second nature.</p>
+
+<p><img src="https://user-images.githubusercontent.com/1567433/50041360-e2457880-0053-11e9-8496-a3cfc71c0b0a.png" width="640px"></p>
+
+<blockquote>
+<p>There is actually not one, but a few <code>flatMap</code> variations. The extra ones allow you to seamlessly mix futures that can produce an error and the ones that can&rsquo;t. </p>
+</blockquote>
+<h3 id='code-maperror-code-code-flatmaperror-code' class='heading'><code>mapError</code>, <code>flatMapError</code></h3>
+
+<p><code><a href="Structs/Future.html">Future</a></code> has typed errors. To convert from one error type to another use <code>mapError</code>:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">URLError</span><span class="o">&gt;</span>
+<span class="n">request</span><span class="o">.</span><span class="nf">mapError</span><span class="p">(</span><span class="kt">MyError</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">urlError</span><span class="p">:))</span>
+</code></pre>
+
+<p>Use <code>flatMapError</code> to &ldquo;recover&rdquo; from an error.</p>
+
+<blockquote>
+<p>If you have a future that never produces an error (<code>Future&lt;_, Never&gt;</code>) you can cast it to the future which can produce <em>any</em> error using <code>castError</code> method. In most cases, this is not needed though.</p>
+</blockquote>
+<h3 id='code-zip-code' class='heading'><code>zip</code></h3>
+
+<p>Use  <code>zip</code>  to combine the result of up to three futures in a single future:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">user</span><span class="p">:</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">User</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span>
+<span class="k">let</span> <span class="nv">avatar</span><span class="p">:</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">UIImage</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span>
+
+<span class="kt">Future</span><span class="o">.</span><span class="nf">zip</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">avatar</span><span class="p">)</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="n">user</span><span class="p">,</span> <span class="n">avatar</span> <span class="k">in</span>
+    <span class="c1">// use both values</span>
+<span class="p">})</span>
+</code></pre>
+
+<p>Or to wait for the result of multiple futures:</p>
+<pre class="highlight swift"><code><span class="kt">Future</span><span class="o">.</span><span class="nf">zip</span><span class="p">([</span><span class="n">future1</span><span class="p">,</span> <span class="n">future2</span><span class="p">])</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="n">values</span> <span class="k">in</span>
+    <span class="c1">// use an array of values</span>
+<span class="p">})</span>
+</code></pre>
+<h3 id='code-reduce-code' class='heading'><code>reduce</code></h3>
+
+<p>Use <code>reduce</code> to combine the results of multiple futures:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">future1</span> <span class="o">=</span> <span class="kt">Future</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">future2</span> <span class="o">=</span> <span class="kt">Future</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="kt">Future</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">future1</span><span class="p">,</span> <span class="n">future2</span><span class="p">],</span> <span class="o">+</span><span class="p">)</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="n">value</span> <span class="k">in</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">// prints "3"</span>
+<span class="p">})</span>
+</code></pre>
+<h2 id='extensions' class='heading'>Extensions</h2>
+
+<p>In addition to the primary interface, there is also a set of extensions to <code><a href="Structs/Future.html">Future</a></code> which includes multiple convenience functions. Not all of them are mentioned here, look into <code>FutureExtensions.swift</code> to find more!</p>
+<h3 id='code-first-code' class='heading'><code>first</code></h3>
+
+<p>Use <code>first</code> to wait for a first future to succeed:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">requests</span><span class="p">:</span> <span class="p">[</span><span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="kt">Future</span><span class="o">.</span><span class="nf">first</span><span class="p">(</span><span class="n">requests</span><span class="p">)</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"got response!"</span><span class="p">)</span> <span class="p">})</span>
+</code></pre>
+<h3 id='code-foreach-code' class='heading'><code>forEach</code></h3>
+
+<p>Use <code>forEach</code> to perform the work in a sequence:</p>
+<pre class="highlight swift"><code><span class="c1">// `startWork` is a function that returns a future</span>
+<span class="kt">Future</span><span class="o">.</span><span class="nf">forEach</span><span class="p">([</span><span class="n">startWork</span><span class="p">,</span> <span class="n">startOtherWork</span><span class="p">])</span> <span class="p">{</span> <span class="n">future</span> <span class="k">in</span>
+    <span class="c1">// In the callback you can subscribe to each future when work is started</span>
+    <span class="n">future</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"work is completed"</span><span class="p">)</span> <span class="p">})</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='code-after-code' class='heading'><code>after</code></h3>
+
+<p>Use <code>after</code> to produce a value after a given time interval.</p>
+<pre class="highlight swift"><code><span class="kt">Future</span><span class="o">.</span><span class="nf">after</span><span class="p">(</span><span class="nv">seconds</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">)</span><span class="o">.</span><span class="n">on</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"2.5 seconds passed"</span><span class="p">)</span> <span class="p">})</span>
+</code></pre>
+<h3 id='code-retry-code' class='heading'><code>retry</code></h3>
+
+<p>Use <code>retry</code> to perform the given number of attempts to finish the work successfully.</p>
+<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">startSomeWork</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span>
+
+<span class="kt">Future</span><span class="o">.</span><span class="nf">retry</span><span class="p">(</span><span class="nv">attempts</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nv">delay</span><span class="p">:</span> <span class="o">.</span><span class="nf">seconds</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">startSomeWork</span><span class="p">)</span>
+</code></pre>
+
+<p>Retry is flexible. It allows you to specify multiple delay strategies including exponential backoff, to inspect the error before retrying and more.</p>
+<h3 id='code-materialize-code' class='heading'><code>materialize</code></h3>
+
+<p>This one is fascinating. It converts <code>Future&lt;Value, Error&gt;</code> to <code>Future&lt;Future&lt;Value, Error&gt;.Result, Never&gt;</code> – a future which never fails. It always succeeds with the result of the initial future. Now, why would you want to do that? Turns out <code>materialize</code> composes really well with other functions like <code>zip</code>, <code>reduce</code>, <code>first</code>, etc. All of these functions fail as soon as one of the given futures fails. But with <code>materialize</code> you can change the behavior of these functions so that they would wait until all futures are resolved, no matter successfully or with an error.</p>
+
+<blockquote>
+<p>Notice that we use native <code>Never</code> type to represent a situation when error can never be produced.</p>
+</blockquote>
+<pre class="highlight swift"><code><span class="kt">Future</span><span class="o">.</span><span class="nf">zip</span><span class="p">(</span><span class="n">futures</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="nf">materialize</span><span class="p">()</span> <span class="p">})</span><span class="o">.</span><span class="n">on</span> <span class="p">{</span> <span class="n">results</span> <span class="k">in</span>
+    <span class="c1">// All futures are resolved and we get the list of all of the results -</span>
+    <span class="c1">// either values or errors.</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='threading' class='heading'>Threading</h2>
+
+<p>On iOS users expect UI renders to happen synchronously. To accommodate that, by default, the callbacks are run using <code><a href="Enums/Scheduler.html#/s:6Future9SchedulerO4mainyyyyccvpZ">Scheduler.main</a></code>. It runs work immediately if on the main thread, otherwise asynchronously on the main thread. The design is similar to the reactive frameworks like RxSwift. It opens a whole new area for using futures which are traditionally asynchronous by design. </p>
+
+<p>There are three schedulers available:</p>
+<pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">Scheduler</span> <span class="p">{</span>
+    <span class="c1">/// If the task finishes on the main thread, the callbacks are executed</span>
+    <span class="c1">/// immediately. Otherwise, they are dispatched to be executed</span>
+    <span class="c1">/// asynchronously on the main thread.</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">main</span><span class="p">:</span> <span class="kt">ScheduleWork</span>
+
+    <span class="c1">/// Immediately executes the given closure.</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">immediate</span><span class="p">:</span> <span class="kt">ScheduleWork</span>
+
+    <span class="c1">/// Runs asynchronously on the given queue.</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">async</span><span class="p">(</span><span class="n">on</span> <span class="nv">queue</span><span class="p">:</span> <span class="kt">DispatchQueue</span><span class="p">,</span> <span class="nv">flags</span><span class="p">:</span> <span class="kt">DispatchWorkItemFlags</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="kt">ScheduleWork</span>
+<span class="p">}</span>
+</code></pre>
+
+<p><code><a href="Typealiases.html#/s:6Future12ScheduleWorka">ScheduleWork</a></code> is just a function so you can easily provide a custom implementation.</p>
+
+<p>To change the scheduler on which callbacks are called use <code>observe(on:)</code>:</p>
+<pre class="highlight swift"><code><span class="c1">// There are two variants, one with `DispatchQueue`, one with `Scheduler`.</span>
+<span class="c1">// Here's the one with `DispatchQueue`:</span>
+<span class="n">future</span><span class="o">.</span><span class="nf">observe</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">global</span><span class="p">())</span>
+    <span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"value: </span><span class="se">\(</span><span class="nv">$0</span><span class="se">)</span><span class="s">"</span> <span class="p">})</span>
+</code></pre>
+
+<p>You can also use <code>observe(on:)</code> to perform transformations like <code>map</code>, <code>tryMap</code> and others on background queues:</p>
+<pre class="highlight swift"><code><span class="n">future</span><span class="o">.</span><span class="nf">observe</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">global</span><span class="p">())</span>
+    <span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="cm">/* heavy operation */</span> <span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p>Please keep in mind that only the future returned directly by <code>observe(on:)</code> is guaranteed to run its continuations on the given queue (or scheduler).</p>
+</blockquote>
+<h2 id='cancellation' class='heading'>Cancellation</h2>
+
+<p>Cancellation is a concern orthogonal to <code><a href="Structs/Future.html">Future</a></code>. Think about <code><a href="Structs/Future.html">Future</a></code> as a simple callback replacement – callbacks don&rsquo;t support cancellation.</p>
+
+<p><code><a href="Structs/Future.html">Future</a></code> implements a <a href="https://kean.github.io/post/cancellation-token"><code><a href="Structs/CancellationToken.html">CancellationToken</a></code></a> pattern for cooperative cancellation of async tasks. A token is created through a cancellation token source.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">cts</span> <span class="o">=</span> <span class="kt">CancellationTokenSource</span><span class="p">()</span>
+<span class="nf">asyncWork</span><span class="p">(</span><span class="nv">token</span><span class="p">:</span> <span class="n">cts</span><span class="o">.</span><span class="n">token</span><span class="p">)</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// To prevent closure from running when task is cancelled use `isCancelling`:</span>
+    <span class="k">guard</span> <span class="o">!</span><span class="n">cts</span><span class="o">.</span><span class="n">isCancelling</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+
+    <span class="c1">// Do something with the result</span>
+<span class="p">})</span> 
+
+<span class="c1">// At some point later, can be on the other thread:</span>
+<span class="n">cts</span><span class="o">.</span><span class="nf">cancel</span><span class="p">()</span>
+</code></pre>
+
+<p>To cancel multiple async tasks, you can pass the same token to all of them.</p>
+
+<p>Implementing async tasks that support cancellation is easy:</p>
+<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">loadData</span><span class="p">(</span><span class="n">with</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="n">_</span> <span class="nv">token</span><span class="p">:</span> <span class="kt">CancellationToken</span> <span class="o">=</span> <span class="o">.</span><span class="k">none</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">URLError</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">promise</span> <span class="o">=</span> <span class="kt">Promise</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">URLError</span><span class="o">&gt;</span><span class="p">()</span>
+    <span class="k">let</span> <span class="nv">task</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span> <span class="p">{</span> <span class="n">data</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span>
+        <span class="c1">// Handle response</span>
+    <span class="p">}</span>
+    <span class="n">token</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">cancel</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">promise</span><span class="o">.</span><span class="n">future</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>The task has full control over cancellation. You can ignore it, you can fail a promise with a specific error, return a partial result, or not resolve a promise at all.</p>
+
+<blockquote>
+<p><code><a href="Structs/CancellationTokenSource.html">CancellationTokenSource</a></code> itself is built using <code><a href="Structs/Future.html">Future</a></code>  and benefits from all of its performance optimizations.</p>
+</blockquote>
+<h2 id='async-await' class='heading'>Async/Await</h2>
+
+<p>Async/await is often built on top of futures. When <a href="https://gist.github.com/lattner/429b9070918248274f25b714dcfc7619">async/await</a> support is eventually added to Swift, it would be relatively easy to replace the code that uses futures with async/await.</p>
+
+<blockquote>
+<p>There is a <a href="https://gist.github.com/kean/24a3d0c2538647b33006b344ebc283a7">(blocking) version</a> of async/await built on top Future. It&rsquo;s not meant to be used in production.</p>
+</blockquote>
+<h2 id='performance' class='heading'>Performance</h2>
+
+<p>Every feature in Future is engineered with performance in mind.</p>
+
+<p>We avoid dynamic dispatch, reduce the number of allocations and deallocations, avoid doing unnecessary work and lock as less as possible. Methods are often implemented in a sometimes less elegant but more performant way.</p>
+
+<p>There are also some key design differences that give Future an edge over other frameworks. One example is <code><a href="Structs/Future.html">Future</a></code> type itself which is designed as struct which allows some common operations to be performed without a single allocation.</p>
+<h2 id='requirements' class='heading'>Requirements</h2>
+
+<table><thead>
+<tr>
+<th>Future</th>
+<th>Swift</th>
+<th>Xcode</th>
+<th>Platforms</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Future 1.4</td>
+<td>Swift 5.1</td>
+<td>Xcode 11</td>
+<td>iOS 11.0 / watchOS 4.0 / macOS 10.13 / tvOS 11.0 / Linux</td>
+</tr>
+<tr>
+<td>Future 1.1</td>
+<td>Swift 5.0</td>
+<td>Xcode 10.2</td>
+<td>iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0</td>
+</tr>
+<tr>
+<td>Future 1.0</td>
+<td>Swift 4.2</td>
+<td>Xcode 10.1</td>
+<td>iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0</td>
+</tr>
+<tr>
+<td>Future 0.17</td>
+<td>Swift 4.0</td>
+<td>Xcode 9.2</td>
+<td>iOS 9.0 / watchOS 2.0 / macOS 10.11 / tvOS 9.0</td>
+</tr>
+</tbody></table>
+<h2 id='license' class='heading'>License</h2>
+
+<p><code><a href="Structs/Future.html">Future</a></code> is available under the MIT license. See the LICENSE file for more info.</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-04-27)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

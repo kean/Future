@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Structures  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/Structures" class="dashAnchor"></a>
+    <a title="Structures  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html"> Docs</a> (87% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html"> Reference</a>
+        <img id="carat" src="img/carat.png" />
+        Structures  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/Scheduler.html">Scheduler</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/CancellationToken.html">CancellationToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/CancellationTokenSource.html">CancellationTokenSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Future.html">Future</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Future/Promise.html">– Promise</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Future/Delay.html">– Delay</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:6Future7Promisea">Promise</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:6Future12ScheduleWorka">ScheduleWork</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Structures</h1>
+            <p>The following structures are available globally.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/CancellationTokenSource"></a>
+                <a name="//apple_ref/swift/Section/CancellationTokenSource" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/CancellationTokenSource"></a>
+                  <h3 class="section-name"><p>CancellationTokenSource</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Future23CancellationTokenSourceV"></a>
+                    <a name="//apple_ref/swift/Struct/CancellationTokenSource" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Future23CancellationTokenSourceV">CancellationTokenSource</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Manages cancellation tokens and signals them when cancellation is requested.</p>
+
+<p>All <code>CancellationTokenSource</code> methods are thread safe.</p>
+
+                        <a href="Structs/CancellationTokenSource.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">CancellationTokenSource</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Future17CancellationTokenV"></a>
+                    <a name="//apple_ref/swift/Struct/CancellationToken" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Future17CancellationTokenV">CancellationToken</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Enables cooperative cancellation of operations.</p>
+
+<p>You create a cancellation token by instantiating a <code><a href="Structs/CancellationTokenSource.html">CancellationTokenSource</a></code>
+object and calling its <code>token</code> property. You then pass the token to any
+number of threads, tasks, or operations that should receive notice of
+cancellation. When the owning object calls <code>cancel()</code>, the <code>isCancelling</code>
+property on every copy of the cancellation token is set to <code>true</code>.
+The registered objects can respond in whatever manner is appropriate.</p>
+
+<p>All <code>CancellationToken</code> methods are thread safe.</p>
+
+                        <a href="Structs/CancellationToken.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">CancellationToken</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6FutureAAV"></a>
+                    <a name="//apple_ref/swift/Struct/Future" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6FutureAAV">Future</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A future represents a result of a task which may be available now, or
+in the future, or never. Once the future receives the result, its state can
+never be changed, either a value or an error is broadcasted to all observers.</p>
+
+<p>To attach a callback to the <code>Future</code> use <code>on</code> method:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">user</span><span class="p">:</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">User</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span>
+
+<span class="n">user</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"received entity: </span><span class="se">\(</span><span class="nv">$0</span><span class="se">)</span><span class="s">"</span> <span class="p">},</span>
+        <span class="nv">failure</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"failed with error: </span><span class="se">\(</span><span class="nv">$0</span><span class="se">)</span><span class="s">"</span> <span class="p">})</span>
+
+<span class="c1">// As an alternative observe a completion:</span>
+<span class="n">user</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"completed with result: </span><span class="se">\(</span><span class="nv">$0</span><span class="se">)</span><span class="s">"</span> <span class="p">})</span>
+</code></pre>
+
+<p>Futures are easily composable. <code>Future&lt;Value, Error&gt;</code> provides a set of
+functions like <code>map</code>, <code>flatMap</code>, <code>zip</code>, <code>reduce</code> and more to compose futures.</p>
+
+                        <a href="Structs/Future.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Future</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">Error</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-04-27)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
