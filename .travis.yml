@@ -41,4 +41,4 @@ jobs:
     - stage: test
       name: Swift Build (Swift Package Manager)
       osx_image: xcode11
-      script: swift build
+      script: swift test
