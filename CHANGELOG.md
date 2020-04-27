@@ -1,5 +1,11 @@
 # Future 1.x
 
+## Future 1.4.0
+
+*April 27, 2019*
+
+- Add Linux support - [#12](https://github.com/kean/Future/pull/12), by [Joseph Heck](https://github.com/heckj)
+
 ## Future 1.3.0
 
 *November 20, 2019*

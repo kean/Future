@@ -340,6 +340,7 @@ There are also some key design differences that give Future an edge over other f
 
 | Future         | Swift         | Xcode          | Platforms                                         |
 |----------------|---------------|----------------|---------------------------------------------------|
+| Future 1.3     | Swift 5.0     | Xcode 10.2     | iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0 / Linux  |
 | Future 1.1     | Swift 5.0     | Xcode 10.2     | iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0  |
 | Future 1.0     | Swift 4.2     | Xcode 10.1     | iOS 10.0 / watchOS 3.0 / macOS 10.12 / tvOS 10.0  |
 | Future 0.17    | Swift 4.0     | Xcode 9.2      | iOS 9.0 / watchOS 2.0 / macOS 10.11 / tvOS 9.0    | 
