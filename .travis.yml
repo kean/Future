@@ -49,24 +49,15 @@ jobs:
       osx_image: xcode11
       script: swift test
 
-    # - os: linux
-    #   language: generic
-    #   dist: bionic
-    #   sudo: required
-    #   git:
-    #     depth: 1
-    #   stages:
-    #     - name: test
-    #       #branches:
-    #       #only:
-    #       #- master
-    #   jobs:
-    #     include:
-    #       - stage: test
-    #         name: Swift Build (Swift Package Manager)
-    #         install:
-    #           - sudo apt-get install clang libicu-dev
-    #           - wget https://swift.org/builds/swift-5.2-release/ubuntu1804/swift-5.2-RELEASE/swift-5.2-RELEASE-ubuntu18.04.tar.gz
-    #           - tar xzf swift-5.2-RELEASE-ubuntu18.04.tar.gz
-    #           - export PATH="${PWD}/swift-5.2-RELEASE-ubuntu18.04/usr/bin:$PATH"
-    #         script: swift test --enable-test-discovery
+    - stage: test
+      name: Run Unit Tests (Linux)
+      os: linux      
+      language: generic
+      dist: bionic
+      sudo: required
+      install:
+        - sudo apt-get install clang libicu-dev
+        - wget https://swift.org/builds/swift-5.2-release/ubuntu1804/swift-5.2-RELEASE/swift-5.2-RELEASE-ubuntu18.04.tar.gz
+        - tar xzf swift-5.2-RELEASE-ubuntu18.04.tar.gz
+        - export PATH="${PWD}/swift-5.2-RELEASE-ubuntu18.04/usr/bin:$PATH"
+      script: swift test --enable-test-discovery
