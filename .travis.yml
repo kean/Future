@@ -48,9 +48,9 @@ matrix:
         depth: 1
       stages:
         - name: test
-      branches:
-        only:
-          - master
+          #branches:
+          #only:
+          #- master
       jobs:
         include:
           - stage: test
