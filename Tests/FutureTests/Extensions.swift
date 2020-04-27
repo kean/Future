@@ -45,14 +45,6 @@ extension XCTestCase {
     }
 }
 
-func rnd() -> Int {
-    return Int(arc4random())
-}
-
-func rnd(_ uniform: Int) -> Int {
-    return Int(arc4random_uniform(UInt32(uniform)))
-}
-
 func after(ticks: Int, execute body: @escaping () -> Void) {
     if ticks == 0 {
         body()

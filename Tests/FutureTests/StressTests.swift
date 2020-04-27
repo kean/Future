@@ -39,5 +39,11 @@ private func stressDataRace<Value: Equatable>(expectation e1: XCTestExpectation,
         }
     }
 
-    group.notify(queue: queue, execute: e1.fulfill)
+    // this works around a type complaint in swift/linux where it was refusing to
+    // bind and invoke e1.fulfill with no parameters.
+    func voidfulfill() -> Void {
+        e1.fulfill()
+    }
+
+    group.notify(queue: queue, execute: voidfulfill)
 }

@@ -16,6 +16,6 @@ let package = Package(
     dependencies: [],
     targets: [
         .target(name: "Future", dependencies: [], path: "Sources"),
-        .testTarget(name: "FutureTests", dependencies: ["Future"], path: "Tests")
+        .testTarget(name: "FutureTests", dependencies: ["Future"])
     ]
 )
